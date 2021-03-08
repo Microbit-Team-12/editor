@@ -1,18 +1,39 @@
 .App {
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+
   text-align: center;
+  background-color: #96ceb2;
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+  height: 5vh;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.App-button {
+  margin: 2vw;
+  font-size: calc(10px + 2vmin);  
+}
+
+.App-textareas {
+  width: 100vw;
+  height: 90vh;
+
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: center;
+}
+
+.App-textareas textarea {
+  width: 40%;
+  height: 90vh;
+
+  font-size: x-large;
 }
