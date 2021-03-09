@@ -39,9 +39,10 @@ export interface InteractWithConnectedMicrobit {
   reboot: () => Promise<void>
 
   /**
-   * Interrupt the connected micro:bit.
+   * Send an interrupt signal the connected micro:bit.
+   * This will try to stop any python code running on the micro:bit.
    * 
-   * TODO: add more description here
+   * The promise completes when the interruption is successful.
    */
   interrupt: () => Promise<void>
 }
