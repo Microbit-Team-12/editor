@@ -67,17 +67,17 @@ export type MicrobitOutput = NormalOutput | ErrorMessage
  * A content that is output to the standard output of micro:bit
  */
 export interface NormalOutput {
-    kind: 'NormalOutput'
-    outputLine: string
+  kind: 'NormalOutput'
+  outputLine: string
 }
 
 /**
  * A description of a runtime error that occured on micro:bit
  */
 export interface ErrorMessage {
-    kind: 'ErrorMessage'
-    line: number
-    file: string
-    reason: string
-    message: string
+  kind: 'ErrorMessage'
+  line: number
+  file: string
+  reason: string
+  message: string
 }
