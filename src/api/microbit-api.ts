@@ -35,14 +35,15 @@ export interface ConnectToMicrobit {
 
 export interface MicrobitConnection {
   /**
-   * A promise that completes when the micro:bit connection is no longer active.
-   */
-  awaitDisconnection: Promise<void>
-
-  /**
    * An object that allows us to interact with the connected micro:bit.
    */
   interact: InteractWithConnectedMicrobit
+
+  /**
+   * A promise that completes when the micro:bit connection is no longer active.
+   * This promise itself does not try to disconnect micro:bit.
+   */
+  disconnection: Promise<void>
 }
 
 export interface InteractWithConnectedMicrobit {
