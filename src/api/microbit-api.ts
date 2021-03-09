@@ -26,10 +26,10 @@ export interface InteractWithConnectedMicrobit {
   /**
    * Flash ROM of the connected micro:bit.
    * 
-   * The promise completes when flashing is done,
-   * and results in a stream of outputs from microbit.
+   * The resulting stream first yields the progress status of the flashing process,
+   * yields a stream of outputs (see DoneFlashing) and then ends.
    */
-  flash: (code: string) => Promise<Stream<MicrobitOutput>>
+  flash: (code: string) => Stream<FlashProgress>
 
   /**
    * Reboots the connected micro:bit.
@@ -43,6 +43,19 @@ export interface InteractWithConnectedMicrobit {
    * The promise completes when the interruption is successful.
    */
   interrupt: () => Promise<void>
+}
+
+export type FlashProgress = Flashing | DoneFlashing
+
+export interface Flashing {
+  kind: 'Flashing'
+  totalBytesWritten: number
+  totalBytesToWrite: number
+}
+
+export interface DoneFlashing {
+  kind: 'DoneFlashing'
+  outputStream: Stream<MicrobitOutput>
 }
 
 /**
