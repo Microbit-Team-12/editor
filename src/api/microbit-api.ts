@@ -65,10 +65,11 @@ export type MicrobitOutput = NormalOutput | ErrorMessage
 
 /**
  * A content that is output to the standard output of micro:bit
+ * outputSoFar is the complete output from the flashed program
  */
 export interface NormalOutput {
   kind: 'NormalOutput'
-  outputLine: string
+  outputSoFar: string
 }
 
 /**
