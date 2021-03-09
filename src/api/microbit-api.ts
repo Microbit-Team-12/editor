@@ -4,9 +4,19 @@ export interface ConnectToMicrobit {
   /**
    * Get a connection to micro:bit by letting the user select connected devices.
    * 
-   * The promise completes with a object that allows interaction with micro:bit.
+   * The promise completes with a object that allows interaction with micro:bit if connection is successful.
+   * Otherwise completes with a ConnectionFailure object.
    */
-  connect: () => Promise<InteractWithConnectedMicrobit>
+  connect: () => Promise<InteractWithConnectedMicrobit|ConnectionFailure>
+}
+
+/**
+ * A description of connection failure
+*/
+
+export interface ConnectionFailure{
+  kind: "ConnectionFailure",
+  reason: string
 }
 
 export interface MicrobitConnection {
