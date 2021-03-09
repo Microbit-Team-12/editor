@@ -1,29 +1,5 @@
 import Stream from 'ts-stream';
 
-/**
- * Data that we expect to receive from micro:bit as a result of execution/flash
- */
-export type MicrobitOutput = NormalOutput | ErrorMessage
-
-/**
- * A content that is output to the standard output of micro:bit
- */
-export interface NormalOutput {
-  kind: 'NormalOutput'
-  outputLine: string
-}
-
-/**
- * A description of a runtime error that occured on micro:bit
- */
-export interface ErrorMessage {
-  kind: 'ErrorMessage'
-  line: number
-  file: string
-  reason: string
-  message: string
-}
-
 export interface ConnectToMicrobit {
   /**
    * Get a connection to micro:bit by letting the user select connected devices.
@@ -67,4 +43,28 @@ export interface InteractWithConnectedMicrobit {
    * The promise completes when the interruption is successful.
    */
   interrupt: () => Promise<void>
+}
+
+/**
+ * Data that we expect to receive from micro:bit as a result of execution/flash
+ */
+export type MicrobitOutput = NormalOutput | ErrorMessage
+
+/**
+ * A content that is output to the standard output of micro:bit
+ */
+export interface NormalOutput {
+    kind: 'NormalOutput'
+    outputLine: string
+}
+
+/**
+ * A description of a runtime error that occured on micro:bit
+ */
+export interface ErrorMessage {
+    kind: 'ErrorMessage'
+    line: number
+    file: string
+    reason: string
+    message: string
 }
