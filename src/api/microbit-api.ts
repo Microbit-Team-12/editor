@@ -24,6 +24,27 @@ export interface ErrorMessage {
   message: string
 }
 
+export interface ConnectToMicrobit {
+  /**
+   * Get a connection to micro:bit by letting the user select connected devices.
+   * 
+   * The promise completes with a object that allows interaction with micro:bit.
+   */
+  connect: () => Promise<InteractWithConnectedMicrobit>
+}
+
+export interface MicrobitConnection {
+  /**
+   * A promise that completes when the micro:bit connection is no longer active.
+   */
+  awaitDisconnection: Promise<void>
+
+  /**
+   * An object that allows us to interact with the connected micro:bit.
+   */
+  interact: InteractWithConnectedMicrobit
+}
+
 export interface InteractWithConnectedMicrobit {
   /**
    * Flash ROM of the connected micro:bit.
