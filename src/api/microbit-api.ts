@@ -46,7 +46,7 @@ export interface InteractWithConnectedMicrobit {
 }
 
 /**
- * Data that we expect to receive from micro:bit as a result of execution/flash
+ * Data that we expect to receive from micro:bit as a result of execututing the flashed code.
  */
 export type MicrobitOutput = NormalOutput | ErrorMessage
 
