@@ -26,8 +26,8 @@ export interface InteractWithConnectedMicrobit {
   /**
    * Flash ROM of the connected micro:bit.
    * 
-   * The promise completes when flashing is done,
-   * and results in a stream of outputs from microbit.
+   * The flashing consists of two stages of flashing the code followed by a reboot.
+   * The promise completes when reboot is done, resulting in a stream of outputs from microbit.
    */
   flash: (code: string) => Promise<Stream<MicrobitOutput>>
 
