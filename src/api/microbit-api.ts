@@ -15,7 +15,7 @@ export interface ConnectToMicrobit {
 */
 
 export interface ConnectionFailure{
-  kind: "ConnectionFailure",
+  kind: 'ConnectionFailure',
   reason: string
 }
 
@@ -61,8 +61,10 @@ export interface InteractWithConnectedMicrobit {
 export type MicrobitOutput = NormalOutput | ErrorMessage
 
 /**
- * A content that is output to the standard output of micro:bit
- * outputChunk is the complete output from the flashed program
+ * A piece of content that is output to the standard output of micro:bit.
+ * 
+ * outputChunk is a new piece of output we have obtained from micro:bit,
+ * and may not correspond to a single print() executed on the device.
  */
 export interface NormalOutput {
   kind: 'NormalOutput'
