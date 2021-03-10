@@ -1,0 +1,13 @@
+{
+    "configurations": [
+        {
+            "type": "chrome",
+            "name": "Launch Chrome",
+            "request": "launch",
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}",
+            "disableNetworkCache": true,
+            "internalConsoleOptions": "openOnSessionStart"
+        }
+    ]
+}
