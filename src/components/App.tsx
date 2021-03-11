@@ -1,5 +1,6 @@
 import React from 'react';
-import { MicrobitConnection } from '../api/microbit-api';
+import { Stream } from 'ts-stream';
+import { MicrobitConnection, MicrobitOutput } from '../api/microbit-api';
 import { connect } from '../api/microbit/connect';
 import './App.css';
 
@@ -26,6 +27,9 @@ class App extends React.Component<unknown, AppState> {
     this.onStart = this.onStart.bind(this);
     this.onFlash = this.onFlash.bind(this);
     this.onCodeChange = this.onCodeChange.bind(this);
+    this.onReboot = this.onReboot.bind(this);
+    this.onExec = this.onExec.bind(this);
+    this.onInterrupt = this.onInterrupt.bind(this);
   }
 
   render(): JSX.Element {
@@ -35,8 +39,8 @@ class App extends React.Component<unknown, AppState> {
           <button className="App-button" onClick={this.onStart}>Start</button>
           <button className="App-button">Run Code</button>
           <button className="App-button" onClick={this.onFlash}>Flash Code</button>
-          <button className="App-button">Interrupt</button>
-          <button className="App-button">Reboot</button>
+          <button className="App-button" onClick={this.onInterrupt}>Interrupt</button>
+          <button className="App-button" onClick={this.onReboot}>Reboot</button>
         </header>
         <div className="App-textareas">
           <textarea value={this.state.code} onChange={this.onCodeChange} className="App-doc"></textarea>
@@ -59,19 +63,31 @@ class App extends React.Component<unknown, AppState> {
     else globalConnection = connection;
   }
 
-  async onFlash():Promise<void>{
-    console.log('onFlash');
-    const code = this.state.code;
-    const outStream = await globalConnection.interact.flash(code);
-    await outStream.forEach(output =>{
-      if(output.kind==='NormalOutput'){
+  async onExec(outputStream: Stream<MicrobitOutput>):Promise<void>{
+    await outputStream.forEach( output => {
+      if (output.kind === 'NormalOutput') {
         this.setState({
           output: output.outputChunk
         });
-      }else{
-        console.log(output);
+      } else {
+        alert(output.message);
       }
     });
+  }
+
+  async onFlash():Promise<void>{
+    console.log('onFlash');
+    const code = this.state.code;
+    this.onExec(await globalConnection.interact.flash(code));
+  }
+
+  async onReboot():Promise<void>{
+    console.log('onReboot');
+    this.onExec(await globalConnection.interact.reboot());
+  }
+
+  async onInterrupt():Promise<void>{
+    globalConnection.interact.interrupt();
   }
 }
 

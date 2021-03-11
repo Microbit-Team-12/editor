@@ -18,6 +18,10 @@ export class SerialParser {
     console.log('Flash done');
   }
 
+  async watchReboot():Promise<void> {
+    await this.portReader.safeReadUntil(this.config.rebootDone);
+  }
+
   async watchOutput(outputStream:Stream<MicrobitOutput>):Promise<void> {
     const signals = [
       this.config.execDone,

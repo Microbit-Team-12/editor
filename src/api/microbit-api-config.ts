@@ -15,6 +15,7 @@ export interface readOption {
 export interface ParseOption {
     showLog: boolean,
     flashDone: string
+    rebootDone: string
     execDone: string
     execError: string
 }
@@ -42,6 +43,7 @@ export const defaultConfig: ManagerOption = {
   parseOption: {
     showLog: true,
     flashDone: 'file.close();from microbit import *;sleep(0);reset()\r\n',
+    rebootDone: 'from microbit import *;reset()\r\n',
     execDone: 'Type "help()" for more information.\r\n>>',
     execError: 'Traceback (most recent call last):\r\n'
   }

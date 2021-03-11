@@ -61,10 +61,20 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
     this.portParser.watchOutput(outputStream);
     return outputStream;
   }
+
   async reboot(): Promise<Stream<MicrobitOutput>> {
-    return '' as any;
+    await this.portWriter.write(
+      ctrlC
+      + 'from microbit import *;'
+      + 'reset()\r'
+    );
+    await this.portParser.watchReboot();
+    const outputStream = new Stream<MicrobitOutput>();
+    this.portParser.watchOutput(outputStream);
+    return outputStream;
   }
+  
   async interrupt(): Promise<void> {
-    return '' as any;
+    await this.portWriter.write(ctrlC);
   }
 }
