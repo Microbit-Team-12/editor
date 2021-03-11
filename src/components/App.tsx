@@ -78,7 +78,7 @@ class App extends React.Component<unknown, AppState> {
           output: output.outputChunk
         });
       } else {
-        alert(output.message);
+        alert(output.fullMessage);
       }
     });
   }

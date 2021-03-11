@@ -101,12 +101,16 @@ export class SerialParser {
   async watchError(outputStream: Stream<MicrobitOutput>):Promise<void> {
     const line1 = await this.portReader.unsafeReadline();
     const line2 = await this.portReader.unsafeReadline();
+    const lineNumberString = line1.split('line ')[1].split(',')[0];
+    const line2split = line2.split(': ');
+    
     outputStream.write({
       kind: 'ErrorMessage',
-      line: -1,
+      line: parseInt(lineNumberString),
       file: 'main.py',
-      reason: '',
-      message: line1+'\r\n'+line2
+      errorType: line2split[0],
+      errorExplan: line2split[1],
+      fullMessage: line1+'\r\n'+line2
     });
     outputStream.end();
   }

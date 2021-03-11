@@ -80,6 +80,7 @@ export interface ErrorMessage {
   kind: 'ErrorMessage'
   line: number
   file: string
-  reason: string
-  message: string
+  errorType: string
+  errorExplan: string
+  fullMessage: string
 }
