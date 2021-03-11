@@ -39,8 +39,14 @@ export async function connectBySelection(config: ManagerOption = defaultConfig):
 
   let port: SerialPort;
   if (config.devReusePort) port = (await navigator.serial.getPorts())[0];
-  else port = await navigator.serial.requestPort(config.serialRequsetOption);
-  
+  else try {
+    port = await navigator.serial.requestPort(config.serialRequsetOption);
+  } catch (error) {
+    return {
+      kind: 'ConnectionFailure',
+      reason: error.message
+    };
+  }
   if (port == null) return {
     kind: 'ConnectionFailure',
     reason: 'No SerialPort Selected'

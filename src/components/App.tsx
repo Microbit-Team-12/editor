@@ -30,7 +30,6 @@ class App extends React.Component<unknown, AppState> {
     this.onReboot = this.onReboot.bind(this);
     this.onExec = this.onExec.bind(this);
     this.onInterrupt = this.onInterrupt.bind(this);
-    connectByPlugIn();
   }
 
   render(): JSX.Element {
@@ -62,6 +61,13 @@ class App extends React.Component<unknown, AppState> {
     const connection = await connectBySelection();
     if(connection.kind==='ConnectionFailure') {
       alert(connection.reason);
+      /*
+      Maybe use by plugin here?
+      connectByPlugIn().then(connection => {
+        if (connection.kind === 'ConnectionFailure') alert(connection.reason);
+        else globalConnection = connection;
+      });
+      */
     }else globalConnection = connection;
   }
 
