@@ -1,4 +1,3 @@
-import { filter } from 'ts-stream';
 import { ConnectionFailure, MicrobitConnection } from '../microbit-api';
 import { defaultConfig, ManagerOption } from '../microbit-api-config';
 import { ConnectedMicrobitInteract } from './interact';
@@ -8,8 +7,14 @@ import { ConnectedMicrobitInteract } from './interact';
  * create a MicrobitConnection object
  */
 async function createConnection(port: SerialPort, config: ManagerOption): Promise<MicrobitConnection | ConnectionFailure> {
-  await port.open(config.serialConnectionOption);
-
+  try{
+    await port.open(config.serialConnectionOption);
+  } catch (error) {
+    return {
+      kind: 'ConnectionFailure',
+      reason: error.message
+    };
+  }
   return {
     kind: 'MicrobitConnection',
     interact: new ConnectedMicrobitInteract(port, config),

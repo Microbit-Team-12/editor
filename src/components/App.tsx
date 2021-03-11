@@ -60,8 +60,9 @@ class App extends React.Component<unknown, AppState> {
   async onStart():Promise<void>{
     console.log('on');
     const connection = await connectBySelection();
-    if(connection.kind==='ConnectionFailure') console.log('Falied');
-    else globalConnection = connection;
+    if(connection.kind==='ConnectionFailure') {
+      alert(connection.reason);
+    }else globalConnection = connection;
   }
 
   async onExec(outputStream: Stream<MicrobitOutput>):Promise<void>{
