@@ -6,5 +6,6 @@
         "source.fixAll": true,
         "source.organizeImports": true
     },
-    "editor.formatOnPaste": true
+    "editor.formatOnPaste": true,
+    "editor.tabSize": 2
 }
