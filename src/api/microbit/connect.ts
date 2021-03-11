@@ -1,7 +1,12 @@
+import { filter } from 'ts-stream';
 import { ConnectionFailure, MicrobitConnection } from '../microbit-api';
 import { defaultConfig, ManagerOption } from '../microbit-api-config';
 import { ConnectedMicrobitInteract } from './interact';
 
+/**
+ * Given a unopenned serial port and configuration object,
+ * create a MicrobitConnection object
+ */
 async function createConnection(port: SerialPort, config: ManagerOption): Promise<MicrobitConnection | ConnectionFailure> {
   await port.open(config.serialConnectionOption);
 
@@ -16,6 +21,10 @@ async function createConnection(port: SerialPort, config: ManagerOption): Promis
   };
 }
 
+/**
+ * Create a MicrobitConnection object
+ * By selecting a serial port in the native permission window.
+ */
 export async function connectBySelection(config: ManagerOption = defaultConfig): Promise< MicrobitConnection | ConnectionFailure> {
   //TODO: Use webserial polyfill to add support for lower version of chrome
   if (!('serial' in navigator)) return {
@@ -35,11 +44,15 @@ export async function connectBySelection(config: ManagerOption = defaultConfig):
   return await createConnection(port,config);
 }
 
-
+/**
+ * Create a MicrobitConnection object
+ * By user plugging the device
+ */
 export async function connectByPlugIn(config: ManagerOption = defaultConfig): Promise<MicrobitConnection | ConnectionFailure>{
   return new Promise((resolve,reject)=>{
     navigator.serial.addEventListener('connect', async (event) => {
       const port: SerialPort = (event as any).port || event.target;
+      //TODO: check USB vendor
       resolve(await createConnection(port,config));
     });
   });

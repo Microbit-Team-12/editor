@@ -1,23 +1,66 @@
+//TODO: Rename
+
 export interface ManagerOption {
-    devReusePort: boolean,
-    serialConnectionOption: SerialOptions
-    serialRequsetOption: SerialPortRequestOptions
-    readOption: readOption
-    parseOption: ParseOption
+  /**
+   * If paried serial should be used.
+   */
+  devReusePort: boolean,
+  /**
+   * Parameter used to connect serial port. See `SerialOptions`
+   */
+  serialConnectionOption: SerialOptions
+  /**
+   * Parameter used for filtering serial port. See `SerialPortRequestOptions`
+   */
+  serialRequsetOption: SerialPortRequestOptions
+  /**
+   * Parameter used for reader class
+   */
+  readOption: readOption
+  /**
+   * Parameter used for parser class
+   */
+  parseOption: ParseOption
 }
 
 export interface readOption {
-    showLog: boolean,
-    updateMs: number
-    cutLength: number
+  /**
+   * If log should be printed to console
+   */
+  showLog: boolean,
+  /**
+   * Program output should be updated to the web every `updateMs` ms.
+   */
+  updateMs: number
+  /**
+   * Length of program output that should be kept.
+   * 
+   * It is recommended to set this to 2 * maximum number of character in the textarea.
+   */
+  cutLength: number
 }
 
 export interface ParseOption {
-    showLog: boolean,
-    flashDone: string
-    rebootDone: string
-    execDone: string
-    execError: string
+  /**
+   * If log should be printed to console
+   */
+  showLog: boolean,
+  /**
+   * Indication of flash done
+   */
+  flashDone: string
+  /**
+   * Indication of reboot done
+   */
+  rebootDone: string
+  /**
+   * Indication of execution done without errors
+   */
+  execDone: string
+  /**
+   * Indication of execution stopped with errors
+   */
+  execError: string
 }
 
 export const defaultConfig: ManagerOption = {
