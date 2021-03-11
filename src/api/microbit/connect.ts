@@ -1,3 +1,4 @@
+import { serial } from 'web-serial-polyfill';
 import { ConnectionFailure, MicrobitConnection } from '../microbit-api';
 import { defaultConfig, ManagerOption } from '../microbit-api-config';
 import { ConnectedMicrobitInteract } from './interact';
@@ -7,7 +8,7 @@ import { ConnectedMicrobitInteract } from './interact';
  * create a MicrobitConnection object
  */
 async function createConnection(port: SerialPort, config: ManagerOption): Promise<MicrobitConnection | ConnectionFailure> {
-  try{
+  try {
     await port.open(config.serialConnectionOption);
   } catch (error) {
     return {
@@ -30,12 +31,14 @@ async function createConnection(port: SerialPort, config: ManagerOption): Promis
  * Create a MicrobitConnection object
  * By selecting a serial port in the native permission window.
  */
-export async function connectBySelection(config: ManagerOption = defaultConfig): Promise< MicrobitConnection | ConnectionFailure> {
-  //TODO: Use webserial polyfill to add support for lower version of chrome
-  if (!('serial' in navigator)) return {
-    kind: 'ConnectionFailure',
-    reason: 'WebSerial not Supported'
-  };
+export async function connectBySelection(config: ManagerOption = defaultConfig): Promise<MicrobitConnection | ConnectionFailure> {
+  if (!('serial' in navigator)) {
+    if ('usb' in navigator) (navigator as any).serial = serial;
+    else return {
+      kind: 'ConnectionFailure',
+      reason: 'WebSerial/WebUSB not Supported'
+    };
+  }
 
   let port: SerialPort;
   if (config.devReusePort) port = (await navigator.serial.getPorts())[0];
@@ -52,24 +55,27 @@ export async function connectBySelection(config: ManagerOption = defaultConfig):
     reason: 'No SerialPort Selected'
   };
 
-  return await createConnection(port,config);
+  return await createConnection(port, config);
 }
 
 /**
  * Create a MicrobitConnection object
  * By user plugging the device
  */
-export async function connectByPlugIn(config: ManagerOption = defaultConfig): Promise<MicrobitConnection | ConnectionFailure>{
-  if (!('serial' in navigator)) return {
-    kind: 'ConnectionFailure',
-    reason: 'WebSerial not Supported'
-  };
-  
-  return new Promise((resolve,reject)=>{
+export async function connectByPlugIn(config: ManagerOption = defaultConfig): Promise<MicrobitConnection | ConnectionFailure> {
+  if (!('serial' in navigator)) {
+    if ('usb' in navigator) (navigator as any).serial = serial;
+    else return {
+      kind: 'ConnectionFailure',
+      reason: 'WebSerial/WebUSB not Supported'
+    };
+  }
+
+  return new Promise((resolve, reject) => {
     navigator.serial.addEventListener('connect', async (event) => {
       const port: SerialPort = (event as any).port || event.target;
       //TODO: check USB vendor
-      resolve(await createConnection(port,config));
+      resolve(await createConnection(port, config));
     });
   });
 }
