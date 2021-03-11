@@ -1,6 +1,6 @@
-import {readOption} from '../../microbit-api-config';
+import { readOption } from '../../../microbit-api-config';
 
-export class OutputReader {
+export class SerialReader {
   private serialBuffer = ''
   private portReader: ReadableStreamDefaultReader<string>
   private config: readOption
@@ -13,8 +13,10 @@ export class OutputReader {
   }
 
   private async readLoop(termination: (text: string) => boolean): Promise<void> {
+    if(this.config.showLog) console.log('Before Loop:'+this.serialBuffer);
     while (!termination(this.serialBuffer)) {
       const { value, done } = await this.portReader.read();
+      if (this.config.showLog) console.log('In Loop:' + this.serialBuffer);
       this.serialBuffer += value;
     }
   }

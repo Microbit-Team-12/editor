@@ -7,18 +7,20 @@ export interface ManagerOption {
 }
 
 export interface readOption {
+    showLog: boolean,
     updateMs: number
     cutLength: number
 }
 
 export interface ParseOption {
+    showLog: boolean,
     flashDone: string
     execDone: string
     execError: string
 }
 
 export const defaultConfig: ManagerOption = {
-  devReusePort: true,
+  devReusePort: false,
   serialConnectionOption: {
     baudRate: 115200,
     dataBits: 8,
@@ -33,11 +35,13 @@ export const defaultConfig: ManagerOption = {
     ]
   },
   readOption: {
+    showLog: true,
     updateMs: 100,
     cutLength: 1000
   },
   parseOption: {
-    flashDone: 'file.close();from microbit import reset;reset()\r\n',
+    showLog: true,
+    flashDone: 'file.close();from microbit import *;sleep(0);reset()\r\n',
     execDone: 'Type "help()" for more information.\r\n>>',
     execError: 'Traceback (most recent call last):\r\n'
   }

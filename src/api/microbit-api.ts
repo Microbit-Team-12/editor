@@ -19,6 +19,7 @@ export interface ConnectionFailure{
 }
 
 export interface MicrobitConnection {
+  kind: 'MicrobitConnection'
   /**
    * An object that allows us to interact with the connected micro:bit.
    */

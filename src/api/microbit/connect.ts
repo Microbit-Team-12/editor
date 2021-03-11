@@ -1,9 +1,9 @@
 import { ConnectionFailure, MicrobitConnection } from '../microbit-api';
-import { ManagerOption } from '../microbit-api-config';
-import { ActualMicrobitConnection } from './connection';
+import { defaultConfig, ManagerOption } from '../microbit-api-config';
+import { ConnectedMicrobitInteract } from './interact';
 
-export async function connect(config: ManagerOption): Promise< MicrobitConnection | ConnectionFailure> {
-  //To be relaxed with a webserial polyfill
+export async function connect(config: ManagerOption = defaultConfig): Promise< MicrobitConnection | ConnectionFailure> {
+  //TODO: Use webserial polyfill to add support for lower version of chrome
   if (!('serial' in navigator)) return {
     kind: 'ConnectionFailure',
     reason: 'WebSerial not Supported'
@@ -15,12 +15,19 @@ export async function connect(config: ManagerOption): Promise< MicrobitConnectio
   } else {
     port = await navigator.serial.requestPort(config.serialRequsetOption);
   }
-
   if (port == null) return {
     kind: 'ConnectionFailure',
     reason: 'No SerialPort Selected'
   };
 
-  return new ActualMicrobitConnection(port,config);
-
+  //TODO: Add timeout
+  await port.open(config.serialConnectionOption);
+  navigator.serial.addEventListener('disconnect', (event) => {
+    console.log(event.target);
+  });
+  return {
+    kind: 'MicrobitConnection',
+    interact: new ConnectedMicrobitInteract(port, config),
+    disconnection: '' as any
+  };
 }

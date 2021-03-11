@@ -1,13 +1,13 @@
 import Stream from 'ts-stream';
-import { MicrobitOutput } from '../../microbit-api';
-import { ParseOption } from '../../microbit-api-config';
-import { OutputReader } from './OutputReader';
+import { MicrobitOutput } from '../../../microbit-api';
+import { ParseOption } from '../../../microbit-api-config';
+import { SerialReader } from './reader';
 
-export class OutputParser {
-  portReader: OutputReader;
+export class SerialParser {
+  portReader: SerialReader;
   config: ParseOption;
 
-  constructor(portReader: OutputReader, config:ParseOption) {
+  constructor(portReader: SerialReader, config:ParseOption) {
     this.portReader = portReader;
     this.config = config;
   }

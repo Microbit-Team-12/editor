@@ -7,5 +7,22 @@
         "source.organizeImports": true
     },
     "editor.formatOnPaste": true,
-    "editor.tabSize": 2
+    "editor.tabSize": 2,
+    "javascript.preferences.quoteStyle": "single",
+    "typescript.preferences.quoteStyle": "single",
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        ".github": true,
+        "node_modules": true,
+        ".eslintrc.js": true,
+        ".gitattributes": true,
+        ".gitignore": true,
+        "tsconfig.json": true,
+        "yarn.lock": true,
+        "public": true
+    }
 }

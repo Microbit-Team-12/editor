@@ -1,14 +1,13 @@
 import Stream from 'ts-stream';
 import { InteractWithConnectedMicrobit, MicrobitOutput } from '../microbit-api';
 import { ManagerOption } from '../microbit-api-config';
-import { OutputReader } from './helper/OutputReader';
-import { OutputParser } from './helper/OutputParser';
+import { SerialParser } from './helper/serial/parser';
+import { SerialReader } from './helper/serial/reader';
 const ctrlC = '\x03';
-const ctrlD = '\x04';
 
 export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit {
   portWriter!: WritableStreamDefaultWriter<string>;
-  portParser!: OutputParser
+  portParser!: SerialParser
 
   constructor(port: SerialPort, config: ManagerOption) {
     const encoder = new TextEncoderStream();
@@ -17,8 +16,8 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
       this.portWriter = encoder.writable.getWriter();
     }
     if (port.readable != null) {
-      const portReader = new OutputReader(port.readable, config.readOption);
-      this.portParser = new OutputParser(portReader, config.parseOption);
+      const portReader = new SerialReader(port.readable, config.readOption);
+      this.portParser = new SerialParser(portReader, config.parseOption);
     }
   }
 
@@ -52,7 +51,8 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
       + 's=\'' + codeInPythonString + '\';'
       + 'file.write(s);'
       + 'file.close();'
-      + 'from microbit import reset;'
+      + 'from microbit import *;'
+      + 'sleep(0);'
       + 'reset()\r'
     );
 
@@ -67,5 +67,4 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
   async interrupt(): Promise<void> {
     return '' as any;
   }
-
 }
