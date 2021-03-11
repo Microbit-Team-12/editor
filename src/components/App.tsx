@@ -1,7 +1,7 @@
 import React from 'react';
 import { Stream } from 'ts-stream';
 import { MicrobitConnection, MicrobitOutput } from '../api/microbit-api';
-import { connect } from '../api/microbit/connect';
+import { connectByPlugIn, connectBySelection } from '../api/microbit/connect';
 import './App.css';
 
 type AppState = {
@@ -30,6 +30,7 @@ class App extends React.Component<unknown, AppState> {
     this.onReboot = this.onReboot.bind(this);
     this.onExec = this.onExec.bind(this);
     this.onInterrupt = this.onInterrupt.bind(this);
+    connectByPlugIn();
   }
 
   render(): JSX.Element {
@@ -58,7 +59,7 @@ class App extends React.Component<unknown, AppState> {
 
   async onStart():Promise<void>{
     console.log('on');
-    const connection = await connect();
+    const connection = await connectBySelection();
     if(connection.kind==='ConnectionFailure') console.log('Falied');
     else globalConnection = connection;
   }
