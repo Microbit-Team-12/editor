@@ -54,6 +54,11 @@ export async function connectBySelection(config: ManagerOption = defaultConfig):
  * By user plugging the device
  */
 export async function connectByPlugIn(config: ManagerOption = defaultConfig): Promise<MicrobitConnection | ConnectionFailure>{
+  if (!('serial' in navigator)) return {
+    kind: 'ConnectionFailure',
+    reason: 'WebSerial not Supported'
+  };
+  
   return new Promise((resolve,reject)=>{
     navigator.serial.addEventListener('connect', async (event) => {
       const port: SerialPort = (event as any).port || event.target;
