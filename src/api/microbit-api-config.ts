@@ -83,11 +83,13 @@ export const defaultConfig: ManagerOption = {
     updateMs: 100,
     cutLength: 1000
   },
+  //maybe consider using regexp?
   parseOption: {
     showLog: true,
     flashDone: 'file.close();from microbit import *;sleep(0);reset()\r\n',
     rebootDone: 'from microbit import *;reset()\r\n',
-    execDone: 'Type "help()" for more information.\r\n>>',
+    //execDone: 'Type "help()" for more information.\r\n>>',
+    execDone: '\r\nMicroPython v1.',
     execError: 'Traceback (most recent call last):\r\n'
   }
 };
