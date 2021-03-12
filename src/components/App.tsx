@@ -58,8 +58,8 @@ class App extends React.Component<unknown, AppState> {
 
   async onStart():Promise<void>{
     console.log('on');
-    //const connection = await connectBySelection();
-    const connection = await connectByPlugIn();
+    const connection = await connectBySelection();
+    //const connection = await connectByPlugIn();
     if(connection.kind==='ConnectionFailure') {
       alert(connection.reason);
       /*
