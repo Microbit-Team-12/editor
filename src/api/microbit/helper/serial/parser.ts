@@ -108,9 +108,8 @@ export class SerialParser {
       kind: 'ErrorMessage',
       line: parseInt(lineNumberString),
       file: 'main.py',
-      errorType: line2split[0],
-      errorExplan: line2split[1],
-      fullMessage: line1+'\r\n'+line2
+      reason: line2split[0],
+      message: line2split[1]
     });
     outputStream.end();
   }

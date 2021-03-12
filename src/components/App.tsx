@@ -1,7 +1,7 @@
 import React from 'react';
 import { Stream } from 'ts-stream';
 import { MicrobitConnection, MicrobitOutput } from '../api/microbit-api';
-import { connectByPlugIn, connectBySelection } from '../api/microbit/connect';
+import { connectBySelection } from '../api/microbit/connect';
 import './App.css';
 
 type AppState = {
@@ -60,7 +60,7 @@ class App extends React.Component<unknown, AppState> {
     console.log('on');
     const connection = await connectBySelection();
     if(connection.kind==='ConnectionFailure') {
-      alert(connection.message);
+      alert(connection.reason);
       /*
       Maybe use by plugin here?
       connectByPlugIn().then(connection => {
@@ -78,7 +78,7 @@ class App extends React.Component<unknown, AppState> {
           output: output.outputChunk
         });
       } else {
-        alert(output.fullMessage);
+        alert(output.reason + output.message);
       }
     });
   }

@@ -16,7 +16,7 @@ export interface ConnectToMicrobit {
 export interface ConnectionFailure{
   kind: 'ConnectionFailure',
   type: 'Browser Not Supported' | 'Failed to Obtain Port' | 'Failed to Open Port'
-  message: string
+  reason: string
 }
 
 export interface MicrobitConnection {
@@ -81,7 +81,6 @@ export interface ErrorMessage {
   kind: 'ErrorMessage'
   line: number
   file: string
-  errorType: string
-  errorExplan: string
-  fullMessage: string
+  reason: string
+  message: string
 }
