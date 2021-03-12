@@ -1,7 +1,7 @@
 import React from 'react';
 import { Stream } from 'ts-stream';
 import { MicrobitConnection, MicrobitOutput } from '../api/microbit-api';
-import { connectBySelection } from '../api/microbit/connect';
+import { connectByPlugIn, connectBySelection } from '../api/microbit/connect';
 import './App.css';
 
 type AppState = {
@@ -58,7 +58,8 @@ class App extends React.Component<unknown, AppState> {
 
   async onStart():Promise<void>{
     console.log('on');
-    const connection = await connectBySelection();
+    //const connection = await connectBySelection();
+    const connection = await connectByPlugIn();
     if(connection.kind==='ConnectionFailure') {
       alert(connection.reason);
       /*

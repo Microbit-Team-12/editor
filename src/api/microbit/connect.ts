@@ -62,9 +62,27 @@ export async function connectBySelection(config: ManagerOption = defaultConfig):
   return await createConnection(port, config);
 }
 
+function checkUSBInfo(info: SerialPortInfo, filters: SerialPortFilter[] | undefined): boolean {
+  //no constraint
+  if(filters===undefined) return true;
+  else{
+    for(const f of filters){
+      //for two property, no constraint or equal
+      if(f.usbProductId===undefined||f.usbProductId===info.usbProductId)
+        if(f.usbVendorId===undefined||f.usbVendorId===info.usbVendorId)
+          return true;
+    }
+    return false;
+  }
+}
+
+
 /**
  * Create a MicrobitConnection object
  * By user plugging the device
+ * 
+ * Does not seem to work on chrome
+ * But works on Chromium Edge
  */
 export async function connectByPlugIn(config: ManagerOption = defaultConfig): Promise<MicrobitConnection | ConnectionFailure> {
   if (!('serial' in navigator)) {
@@ -75,12 +93,15 @@ export async function connectByPlugIn(config: ManagerOption = defaultConfig): Pr
       reason: 'Your browser does not support WebSerial or WebUSB, please consider use another browser'
     };
   }
-
+  
   return new Promise((resolve, reject) => {
-    navigator.serial.addEventListener('connect', async (event) => {
+    const waitForPort = async (event: Event) => {
       const port: SerialPort = (event as any).port || event.target;
-      //TODO: check USB vendor
-      resolve(await createConnection(port, config));
-    });
+      if (checkUSBInfo(port.getInfo(), config.serialRequsetOption.filters)) {
+        navigator.serial.removeEventListener('connect', waitForPort);
+        resolve(await createConnection(port, config));
+      }
+    };
+    navigator.serial.addEventListener('connect', waitForPort);
   });
 }
