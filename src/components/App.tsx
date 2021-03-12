@@ -60,7 +60,7 @@ class App extends React.Component<unknown, AppState> {
     console.log('on');
     const connection = await connectBySelection();
     if(connection.kind==='ConnectionFailure') {
-      alert(connection.reason);
+      alert(connection.message);
       /*
       Maybe use by plugin here?
       connectByPlugIn().then(connection => {

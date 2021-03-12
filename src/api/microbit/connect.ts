@@ -13,7 +13,8 @@ async function createConnection(port: SerialPort, config: ManagerOption): Promis
   } catch (error) {
     return {
       kind: 'ConnectionFailure',
-      reason: error.message
+      type: 'Failed to Open Port',
+      message: error.message
     };
   }
   return {
@@ -36,7 +37,8 @@ export async function connectBySelection(config: ManagerOption = defaultConfig):
     if ('usb' in navigator) (navigator as any).serial = serial;
     else return {
       kind: 'ConnectionFailure',
-      reason: 'WebSerial/WebUSB not Supported'
+      type: 'Browser Not Supported',
+      message: 'Your browser does not support WebSerial or WebUSB, please consider use another browser'
     };
   }
 
@@ -47,12 +49,14 @@ export async function connectBySelection(config: ManagerOption = defaultConfig):
   } catch (error) {
     return {
       kind: 'ConnectionFailure',
-      reason: error.message
+      type: 'Failed to Obtain Port',
+      message: error.message
     };
   }
   if (port == null) return {
     kind: 'ConnectionFailure',
-    reason: 'No SerialPort Selected'
+    type: 'Failed to Obtain Port',
+    message: 'No SerialPort Selected'
   };
 
   return await createConnection(port, config);
@@ -67,7 +71,8 @@ export async function connectByPlugIn(config: ManagerOption = defaultConfig): Pr
     if ('usb' in navigator) (navigator as any).serial = serial;
     else return {
       kind: 'ConnectionFailure',
-      reason: 'WebSerial/WebUSB not Supported'
+      type: 'Browser Not Supported',
+      message: 'Your browser does not support WebSerial or WebUSB, please consider use another browser'
     };
   }
 
