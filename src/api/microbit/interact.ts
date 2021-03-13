@@ -6,18 +6,25 @@ import { SerialReader } from './helper/serial/reader';
 const ctrlC = '\x03';
 
 export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit {
+  port: SerialPort;
   portWriter!: WritableStreamDefaultWriter<string>;
+  portReader!: ReadableStreamDefaultReader<string>;
   portParser!: SerialParser
 
   constructor(port: SerialPort, config: ManagerOption) {
-    const encoder = new TextEncoderStream();
+    this.port = port;
     if (port.writable != null) {
+      const encoder = new TextEncoderStream();
       encoder.readable.pipeTo(port.writable);
       this.portWriter = encoder.writable.getWriter();
     }
     if (port.readable != null) {
-      const portReader = new SerialReader(port.readable, config.readOption);
-      this.portParser = new SerialParser(portReader, config.parseOption);
+      const decoder = new TextDecoderStream();
+      port.readable.pipeTo(decoder.writable);
+      this.portReader = decoder.readable.getReader();
+
+      const portReaderHelper = new SerialReader(this.portReader, config.readOption);
+      this.portParser = new SerialParser(portReaderHelper, config.parseOption);
     }
   }
 

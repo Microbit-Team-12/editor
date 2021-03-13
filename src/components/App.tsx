@@ -14,7 +14,7 @@ const exampleDoc = `from microbit import *
 display.show(1)
 print(1)`;
 
-let globalConnection: MicrobitConnection;
+let globalConnection: MicrobitConnection | null;
 
 
 class App extends React.Component<unknown, AppState> {
@@ -44,7 +44,7 @@ class App extends React.Component<unknown, AppState> {
         </header>
         <div className="App-textareas">
           <textarea value={this.state.code} onChange={this.onCodeChange} className="App-doc"></textarea>
-          <textarea value={this.state.output} className="App-editor"></textarea>
+          <textarea value={this.state.output} readOnly className="App-editor"></textarea>
         </div>
       </div>
     );
@@ -60,16 +60,20 @@ class App extends React.Component<unknown, AppState> {
     console.log('on');
     const connection = await connectBySelection();
     //const connection = await connectByPlugIn();
-    if(connection.kind==='ConnectionFailure') {
-      alert(connection.reason);
-      /*
-      Maybe use by plugin here?
-      connectByPlugIn().then(connection => {
-        if (connection.kind === 'ConnectionFailure') alert(connection.reason);
-        else globalConnection = connection;
-      });
-      */
-    }else globalConnection = connection;
+    switch(connection.kind){
+      case 'ConnectionFailure':
+        alert(connection.reason);
+        break;
+      case 'MicrobitConnection':
+        globalConnection = connection;
+        connection.disconnection.then(async ()=>{
+          alert('Serial connection lost');
+          globalConnection = null;
+          const newConnection = await connectByPlugIn();
+          if(newConnection.kind==='MicrobitConnection')
+            globalConnection = newConnection;
+        });
+    }
   }
 
   async onExec(outputStream: Stream<MicrobitOutput>):Promise<void>{
@@ -87,16 +91,16 @@ class App extends React.Component<unknown, AppState> {
   async onFlash():Promise<void>{
     console.log('onFlash');
     const code = this.state.code;
-    this.onExec(await globalConnection.interact.flash(code));
+    this.onExec(await globalConnection!.interact.flash(code));
   }
 
   async onReboot():Promise<void>{
     console.log('onReboot');
-    this.onExec(await globalConnection.interact.reboot());
+    this.onExec(await globalConnection!.interact.reboot());
   }
 
   async onInterrupt():Promise<void>{
-    globalConnection.interact.interrupt();
+    globalConnection!.interact.interrupt();
   }
 }
 

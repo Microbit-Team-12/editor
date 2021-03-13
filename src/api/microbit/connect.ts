@@ -17,16 +17,35 @@ async function createConnection(port: SerialPort, config: ManagerOption): Promis
       reason: error.message
     };
   }
+  const portInteract = new ConnectedMicrobitInteract(port, config);
   return {
     kind: 'MicrobitConnection',
-    interact: new ConnectedMicrobitInteract(port, config),
+    interact: portInteract,
     disconnection: new Promise((resolve, reject) => {
-      port.addEventListener('disconnect', (event) => {
+      const onDisconnect = (event:Event) => {
+        console.log('disconnected');
+        port.removeEventListener('disconnect',onDisconnect);
         resolve();
-      });
+      };
+      port.addEventListener('disconnect', onDisconnect);
     })
   };
 }
+
+function checkUSBInfo(info: SerialPortInfo, filters: SerialPortFilter[] | undefined): boolean {
+  //no constraint
+  if (filters === undefined) return true;
+  else {
+    for (const f of filters) {
+      //for two property, no constraint or equal
+      if (f.usbProductId === undefined || f.usbProductId === info.usbProductId)
+        if (f.usbVendorId === undefined || f.usbVendorId === info.usbVendorId)
+          return true;
+    }
+    return false;
+  }
+}
+
 
 /**
  * Create a MicrobitConnection object
@@ -62,27 +81,9 @@ export async function connectBySelection(config: ManagerOption = defaultConfig):
   return await createConnection(port, config);
 }
 
-function checkUSBInfo(info: SerialPortInfo, filters: SerialPortFilter[] | undefined): boolean {
-  //no constraint
-  if(filters===undefined) return true;
-  else{
-    for(const f of filters){
-      //for two property, no constraint or equal
-      if(f.usbProductId===undefined||f.usbProductId===info.usbProductId)
-        if(f.usbVendorId===undefined||f.usbVendorId===info.usbVendorId)
-          return true;
-    }
-    return false;
-  }
-}
-
-
 /**
  * Create a MicrobitConnection object
  * By user plugging the device
- * 
- * Does not seem to work on chrome
- * But works on Chromium Edge
  */
 export async function connectByPlugIn(config: ManagerOption = defaultConfig): Promise<MicrobitConnection | ConnectionFailure> {
   if (!('serial' in navigator)) {

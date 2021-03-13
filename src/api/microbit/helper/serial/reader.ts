@@ -9,12 +9,8 @@ export class SerialReader {
   private portReader: ReadableStreamDefaultReader<string>
   private config: readOption
 
-  constructor(portReadable: ReadableStream<Uint8Array>, config: readOption) {
-    //convert stream<Uint8Array> to stream<string>
-    const decoder = new TextDecoderStream();
-    portReadable.pipeTo(decoder.writable);
-    this.portReader = decoder.readable.getReader();
-    //keeping config
+  constructor(portReader: ReadableStreamDefaultReader<string>, config: readOption) {
+    this.portReader = portReader;
     this.config = config;
   }
 
@@ -26,6 +22,7 @@ export class SerialReader {
   private async readLoop(termination: (text: string) => boolean): Promise<void> {
     while (!termination(this.serialBuffer)) {
       const { value, done } = await this.portReader.read();
+      if(done) console.log(233);
       this.serialBuffer += value;
     }
   }
@@ -41,6 +38,7 @@ export class SerialReader {
       const len = this.serialBuffer.length;
       if (len > bufferLimit) this.serialBuffer = this.serialBuffer.substring(len - bufferLimit);
       const { value, done } = await this.portReader.read();
+      if(done) console.log(233);
       this.serialBuffer += value;
     }
   }
