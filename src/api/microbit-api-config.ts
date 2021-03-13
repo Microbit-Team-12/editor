@@ -46,6 +46,10 @@ export interface ParseOption {
    */
   showLog: boolean,
   /**
+   * String indicating new REPL line is ready.
+   */
+  replLineReady: string
+  /**
    * String indicating flash done
    */
   flashDone: string
@@ -54,9 +58,9 @@ export interface ParseOption {
    */
   rebootDone: string
   /**
-   * String indicating new REPL line is ready.
+   * String indicating exec(''); entered in REPL
    */
-  replReady: string
+  replExecEntered: string
   /**
    * String indicating of execution of main.py without errors
    */
@@ -90,9 +94,10 @@ export const defaultConfig: ManagerOption = {
   //maybe consider using regexp?
   parseOption: {
     showLog: true,
+    replLineReady: '>>> ',
     flashDone: 'file.close();from microbit import *;sleep(0);reset()\r\n',
     rebootDone: 'from microbit import *;reset()\r\n',
-    replReady: '>>> ',
+    replExecEntered: ')\r\n',
     mainpyDone: 'MicroPython v1.',
     errorOccured: 'Traceback (most recent call last):\r\n'
   }

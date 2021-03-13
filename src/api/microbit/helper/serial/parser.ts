@@ -36,7 +36,7 @@ export class SerialParser {
   }
 
   async readUntilNewREPLLine(): Promise<void> {
-    await this.portReader.safeReadUntil(this.config.replReady);
+    await this.portReader.safeReadUntil(this.config.replLineReady);
   }
 
   /**
@@ -65,6 +65,27 @@ export class SerialParser {
     await this.portReader.safeReadUntil(this.config.rebootDone);
   }
 
+
+  /**
+   * Read until string indicating Exec('') entered
+   */
+  async readUntilREPLExecEntered(): Promise<void> {
+    await this.portReader.safeReadUntil(this.config.replExecEntered);
+  }
+
+  /**
+   * Return update function for portReader
+   * That updates the string to a stream
+   */
+  private updateStream(outputStream:Stream<MicrobitOutput>){
+    return (str:string) => {
+      outputStream.write({
+        kind: 'NormalOutput',
+        outputChunk: str
+      });
+    };
+  }
+
   /**
    * Read until indication of execution finishing, 
    * recent output from serial will be sent to `outputStream`
@@ -74,12 +95,7 @@ export class SerialParser {
       this.config.mainpyDone,
       this.config.errorOccured
     ];
-    const result = await this.portReader.safeReadUntilWithUpdate(signals, str => {
-      outputStream.write({
-        kind: 'NormalOutput',
-        outputChunk: str
-      });
-    });
+    const result = await this.portReader.safeReadUntilWithUpdate(signals, this.updateStream(outputStream));
     console.log('Execution done');
     if (result === this.config.errorOccured) this.readError(outputStream,0);
     else outputStream.end();
@@ -89,17 +105,12 @@ export class SerialParser {
    * Read until indication of execution finishing, 
    * recent output from serial will be sent to `outputStream`
    */
-  async readUntilExecuteDone(outputStream: Stream<MicrobitOutput>): Promise<void> {
+  async readUntilREPLExecDone(outputStream: Stream<MicrobitOutput>): Promise<void> {
     const signals = [
-      this.config.replReady,
+      this.config.replLineReady,
       this.config.errorOccured
     ];
-    const result = await this.portReader.safeReadUntilWithUpdate(signals, str => {
-      outputStream.write({
-        kind: 'NormalOutput',
-        outputChunk: str
-      });
-    });
+    const result = await this.portReader.safeReadUntilWithUpdate(signals, this.updateStream(outputStream));
     console.log('Execution done');
     if (result === this.config.errorOccured) this.readError(outputStream, 1);
     else outputStream.end();
