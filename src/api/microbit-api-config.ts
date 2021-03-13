@@ -46,21 +46,25 @@ export interface ParseOption {
    */
   showLog: boolean,
   /**
-   * Indication of flash done
+   * String indicating flash done
    */
   flashDone: string
   /**
-   * Indication of reboot done
+   * String indicating reboot done
    */
   rebootDone: string
   /**
-   * Indication of execution done without errors
+   * String indicating new REPL line is ready.
    */
-  execDone: string
+  replReady: string
   /**
-   * Indication of execution stopped with errors
+   * String indicating of execution of main.py without errors
    */
-  execError: string
+  mainpyDone: string
+  /**
+   * String indicating error occured
+   */
+  errorOccured: string
 }
 
 export const defaultConfig: ManagerOption = {
@@ -88,8 +92,8 @@ export const defaultConfig: ManagerOption = {
     showLog: true,
     flashDone: 'file.close();from microbit import *;sleep(0);reset()\r\n',
     rebootDone: 'from microbit import *;reset()\r\n',
-    //execDone: 'Type "help()" for more information.\r\n>>',
-    execDone: '\r\nMicroPython v1.',
-    execError: 'Traceback (most recent call last):\r\n'
+    replReady: '>>> ',
+    mainpyDone: 'MicroPython v1.',
+    errorOccured: 'Traceback (most recent call last):\r\n'
   }
 };

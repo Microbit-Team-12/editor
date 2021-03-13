@@ -10,9 +10,11 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
   portWriter!: WritableStreamDefaultWriter<string>;
   portReader!: ReadableStreamDefaultReader<string>;
   portParser!: SerialParser
+  config: ManagerOption;
 
   constructor(port: SerialPort, config: ManagerOption) {
     this.port = port;
+    this.config = config;
     if (port.writable != null) {
       const encoder = new TextEncoderStream();
       encoder.readable.pipeTo(port.writable);
@@ -28,28 +30,34 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
     }
   }
 
-  async flash(code: string): Promise<Stream<MicrobitOutput>> {
-    /* From up to down
-        (1) user-used escape character. e.g. [\][t]
-            This should still be [\][t] in main.py
-            [\][\][t] in python string
-        (2) user-used [']
-            Because code is wrapped with ''
-            [\]['] in python string
-        (3) new line created by user
-            Should be [\r][\n] in main.py
-            [\][r][\][n] in python string
-       Note: 
-        replaceAll require ESNext. 
+  /**
+   * Convert a javascript string of python code to readable python code
+   */
+  codeToPythonString(code: string): string {
+    /* 
+    From up to down
+      (1) user-used escape character. e.g. [\][t]
+        This should still be [\][t] in main.py
+        [\][\][t] in python string
+      (2) user-used [']
+        Because code is wrapped with ''
+        [\]['] in python string
+      (3) new line created by user
+        Should be [\r][\n] in main.py
+        [\][r][\][n] in python string
+      Note:
+        replaceAll require ESNext.
         But web serial already require a high version of chrome.
-     */
-    const codeInPythonString = code
+    */
+    return code
       .replaceAll('\\', '\\\\')
       .replaceAll('\'', '\\\'')
       .replaceAll(/\r?\n/g, '\\r\\n');
-    const outputStream = new Stream<MicrobitOutput>();
+  }
 
-    /*Whole procedure with workaround note
+  async flash(code: string): Promise<Stream<MicrobitOutput>> {
+    /*
+    Whole procedure with workaround note
       - Send ctrlC to stop code execution
         - If no code was running, new REPL line starts
         - If code was running, then keyboardInterrupt appears
@@ -65,8 +73,10 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
       - Read until signal of flash finishing appears.
       - Program is now executing
      */
+    const codeInPythonString = this.codeToPythonString(code);
+    const outputStream = new Stream<MicrobitOutput>();
     await this.portWriter.write(ctrlC);
-    await this.portParser.watchNewREPLLine();
+    await this.portParser.readUntilNewREPLLine();
     await this.portWriter.write(
       'file=open(\'main.py\',\'w\');'
       + 's=\'' + codeInPythonString + '\';'
@@ -76,23 +86,40 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
       + 'sleep(0);'
       + 'reset()\r'
     );
-    await this.portParser.watchFlash();
-    this.portParser.watchOutput(outputStream).catch(() => {
+    await this.portParser.readUntilFlashDone();
+    this.portParser.readUntilMainPYDone(outputStream).catch(() => {
       outputStream.end();
     });
     return outputStream;
   }
 
+  async execute(code: string): Promise<Stream<MicrobitOutput>> {
+    //similar procedure to flash
+    const codeInPythonString = this.codeToPythonString(code);
+    const outputStream = new Stream<MicrobitOutput>();
+    await this.portWriter.write(ctrlC);
+    await this.portParser.readUntilNewREPLLine();
+    await this.portWriter.write(
+      'exec(\'' + codeInPythonString + '\')\r'
+    );
+    await this.portParser.portReader.safeReadUntil(')\r\n');
+    this.portParser.readUntilExecuteDone(outputStream).catch(() => {
+      outputStream.end();
+    });
+
+    return outputStream;
+  }
+
   async reboot(): Promise<Stream<MicrobitOutput>> {
     await this.portWriter.write(ctrlC);
-    await this.portParser.watchNewREPLLine();
+    await this.portParser.readUntilNewREPLLine();
     await this.portWriter.write(
       'from microbit import *;'
       + 'reset()\r'
     );
-    await this.portParser.watchReboot();
+    await this.portParser.readUntilRebootDone();
     const outputStream = new Stream<MicrobitOutput>();
-    this.portParser.watchOutput(outputStream).catch(() => {
+    this.portParser.readUntilMainPYDone(outputStream).catch(() => {
       outputStream.end();
     });
     return outputStream;

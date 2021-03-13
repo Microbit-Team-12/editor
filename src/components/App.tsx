@@ -30,6 +30,7 @@ class App extends React.Component<unknown, AppState> {
     this.onReboot = this.onReboot.bind(this);
     this.onExec = this.onExec.bind(this);
     this.onInterrupt = this.onInterrupt.bind(this);
+    this.onRun = this.onRun.bind(this);
   }
 
   render(): JSX.Element {
@@ -37,7 +38,7 @@ class App extends React.Component<unknown, AppState> {
       <div className="App">
         <header className="App-header">
           <button className="App-button" onClick={this.onStart}>Start</button>
-          <button className="App-button">Run Code</button>
+          <button className="App-button" onClick={this.onRun}>Run Code</button>
           <button className="App-button" onClick={this.onFlash}>Flash Code</button>
           <button className="App-button" onClick={this.onInterrupt}>Interrupt</button>
           <button className="App-button" onClick={this.onReboot}>Reboot</button>
@@ -92,6 +93,12 @@ class App extends React.Component<unknown, AppState> {
     console.log('onFlash');
     const code = this.state.code;
     this.onExec(await globalConnection!.interact.flash(code));
+  }
+
+  async onRun(): Promise<void> {
+    console.log('onFlash');
+    const code = this.state.code;
+    this.onExec(await globalConnection!.interact.execute(code));
   }
 
   async onReboot():Promise<void>{

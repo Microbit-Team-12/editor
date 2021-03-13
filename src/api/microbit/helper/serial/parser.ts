@@ -30,13 +30,13 @@ export class SerialParser {
   portReader: SerialReader;
   config: ParseOption;
 
-  constructor(portReader: SerialReader, config:ParseOption) {
+  constructor(portReader: SerialReader, config: ParseOption) {
     this.portReader = portReader;
     this.config = config;
   }
 
-  async watchNewREPLLine():Promise<void>{
-    await this.portReader.safeReadUntil('\r\n>>> ');
+  async readUntilNewREPLLine(): Promise<void> {
+    await this.portReader.safeReadUntil(this.config.replReady);
   }
 
   /**
@@ -44,7 +44,7 @@ export class SerialParser {
    * 
    * line1 to (including) line3 in the example. 
    */
-  async watchFlash():Promise<void> {
+  async readUntilFlashDone(): Promise<void> {
     await this.portReader.safeReadUntil(this.config.flashDone);
     await this.portReader.unsafeReadline();
     console.log('Flash done');
@@ -61,25 +61,19 @@ export class SerialParser {
    * 5|>>>
    * ```
    */
-  async watchReboot():Promise<void> {
+  async readUntilRebootDone(): Promise<void> {
     await this.portReader.safeReadUntil(this.config.rebootDone);
   }
 
   /**
    * Read until indication of execution finishing, 
    * recent output from serial will be sent to `outputStream`
-   * 
-   * Either program runs sucessful (and REPL starts). Stream closes.
-   * 
-   * Or Error occurs (`Traceback (most recent call last)`)
-   * In this case, watchError will be called. (close stream in watchError)
    */
-  async watchOutput(outputStream:Stream<MicrobitOutput>):Promise<void> {
+  async readUntilMainPYDone(outputStream: Stream<MicrobitOutput>): Promise<void> {
     const signals = [
-      this.config.execDone,
-      this.config.execError
+      this.config.mainpyDone,
+      this.config.errorOccured
     ];
-    
     const result = await this.portReader.safeReadUntilWithUpdate(signals, str => {
       outputStream.write({
         kind: 'NormalOutput',
@@ -87,27 +81,57 @@ export class SerialParser {
       });
     });
     console.log('Execution done');
-    if (result === this.config.execError) this.watchError(outputStream);
+    if (result === this.config.errorOccured) this.readError(outputStream,0);
     else outputStream.end();
   }
+
+  /**
+   * Read until indication of execution finishing, 
+   * recent output from serial will be sent to `outputStream`
+   */
+  async readUntilExecuteDone(outputStream: Stream<MicrobitOutput>): Promise<void> {
+    const signals = [
+      this.config.replReady,
+      this.config.errorOccured
+    ];
+    const result = await this.portReader.safeReadUntilWithUpdate(signals, str => {
+      outputStream.write({
+        kind: 'NormalOutput',
+        outputChunk: str
+      });
+    });
+    console.log('Execution done');
+    if (result === this.config.errorOccured) this.readError(outputStream, 1);
+    else outputStream.end();
+  }
+
 
   /**
    * Read two more lines of error message.
    * Return the parsed error object, and closes the stream.
    * 
+   * Error Sample (Flashing) linetoIgnroe=0
    * ```
    * Traceback (most recent call last):
    * File "main.py", line 1, in <module>
    * NameError: name 'prit' isn't defined
+   * ```
    *
+   * REPL Sample (Running) linetoIgnore=1
+   * ```
+   * Traceback (most recent call last):
+   * File "<stdin>", line 1, in <module>
+   * File "<string>", line 1, in <module>
+   * NameError: name 'prit' isn't defined
    * ```
    */
-  async watchError(outputStream: Stream<MicrobitOutput>):Promise<void> {
+  async readError(outputStream: Stream<MicrobitOutput>, linetoIgnoreOnError: number): Promise<void> {
+    for (let i = 0; i < linetoIgnoreOnError; i++) await this.portReader.unsafeReadline();
     const line1 = await this.portReader.unsafeReadline();
     const line2 = await this.portReader.unsafeReadline();
     const lineNumberString = line1.split('line ')[1].split(',')[0];
     const line2split = line2.split(': ');
-    
+
     outputStream.write({
       kind: 'ErrorMessage',
       line: parseInt(lineNumberString),
@@ -117,4 +141,5 @@ export class SerialParser {
     });
     outputStream.end();
   }
+
 }

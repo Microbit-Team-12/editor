@@ -43,6 +43,11 @@ export interface InteractWithConnectedMicrobit {
   flash: (code: string) => Promise<Stream<MicrobitOutput>>
 
   /**
+   * Run code in REPL.
+   */
+  execute: (code: string) => Promise<Stream<MicrobitOutput>>
+
+  /**
    * Reboots the connected micro:bit.
    * The promise completes with a stream of outputs from microbit.
    */

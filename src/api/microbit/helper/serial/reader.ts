@@ -1,8 +1,6 @@
 import { readOption } from '../../../microbit-api-config';
 /**
  * This class provide convenient function for reading serial output.
- * 
- * TODO: disconnection consideration
  */
 export class SerialReader {
   private serialBuffer = ''
@@ -49,9 +47,11 @@ export class SerialReader {
    * buffer = before + token + after
    * return [before, after]
    */
-  private splitBufferOnFirst(token: string): [string, string] {
+  private splitBufferOnFirst(token: string): string {
     const index = this.serialBuffer.indexOf(token);
-    return [this.serialBuffer.substr(0, index), this.serialBuffer.substr(index + token.length)];
+    const before = this.serialBuffer.substr(0, index);
+    this.serialBuffer = this.serialBuffer.substr(index + token.length);
+    return before;
   }
 
   /**
@@ -63,9 +63,7 @@ export class SerialReader {
   async unsafeReadline(): Promise<string> {
     const token = '\r\n';
     await this.readLoop(str => str.includes(token));
-    const [before, after] = this.splitBufferOnFirst(token);
-    this.serialBuffer = after;
-    return before;
+    return this.splitBufferOnFirst(token);
   }
 
   /**
@@ -79,7 +77,7 @@ export class SerialReader {
    */
   async safeReadUntil(token: string): Promise<void> {
     await this.readLoopWithCut(str => str.includes(token), token.length);
-    this.serialBuffer = this.splitBufferOnFirst(token)[1];
+    this.splitBufferOnFirst(token);
   }
 
   /**
@@ -115,9 +113,7 @@ export class SerialReader {
     }, this.config.updateMs);
     await this.readLoopWithCut(termination, this.config.cutLength);
     clearInterval(updateTimer);
-    const [before, after] = this.splitBufferOnFirst(matchedToken);
-    update(before);
-    this.serialBuffer = after;
+    update(this.splitBufferOnFirst(matchedToken));
     return matchedToken;
   }
 }
