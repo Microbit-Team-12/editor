@@ -35,6 +35,10 @@ export class SerialParser {
     this.config = config;
   }
 
+  async watchNewREPLLine():Promise<void>{
+    await this.portReader.safeReadUntil('\r\n>>> ');
+  }
+
   /**
    * Read until indication of flashing finishing.
    * 

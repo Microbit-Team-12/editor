@@ -10,7 +10,6 @@ type AppState = {
 }
 
 const exampleDoc = `from microbit import *
-
 while True:
     print(1)
     sleep(100)`;

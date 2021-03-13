@@ -49,13 +49,26 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
       .replaceAll(/\r?\n/g, '\\r\\n');
     const outputStream = new Stream<MicrobitOutput>();
 
-    /* Workaround: 
-        Paste mode does not work well with fast serial writing (losing characters)
-        So use a single line for all flashing work
+    /*Whole procedure with workaround note
+      - Send ctrlC to stop code execution
+        - If no code was running, new REPL line starts
+        - If code was running, then keyboardInterrupt appears
+            Serial input unavaible for a few ms, then new REPL line starts.
+      - Read until this new REPL line
+      - Send code for flashing `main.py` to REPL
+          Since Microbit serial seems to be buggy when multiple lines are involved
+          All code is on one line
+      - Sleep for 0ms
+          Allowing output from file.write() to appear on serial
+          Otherwise some weird character appears. Instead of a number then new line
+          Not necessary for microbit v1.
+      - Read until signal of flash finishing appears.
+      - Program is now executing
      */
+    await this.portWriter.write(ctrlC);
+    await this.portParser.watchNewREPLLine();
     await this.portWriter.write(
-      ctrlC
-      + 'file=open(\'main.py\',\'w\');'
+      'file=open(\'main.py\',\'w\');'
       + 's=\'' + codeInPythonString + '\';'
       + 'file.write(s);'
       + 'file.close();'
