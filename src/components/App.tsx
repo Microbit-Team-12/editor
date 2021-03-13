@@ -92,22 +92,42 @@ class App extends React.Component<unknown, AppState> {
   async onFlash():Promise<void>{
     console.log('onFlash');
     const code = this.state.code;
-    this.onExec(await globalConnection!.interact.flash(code));
+    if (globalConnection !== undefined) {
+      this.onExec(await globalConnection!.interact.flash(code));
+    }
+    else {
+      alert('No device is connected. Press \'Start\' to connect a device.');
+    }
   }
 
   async onRun(): Promise<void> {
     console.log('onFlash');
     const code = this.state.code;
-    this.onExec(await globalConnection!.interact.execute(code));
+    if (globalConnection !== undefined) {
+      this.onExec(await globalConnection!.interact.execute(code));
+    }
+    else {
+      alert('No device is connected. Press \'Start\' to connect a device.');
+    }
   }
 
   async onReboot():Promise<void>{
     console.log('onReboot');
-    this.onExec(await globalConnection!.interact.reboot());
+    if (globalConnection !== undefined) {
+      this.onExec(await globalConnection!.interact.reboot());
+    }
+    else {
+      alert('No device is connected. Press \'Start\' to connect a device.');
+    }
   }
 
   async onInterrupt():Promise<void>{
-    globalConnection!.interact.interrupt();
+    if (globalConnection !== undefined) {
+      globalConnection!.interact.interrupt();
+    }
+    else {
+      alert('No device is connected. Press \'Start\' to connect a device.');
+    }
   }
 }
 
