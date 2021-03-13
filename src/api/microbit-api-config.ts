@@ -70,7 +70,7 @@ export const defaultConfig: ManagerOption = {
     dataBits: 8,
     stopBits: 1,
     parity: 'none',
-    bufferSize: 255,
+    bufferSize: 4096,
     flowControl: 'none'
   },
   serialRequsetOption: {

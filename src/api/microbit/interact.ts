@@ -47,6 +47,7 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
       .replaceAll('\\', '\\\\')
       .replaceAll('\'', '\\\'')
       .replaceAll(/\r?\n/g, '\\r\\n');
+    const outputStream = new Stream<MicrobitOutput>();
 
     /* Workaround: 
         Paste mode does not work well with fast serial writing (losing characters)
@@ -62,10 +63,10 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
       + 'sleep(0);'
       + 'reset()\r'
     );
-
     await this.portParser.watchFlash();
-    const outputStream = new Stream<MicrobitOutput>();
-    this.portParser.watchOutput(outputStream);
+    this.portParser.watchOutput(outputStream).catch(() => {
+      outputStream.end();
+    });
     return outputStream;
   }
 
@@ -77,10 +78,12 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
     );
     await this.portParser.watchReboot();
     const outputStream = new Stream<MicrobitOutput>();
-    this.portParser.watchOutput(outputStream);
+    this.portParser.watchOutput(outputStream).catch(() => {
+      outputStream.end();
+    });
     return outputStream;
   }
-  
+
   async interrupt(): Promise<void> {
     await this.portWriter.write(ctrlC);
   }

@@ -11,8 +11,9 @@ type AppState = {
 
 const exampleDoc = `from microbit import *
 
-display.show(1)
-print(1)`;
+while True:
+    print(1)
+    sleep(100)`;
 
 let globalConnection: MicrobitConnection | null;
 

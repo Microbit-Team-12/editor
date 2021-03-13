@@ -36,7 +36,7 @@ export class SerialReader {
   private async readLoopWithCut(termination: (text: string) => boolean, bufferLimit: number): Promise<void> {
     while (!termination(this.serialBuffer)) {
       const len = this.serialBuffer.length;
-      if (len > bufferLimit) this.serialBuffer = this.serialBuffer.substring(len - bufferLimit);
+      if (len >= bufferLimit) this.serialBuffer = this.serialBuffer.substring(len - bufferLimit);
       const { value, done } = await this.portReader.read();
       if(done) console.log(233);
       this.serialBuffer += value;
