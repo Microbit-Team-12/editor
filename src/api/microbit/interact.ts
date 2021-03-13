@@ -84,9 +84,10 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
   }
 
   async reboot(): Promise<Stream<MicrobitOutput>> {
+    await this.portWriter.write(ctrlC);
+    await this.portParser.watchNewREPLLine();
     await this.portWriter.write(
-      ctrlC
-      + 'from microbit import *;'
+      'from microbit import *;'
       + 'reset()\r'
     );
     await this.portParser.watchReboot();
@@ -99,5 +100,7 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
 
   async interrupt(): Promise<void> {
     await this.portWriter.write(ctrlC);
+    //Not reading for new REPL line here
+    //because portParser might already be reading.
   }
 }
