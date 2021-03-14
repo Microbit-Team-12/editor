@@ -8,28 +8,65 @@ type PythonCodeProps = {
 }
 
 type PythonCodeState = {
-  expanded: boolean,
+  isExpanded: boolean,
 }
 
 class PythonCode extends React.Component<PythonCodeProps, PythonCodeState> {
+  readonly isExpandable: boolean;
+  readonly highlightStart: number;
+  readonly highlightEnd: number;
+  readonly lines: string[];
+
   constructor(props: PythonCodeProps) {
     super(props);
 
     this.state = {
-      expanded: false,
+      isExpanded: false,
     };
+
+    this.isExpandable = false;
+    this.lines = this.props.code.split('\n');
+    this.highlightStart = 0;
+    this.highlightEnd = this.lines.length;
+
+    if (this.lines.length > 0) {
+      // Parse "LINES x-y". TODO consider using a parser later.
+      const fragments = this.lines[0].split('# LINES ');
+      if (fragments.length === 2) {
+        const lineNumbers = fragments[1].split('-');
+        const start = parseInt(lineNumbers[0]);
+        const end = parseInt(lineNumbers[1]);
+        if (!isNaN(start) && !isNaN(end)) {
+          this.highlightStart = start - 1; // indexing from 0
+          this.highlightEnd = end - 1 + 1; // end included
+          this.isExpandable = true;
+        }
+      }
+    }
+
+    this.onExpand = this.onExpand.bind(this);
+  }
+
+  onExpand(): void {
+    this.setState({isExpanded: !this.state.isExpanded});
   }
 
   render() {
+    const [start, end] =
+      this.state.isExpanded ?
+        [0, this.lines.length] :
+        [this.highlightStart, this.highlightEnd];
+
     return <div className="Docs-code">
       <SyntaxHighlighter
         style={darcula}
         language="py"
-        showLineNumbers={true}
+        showLineNumbers={this.state.isExpanded}
         // Btw lineNumberContainerStyle can be used to remove the padding
       >
-        {this.props.code}
+        {this.lines.slice(start, end).join('\n')}
       </SyntaxHighlighter>
+      <button onClick={this.onExpand}>expand</button>
       <button>flash</button>
       <button>load</button>
     </div>;
