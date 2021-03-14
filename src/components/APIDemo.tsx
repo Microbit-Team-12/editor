@@ -92,8 +92,8 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
   async onFlash():Promise<void>{
     console.log('onFlash');
     const code = this.state.code;
-    if (globalConnection !== undefined) {
-      this.onExec(await globalConnection!.interact.flash(code));
+    if (globalConnection !== null) {
+      this.onExec(await globalConnection.interact.flash(code));
     }
     else {
       alert('No device is connected. Press \'Start\' to connect a device.');
@@ -103,8 +103,8 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
   async onRun(): Promise<void> {
     console.log('onFlash');
     const code = this.state.code;
-    if (globalConnection !== undefined) {
-      this.onExec(await globalConnection!.interact.execute(code));
+    if (globalConnection !== null) {
+      this.onExec(await globalConnection.interact.execute(code));
     }
     else {
       alert('No device is connected. Press \'Start\' to connect a device.');
@@ -113,8 +113,8 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
 
   async onReboot():Promise<void>{
     console.log('onReboot');
-    if (globalConnection !== undefined) {
-      this.onExec(await globalConnection!.interact.reboot());
+    if (globalConnection !== null) {
+      this.onExec(await globalConnection.interact.reboot());
     }
     else {
       alert('No device is connected. Press \'Start\' to connect a device.');
@@ -122,8 +122,8 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
   }
 
   async onInterrupt():Promise<void>{
-    if (globalConnection !== undefined) {
-      globalConnection!.interact.interrupt();
+    if (globalConnection !== null) {
+      globalConnection.interact.interrupt();
     }
     else {
       alert('No device is connected. Press \'Start\' to connect a device.');
