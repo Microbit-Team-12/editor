@@ -2,9 +2,9 @@ import React from 'react';
 import { Stream } from 'ts-stream';
 import { MicrobitConnection, MicrobitOutput } from '../api/microbit-api';
 import { connectByPlugIn, connectBySelection } from '../api/microbit/connect';
-import './App.css';
+import './APIDemo.css';
 
-type AppState = {
+type APIDemoState = {
   code:string,
   output:string
 }
@@ -17,7 +17,7 @@ while True:
 let globalConnection: MicrobitConnection | null;
 
 
-class App extends React.Component<unknown, AppState> {
+class APIDemo extends React.Component<unknown, APIDemoState> {
   constructor(props: unknown) {
     super(props);
     this.state = {
@@ -35,17 +35,17 @@ class App extends React.Component<unknown, AppState> {
 
   render(): JSX.Element {
     return (
-      <div className="App">
-        <header className="App-header">
-          <button className="App-button" onClick={this.onStart}>Start</button>
-          <button className="App-button" onClick={this.onRun}>Run Code</button>
-          <button className="App-button" onClick={this.onFlash}>Flash Code</button>
-          <button className="App-button" onClick={this.onInterrupt}>Interrupt</button>
-          <button className="App-button" onClick={this.onReboot}>Reboot</button>
+      <div className="APIDemo">
+        <header className="APIDemo-header">
+          <button className="APIDemo-button" onClick={this.onStart}>Start</button>
+          <button className="APIDemo-button" onClick={this.onRun}>Run Code</button>
+          <button className="APIDemo-button" onClick={this.onFlash}>Flash Code</button>
+          <button className="APIDemo-button" onClick={this.onInterrupt}>Interrupt</button>
+          <button className="APIDemo-button" onClick={this.onReboot}>Reboot</button>
         </header>
-        <div className="App-textareas">
-          <textarea value={this.state.code} onChange={this.onCodeChange} className="App-doc"></textarea>
-          <textarea value={this.state.output} readOnly className="App-editor"></textarea>
+        <div className="APIDemo-textareas">
+          <textarea value={this.state.code} onChange={this.onCodeChange} className="APIDemo-doc"></textarea>
+          <textarea value={this.state.output} readOnly className="APIDemo-editor"></textarea>
         </div>
       </div>
     );
@@ -131,4 +131,4 @@ class App extends React.Component<unknown, AppState> {
   }
 }
 
-export default App;
+export default APIDemo;
