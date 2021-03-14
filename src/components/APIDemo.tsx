@@ -44,8 +44,8 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
           <button className="APIDemo-button" onClick={this.onReboot}>Reboot</button>
         </header>
         <div className="APIDemo-textareas">
-          <textarea value={this.state.code} onChange={this.onCodeChange} className="APIDemo-doc"></textarea>
-          <textarea value={this.state.output} readOnly className="APIDemo-editor"></textarea>
+          <textarea value={this.state.code} onChange={this.onCodeChange} className="APIDemo-code"></textarea>
+          <textarea value={this.state.output} readOnly className="APIDemo-output"></textarea>
         </div>
       </div>
     );
