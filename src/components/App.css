@@ -37,3 +37,8 @@
 
   font-size: x-large;
 }
+
+.App-docs {
+  text-align: left;
+  padding: 5px;
+}

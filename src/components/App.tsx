@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import DocsViewer from './DocsViewer';
 
 type AppState = {
   /** The code in the editor. */
@@ -49,7 +50,7 @@ class App extends React.Component<unknown, AppState> {
           <button className="App-button">Reboot</button>
         </header>
         <div className="App-textareas">
-          <textarea readOnly className="App-doc">{this.state.docs}</textarea>
+          <DocsViewer markdown={this.state.docs}/>
           <textarea className="App-editor">{this.state.code}</textarea>
         </div>
       </div>
