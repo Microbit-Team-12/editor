@@ -69,8 +69,15 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
     /*Whole procedure with workaround note
       - Get a clean REPL line, see getREPLLine()
       - Send code for flashing `main.py` to REPL
-          Since Microbit serial seems to be buggy when multiple lines are involved
-          All code is on one line
+          Observation: Microbit serial lose characters when multiple lines are inputted
+          Workaround: All code is on one line
+          The logic might be:
+            Microbit does not have enough pin on the chip for serial hardware flow control.
+            So computer has no way of knowing microbit buffer is full.
+            And when the buffer is full, microbit serial start to lose character.
+
+            When all code is on one line, microbit does not do any hard work until \r entered
+            Less likely for the buffer to be full and lose character
       - Sleep for 0ms
           Allowing output from file.write() to appear on serial
           Otherwise some weird character appears. Instead of a number then new line
