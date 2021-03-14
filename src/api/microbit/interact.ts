@@ -15,12 +15,12 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
     this.port = port;
     if (port.writable != null) {
       const encoder = new TextEncoderStream();
-      encoder.readable.pipeTo(port.writable);
+      encoder.readable.pipeTo(port.writable).catch((err) => { console.log('disconnected in pipe'); });
       this.portWriter = encoder.writable.getWriter();
     }
     if (port.readable != null) {
       const decoder = new TextDecoderStream();
-      port.readable.pipeTo(decoder.writable);
+      port.readable.pipeTo(decoder.writable).catch((err) => { console.log('disconnected in pipe'); });
       this.portReader = decoder.readable.getReader();
 
       const portReaderHelper = new SerialReader(this.portReader, config.readOption);
