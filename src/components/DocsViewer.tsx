@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
-import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter';
-import {darcula} from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { darcula } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { DoubleArrow, FlashOn, Height } from '@material-ui/icons';
+import { IconButton } from '@material-ui/core';
 
 type PythonCodeProps = {
   code: string,
@@ -66,9 +68,9 @@ class PythonCode extends React.Component<PythonCodeProps, PythonCodeState> {
       >
         {this.lines.slice(start, end).join('\n')}
       </SyntaxHighlighter>
-      <button onClick={this.onExpand}>expand</button>
-      <button>flash</button>
-      <button>load</button>
+      <IconButton onClick={this.onExpand}><Height/></IconButton>
+      <IconButton><FlashOn/></IconButton>
+      <IconButton><DoubleArrow/></IconButton>
     </div>;
   }
 }
