@@ -1,12 +1,14 @@
 import React from 'react';
 import './App.css';
 import DocsViewer from './DocsViewer';
+import { MicrobitConnection } from '../api/microbit-api';
 
 type AppState = {
   /** The code in the editor. */
   code: string,
   /** The markdown of the tutorial being displayed. */
   docs: string,
+  connection?: MicrobitConnection,
 }
 
 const exampleCode = `from microbit import *
@@ -36,6 +38,7 @@ class App extends React.Component<unknown, AppState> {
     this.state = {
       code: exampleCode,
       docs: exampleDocs,
+      connection: undefined,
     };
   }
 
@@ -50,7 +53,7 @@ class App extends React.Component<unknown, AppState> {
           <button className="App-button">Reboot</button>
         </header>
         <div className="App-textareas">
-          <DocsViewer markdown={this.state.docs}/>
+          <DocsViewer markdown={this.state.docs} onFlash={this.state.connection?.interact.flash}/>
           <textarea className="App-editor">{this.state.code}</textarea>
         </div>
       </div>

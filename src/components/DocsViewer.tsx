@@ -4,9 +4,12 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { darcula } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { DoubleArrow, FlashOn, Height } from '@material-ui/icons';
 import { IconButton } from '@material-ui/core';
+import Stream from 'ts-stream';
+import { MicrobitOutput } from '../api/microbit-api';
 
 type PythonCodeProps = {
   code: string,
+  onFlash?(code: string): Promise<Stream<MicrobitOutput>>,
 }
 
 type PythonCodeState = {
@@ -47,13 +50,19 @@ class PythonCode extends React.Component<PythonCodeProps, PythonCodeState> {
     }
 
     this.onExpand = this.onExpand.bind(this);
+    this.onFlash = this.onFlash.bind(this);
   }
 
   onExpand(): void {
     this.setState({isExpanded: !this.state.isExpanded});
   }
 
-  render() {
+  async onFlash(): Promise<void> {
+    if (this.props.onFlash !== undefined)
+      await this.props.onFlash(this.props.code);
+  }
+
+  render(): JSX.Element {
     const [start, end] =
       this.state.isExpanded ?
         [0, this.lines.length] :
@@ -69,7 +78,7 @@ class PythonCode extends React.Component<PythonCodeProps, PythonCodeState> {
         {this.lines.slice(start, end).join('\n')}
       </SyntaxHighlighter>
       <IconButton onClick={this.onExpand}><Height/></IconButton>
-      <IconButton><FlashOn/></IconButton>
+      <IconButton onClick={this.onFlash} disabled={this.props.onFlash === undefined}><FlashOn/></IconButton>
       <IconButton><DoubleArrow/></IconButton>
     </div>;
   }
@@ -78,6 +87,7 @@ class PythonCode extends React.Component<PythonCodeProps, PythonCodeState> {
 
 type DocsViewerProps = {
   markdown: string,
+  onFlash?(code: string): Promise<Stream<MicrobitOutput>>,
 }
 
 type MarkdownCode = {
@@ -90,7 +100,7 @@ type MarkdownCode = {
 export default class DocsViewer extends React.Component<DocsViewerProps, unknown> {
   renderCode(code: MarkdownCode): JSX.Element {
     if (code.language === 'py') {
-      return <PythonCode code={code.value}/>;
+      return <PythonCode code={code.value} onFlash={this.props.onFlash}/>;
     } else {
       return <SyntaxHighlighter
         style={darcula}
