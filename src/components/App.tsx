@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import './App.css';
 import DocsViewer from './DocsViewer';
 import { MicrobitConnection } from '../api/microbit-api';
@@ -40,6 +40,19 @@ class App extends React.Component<unknown, AppState> {
       docs: exampleDocs,
       connection: undefined,
     };
+
+    this.onLoad = this.onLoad.bind(this);
+    this.onCodeChange = this.onCodeChange.bind(this);
+  }
+
+  /** Load the code snippet into the editor, by appending it at the end. # TODO at cursor instead */
+  onLoad(codeSnippet: string): void {
+    const currentCode = this.state.code;
+    this.setState({code: currentCode + '\n' + codeSnippet});
+  }
+
+  onCodeChange(e: ChangeEvent<HTMLTextAreaElement>): void {
+    this.setState({code: e.target.value});
   }
 
   render(): JSX.Element {
@@ -53,8 +66,12 @@ class App extends React.Component<unknown, AppState> {
           <button className="App-button">Reboot</button>
         </header>
         <div className="App-textareas">
-          <DocsViewer markdown={this.state.docs} onFlash={this.state.connection?.interact.flash}/>
-          <textarea className="App-editor">{this.state.code}</textarea>
+          <DocsViewer
+            markdown={this.state.docs}
+            onFlash={this.state.connection?.interact.flash}
+            onLoad={this.onLoad}
+          />
+          <textarea className="App-editor" value={this.state.code} onChange={this.onCodeChange}/>
         </div>
       </div>
     );

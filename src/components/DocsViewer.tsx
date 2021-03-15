@@ -10,6 +10,7 @@ import { MicrobitOutput } from '../api/microbit-api';
 type PythonCodeProps = {
   code: string,
   onFlash?(code: string): Promise<Stream<MicrobitOutput>>,
+  onLoad(codeSnippet: string): void,
 }
 
 type PythonCodeState = {
@@ -51,6 +52,7 @@ class PythonCode extends React.Component<PythonCodeProps, PythonCodeState> {
 
     this.onExpand = this.onExpand.bind(this);
     this.onFlash = this.onFlash.bind(this);
+    this.onLoad = this.onLoad.bind(this);
   }
 
   onExpand(): void {
@@ -60,6 +62,10 @@ class PythonCode extends React.Component<PythonCodeProps, PythonCodeState> {
   async onFlash(): Promise<void> {
     if (this.props.onFlash !== undefined)
       await this.props.onFlash(this.props.code);
+  }
+
+  onLoad(): void {
+    this.props.onLoad(this.lines.slice(this.highlightStart, this.highlightEnd).join('\n'));
   }
 
   render(): JSX.Element {
@@ -79,7 +85,7 @@ class PythonCode extends React.Component<PythonCodeProps, PythonCodeState> {
       </SyntaxHighlighter>
       <IconButton onClick={this.onExpand} disabled={!this.isExpandable}><Height/></IconButton>
       <IconButton onClick={this.onFlash} disabled={this.props.onFlash === undefined}><FlashOn/></IconButton>
-      <IconButton><DoubleArrow/></IconButton>
+      <IconButton onClick={this.onLoad}><DoubleArrow/></IconButton>
     </div>;
   }
 }
@@ -88,6 +94,7 @@ class PythonCode extends React.Component<PythonCodeProps, PythonCodeState> {
 type DocsViewerProps = {
   markdown: string,
   onFlash?(code: string): Promise<Stream<MicrobitOutput>>,
+  onLoad(codeSnippet: string): void,
 }
 
 type MarkdownCode = {
@@ -100,7 +107,11 @@ type MarkdownCode = {
 export default class DocsViewer extends React.Component<DocsViewerProps, unknown> {
   renderCode(code: MarkdownCode): JSX.Element {
     if (code.language === 'py') {
-      return <PythonCode code={code.value} onFlash={this.props.onFlash}/>;
+      return <PythonCode
+        code={code.value}
+        onFlash={this.props.onFlash}
+        onLoad={this.props.onLoad}
+      />;
     } else {
       return <SyntaxHighlighter
         style={darcula}
