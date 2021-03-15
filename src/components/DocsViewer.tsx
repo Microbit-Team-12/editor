@@ -77,7 +77,7 @@ class PythonCode extends React.Component<PythonCodeProps, PythonCodeState> {
       >
         {this.lines.slice(start, end).join('\n')}
       </SyntaxHighlighter>
-      <IconButton onClick={this.onExpand}><Height/></IconButton>
+      <IconButton onClick={this.onExpand} disabled={!this.isExpandable}><Height/></IconButton>
       <IconButton onClick={this.onFlash} disabled={this.props.onFlash === undefined}><FlashOn/></IconButton>
       <IconButton><DoubleArrow/></IconButton>
     </div>;
