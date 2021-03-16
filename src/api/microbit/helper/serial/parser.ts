@@ -9,21 +9,15 @@ import { SerialReader } from './reader';
  * 
  * Below is its mechaism. Based on following input of code
  * ```
- * 1|>>>
- * 2|>>> file=open('main.py','w');s='print(1)';file.write(s);file.close();from microbit import *;sleep(0);reset();
- * 3|8
- * 4|1
- * 5|MicroPython v1.13 on 2021-02-19; micro:bit v2.0.0-beta.4 with nRF52833
- * 6|Type "help()" for more information.
- * 7|>>>
- * ```
- * We can know that
- * ```
- * 1|previous running stuff
- * 2|python code to flash 'main.py'
- * 3|number of bytes written, indicating flashing is done
- * 4|output of program
- * 5-7|program execution is done, REPL is starting
+ * 1|Get REPL Line|>>>
+ * 2|Setup Code   |>>> file=open('main.py','w');s='print(executionStart)\\r\\nprint(1)\\r\\nprint(executionStart)';file.write(s);file.close();from microbit import *;sleep(0);reset();
+ * 3|#Byte Written|8
+ * 4|executionStart
+ * 5|Code output  |1
+ * 6|executionDone
+ * 6|MicroPython v1.13 on 2021-02-19; micro:bit v2.0.0-beta.4 with nRF52833
+ * 7|Type "help()" for more information.
+ * 8|>>>
  * ```
  * 
  * Error Sample (Flashing) linetoIgnroe=0
@@ -40,7 +34,6 @@ import { SerialReader } from './reader';
  * File "<string>", line 1, in <module>
  * NameError: name 'prit' isn't defined
  * ```
-
  */
 export class SerialParser {
   portReader: SerialReader;
@@ -51,10 +44,16 @@ export class SerialParser {
     this.signal = config;
   }
 
+  /**
+   * Read until new repl line is ready
+   */
   readUntilNewREPLLine(): Promise<void> {
     return this.portReader.safeReadUntil(this.signal.replLineReady);
   }
 
+  /**
+   * Read until indication of execution starting
+   */
   readUntilExecutionStart(): Promise<void> {
     return this.portReader.safeReadUntil(this.signal.executionStart + '\r\n');
   }
