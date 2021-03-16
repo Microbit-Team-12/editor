@@ -1,6 +1,6 @@
 import Stream from 'ts-stream';
 import { InteractWithConnectedMicrobit, MicrobitOutput } from '../microbit-api';
-import { ManagerOption } from '../microbit-api-config';
+import { ManagerOption, SignalOption } from '../microbit-api-config';
 import { SerialParser } from './helper/serial/parser';
 import { SerialReader } from './helper/serial/reader';
 const ctrlC = '\x03';
@@ -10,9 +10,11 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
   portWriter!: WritableStreamDefaultWriter<string>;
   portReader!: ReadableStreamDefaultReader<string>;
   portParser!: SerialParser
+  signal: SignalOption;
 
   constructor(port: SerialPort, config: ManagerOption) {
     this.port = port;
+    this.signal = config.signalOption;
     if (port.writable != null) {
       const encoder = new TextEncoderStream();
       encoder.readable.pipeTo(port.writable).catch((err) => { console.log('disconnected in pipe'); });
@@ -24,7 +26,7 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
       this.portReader = decoder.readable.getReader();
 
       const portReaderHelper = new SerialReader(this.portReader, config.readOption);
-      this.portParser = new SerialParser(portReaderHelper, config.parseOption);
+      this.portParser = new SerialParser(portReaderHelper, config.signalOption);
     }
   }
 
@@ -33,7 +35,7 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
    */
   private codeToPythonString(code: string): string {
     /* 
-    From up to down
+    replaceAll From up to down
       (1) user-used escape character. e.g. [\][t]
         This should still be [\][t] in main.py
         [\][\][t] in python string
@@ -47,8 +49,10 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
         replaceAll require ESNext.
         But web serial already require a high version of chrome.
     */
-    return code
-      .replaceAll('\\', '\\\\')
+    return (  'print(\'' + this.signal.executionStart + '\')'
+            + '\r\n' + code + '\r\n'
+            + 'print(\'' + this.signal.executionDone + '\')'
+    ) .replaceAll('\\', '\\\\')
       .replaceAll('\'', '\\\'')
       .replaceAll(/\r?\n/g, '\\r\\n');
   }
@@ -68,9 +72,9 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
   async flash(code: string): Promise<Stream<MicrobitOutput>> {
     /*Whole procedure with workaround note
       - Get a clean REPL line, see getREPLLine()
-      - Send code for flashing `main.py` to REPL
+      - Send code to `main.py` to REPL
           Observation: Microbit serial lose characters when multiple lines are inputted
-          Workaround: All code is on one line
+          Workaround: Put all code on one line
           The logic might be:
             Microbit does not have enough pin on the chip for serial hardware flow control.
             So computer has no way of knowing microbit buffer is full.
@@ -78,13 +82,14 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
 
             When all code is on one line, microbit does not do any hard work until \r entered
             Less likely for the buffer to be full and lose character
+      - Print(replDone)
+          On receving replDone, manager knows microbit finished writing to main.py
+          It is rebooting and all later output are program output
       - Sleep for 0ms
-          Allowing output from file.write() to appear on serial
-          Otherwise some weird character appears. Instead of a number then new line
-          Not necessary for microbit v1.
-      - Read until signal of flash finishing appears.
-      - Program is now executing
-     */
+          In case there are characters in output buffer
+      - reboot
+          To run `main.py` in a fresh state
+    */
     const codeInPythonString = this.codeToPythonString(code);
     const outputStream = new Stream<MicrobitOutput>();
 
@@ -95,35 +100,38 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
       + 'file.write(s);'
       + 'file.close();'
       + 'from microbit import *;'
-      + 'sleep(0);'
       + 'reset()\r'
     );
-    await this.portParser.readUntilFlashDone();
-    this.portParser.readUntilMainPYDone(outputStream).catch(() => { outputStream.end(); });
+    await this.portParser.readUntilExecutionStart();
+    this.portParser.readUntilExecuteDone(outputStream,0).catch(() => { outputStream.end(); });
     return outputStream;
   }
 
   async execute(code: string): Promise<Stream<MicrobitOutput>> {
-    //similar procedure to flash
     const codeInPythonString = this.codeToPythonString(code);
     const outputStream = new Stream<MicrobitOutput>();
 
     await this.getREPLLine();
-    await this.portWriter.write('exec(\'' + codeInPythonString + '\')\r');
-    await this.portParser.readUntilREPLExecEntered();
-    this.portParser.readUntilREPLExecDone(outputStream).catch(() => { outputStream.end(); });
+    await this.portWriter.write(
+      'print(\'' + this.signal.executionStart + '\');'
+      + 's=\'' + codeInPythonString + '\';'
+      + 'exec(s)\r'
+    );
+    await this.portParser.readUntilExecutionStart();
+    this.portParser.readUntilExecuteDone(outputStream, 1).catch(() => { outputStream.end(); });
     return outputStream;
   }
 
   async reboot(): Promise<Stream<MicrobitOutput>> {
     await this.getREPLLine();
     await this.portWriter.write(
-      'from microbit import *;'
+      'print(\'' + this.signal.executionStart + '\');'
+      + 'from microbit import *;'
       + 'reset()\r'
     );
-    await this.portParser.readUntilRebootDone();
+    await this.portParser.readUntilExecutionStart();
     const outputStream = new Stream<MicrobitOutput>();
-    this.portParser.readUntilMainPYDone(outputStream).catch(() => { outputStream.end(); });
+    this.portParser.readUntilExecuteDone(outputStream, 0).catch(() => { outputStream.end(); });
     return outputStream;
   }
 

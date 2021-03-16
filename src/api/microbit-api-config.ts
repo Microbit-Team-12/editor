@@ -20,7 +20,7 @@ export interface ManagerOption {
   /**
    * Parameter used for parser class
    */
-  parseOption: ParseOption
+  signalOption: SignalOption
 }
 
 export interface readOption {
@@ -40,35 +40,40 @@ export interface readOption {
   cutLength: number
 }
 
-export interface ParseOption {
+export interface SignalOption {
   /**
    * If log should be printed to console
    */
   showLog: boolean,
   /**
-   * String indicating new REPL line is ready.
+   * A string printed by microbit serial repl
+   * Indicating waiting for user input code
    */
-  replLineReady: string
+  replLineReady: string,
   /**
-   * String indicating flash done
+   * A string to be printed by `print` statement
+   * Before execution of user code
+   * Outputting is implemented by adding print statement before user code
    */
-  flashDone: string
+  executionStart: string,
   /**
-   * String indicating reboot done
+   * A string to be printed by `print` statement 
+   * After execution of given user code
+   * Outputting is implemented by adding print statement after user code
    */
-  rebootDone: string
+  executionDone: string,
   /**
-   * String indicating exec(''); entered in REPL
+   * A string printed by microbit serial repl
+   * Indicating an error occured
    */
-  replExecEntered: string
+  errorOccured: string,
   /**
-   * String indicating of execution of main.py without errors
+   * Ms before microbit is rebooted to run `main.py`
+   * Allowing output buffer to be emptied before reboot
+   * 
+   * Not used right now
    */
-  mainpyDone: string
-  /**
-   * String indicating error occured
-   */
-  errorOccured: string
+  waitMsBeforeReboot: number,
 }
 
 export const defaultConfig: ManagerOption = {
@@ -92,13 +97,12 @@ export const defaultConfig: ManagerOption = {
     cutLength: 1000
   },
   //maybe consider using regexp?
-  parseOption: {
+  signalOption: {
     showLog: true,
     replLineReady: '>>> ',
-    flashDone: 'file.close();from microbit import *;sleep(0);reset()\r\n',
-    rebootDone: 'from microbit import *;reset()\r\n',
-    replExecEntered: ')\r\n',
-    mainpyDone: 'MicroPython v1.',
-    errorOccured: 'Traceback (most recent call last):\r\n'
+    executionDone: 'Execute Done: 0x3f3f3f3f',
+    executionStart: 'Execution Start: 0x3f3f3f3f',
+    errorOccured: 'Traceback (most recent call last):\r\n',
+    waitMsBeforeReboot: 1
   }
 };

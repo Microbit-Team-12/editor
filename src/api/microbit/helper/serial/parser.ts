@@ -1,6 +1,6 @@
 import Stream from 'ts-stream';
 import { MicrobitOutput } from '../../../microbit-api';
-import { ParseOption } from '../../../microbit-api-config';
+import { SignalOption } from '../../../microbit-api-config';
 import { SerialReader } from './reader';
 
 /**
@@ -25,132 +25,72 @@ import { SerialReader } from './reader';
  * 4|output of program
  * 5-7|program execution is done, REPL is starting
  * ```
+ * 
+ * Error Sample (Flashing) linetoIgnroe=0
+ * ```
+ * Traceback (most recent call last):
+ * File "main.py", line 1, in <module>
+ * NameError: name 'prit' isn't defined
+ * ```
+ *
+ * REPL Sample (Running) linetoIgnore=1
+ * ```
+ * Traceback (most recent call last):
+ * File "<stdin>", line 1, in <module>
+ * File "<string>", line 1, in <module>
+ * NameError: name 'prit' isn't defined
+ * ```
+
  */
 export class SerialParser {
   portReader: SerialReader;
-  config: ParseOption;
+  signal: SignalOption;
 
-  constructor(portReader: SerialReader, config: ParseOption) {
+  constructor(portReader: SerialReader, config: SignalOption) {
     this.portReader = portReader;
-    this.config = config;
+    this.signal = config;
   }
 
-  async readUntilNewREPLLine(): Promise<void> {
-    await this.portReader.safeReadUntil(this.config.replLineReady);
+  readUntilNewREPLLine(): Promise<void> {
+    return this.portReader.safeReadUntil(this.signal.replLineReady);
   }
 
-  /**
-   * Read until indication of flashing finishing.
-   * 
-   * line1 to (including) line3 in the example. 
-   */
-  async readUntilFlashDone(): Promise<void> {
-    await this.portReader.safeReadUntil(this.config.flashDone);
-    await this.portReader.unsafeReadline();
-    console.log('Flash done');
+  readUntilExecutionStart(): Promise<void> {
+    return this.portReader.safeReadUntil(this.signal.executionStart + '\r\n');
   }
 
   /**
-   * Read until indication of reboot finishing. 
-   * 
-   * ```
-   * 1|>>> from microbit import reset;reset()
-   * 2|1
-   * 3|MicroPython v1.13 on 2021-02-19; micro:bit v2.0.0-beta.4 with nRF52833
-   * 4|Type "help()" for more information.
-   * 5|>>>
-   * ```
+   * Read until indication of execution finishing, 
+   * recent output from serial will be sent to `outputStream`
    */
-  async readUntilRebootDone(): Promise<void> {
-    await this.portReader.safeReadUntil(this.config.rebootDone);
-  }
-
-
-  /**
-   * Read until string indicating Exec('') entered
-   */
-  async readUntilREPLExecEntered(): Promise<void> {
-    await this.portReader.safeReadUntil(this.config.replExecEntered);
-  }
-
-  /**
-   * Return update function for portReader
-   * That updates the string to a stream
-   */
-  private updateStream(outputStream:Stream<MicrobitOutput>){
-    return (str:string) => {
-      outputStream.write({
+  async readUntilExecuteDone(outputStream: Stream<MicrobitOutput>, lineToIgnore:number): Promise<void> {
+    const signals = [
+      this.signal.executionDone + '\r\n',
+      this.signal.errorOccured
+    ];
+    const result = await this.portReader.safeReadUntilWithUpdate(
+      signals, 
+      str => outputStream.write({
         kind: 'NormalOutput',
         outputChunk: str
+      })
+    );
+    console.log('Execution done');
+    
+    if (result === this.signal.errorOccured) {
+      for (let i = 0; i < lineToIgnore; i++) await this.portReader.unsafeReadline();
+      const line1 = await this.portReader.unsafeReadline();
+      const line2 = await this.portReader.unsafeReadline();
+      const lineNumberString = line1.split('line ')[1].split(',')[0];
+      const line2split = line2.split(': ');
+      outputStream.write({
+        kind: 'ErrorMessage',
+        line: parseInt(lineNumberString)-1,
+        file: 'main.py',
+        reason: line2split[0],
+        message: line2split[1]
       });
-    };
-  }
-
-  /**
-   * Read until indication of execution finishing, 
-   * recent output from serial will be sent to `outputStream`
-   */
-  async readUntilMainPYDone(outputStream: Stream<MicrobitOutput>): Promise<void> {
-    const signals = [
-      this.config.mainpyDone,
-      this.config.errorOccured
-    ];
-    const result = await this.portReader.safeReadUntilWithUpdate(signals, this.updateStream(outputStream));
-    console.log('Execution done');
-    if (result === this.config.errorOccured) this.readError(outputStream,0);
-    else outputStream.end();
-  }
-
-  /**
-   * Read until indication of execution finishing, 
-   * recent output from serial will be sent to `outputStream`
-   */
-  async readUntilREPLExecDone(outputStream: Stream<MicrobitOutput>): Promise<void> {
-    const signals = [
-      this.config.replLineReady,
-      this.config.errorOccured
-    ];
-    const result = await this.portReader.safeReadUntilWithUpdate(signals, this.updateStream(outputStream));
-    console.log('Execution done');
-    if (result === this.config.errorOccured) this.readError(outputStream, 1);
-    else outputStream.end();
-  }
-
-
-  /**
-   * Read two more lines of error message.
-   * Return the parsed error object, and closes the stream.
-   * 
-   * Error Sample (Flashing) linetoIgnroe=0
-   * ```
-   * Traceback (most recent call last):
-   * File "main.py", line 1, in <module>
-   * NameError: name 'prit' isn't defined
-   * ```
-   *
-   * REPL Sample (Running) linetoIgnore=1
-   * ```
-   * Traceback (most recent call last):
-   * File "<stdin>", line 1, in <module>
-   * File "<string>", line 1, in <module>
-   * NameError: name 'prit' isn't defined
-   * ```
-   */
-  async readError(outputStream: Stream<MicrobitOutput>, linetoIgnoreOnError: number): Promise<void> {
-    for (let i = 0; i < linetoIgnoreOnError; i++) await this.portReader.unsafeReadline();
-    const line1 = await this.portReader.unsafeReadline();
-    const line2 = await this.portReader.unsafeReadline();
-    const lineNumberString = line1.split('line ')[1].split(',')[0];
-    const line2split = line2.split(': ');
-
-    outputStream.write({
-      kind: 'ErrorMessage',
-      line: parseInt(lineNumberString),
-      file: 'main.py',
-      reason: line2split[0],
-      message: line2split[1]
-    });
+    }
     outputStream.end();
   }
-
 }
