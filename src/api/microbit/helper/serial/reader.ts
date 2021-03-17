@@ -42,8 +42,9 @@ export class SerialReader {
   /**
    * Split *buffer* on first occurence of token.
    * 
-   * buffer = before + token + after
-   * return [before, after]
+   * PRE: buffer = before + token + after
+   * buffer = after
+   * return before
    */
   private splitBufferOnFirst(token: string): string {
     const index = this.serialBuffer.indexOf(token);

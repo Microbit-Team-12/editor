@@ -2,17 +2,13 @@
 
 export interface ManagerOption {
   /**
-   * If paried serial should be used.
-   */
-  devReusePort: boolean,
-  /**
    * Parameter used to connect serial port. See `SerialOptions`
    */
-  serialConnectionOption: SerialOptions
+  connectOption: SerialOptions
   /**
    * Parameter used for filtering serial port. See `SerialPortRequestOptions`
    */
-  serialRequsetOption: SerialPortRequestOptions
+  requestOption: SerialPortRequestOptions
   /**
    * Parameter used for reader class
    */
@@ -78,8 +74,7 @@ export interface SignalOption {
 }
 
 export const defaultConfig: ManagerOption = {
-  devReusePort: false,
-  serialConnectionOption: {
+  connectOption: {
     baudRate: 115200,
     dataBits: 8,
     stopBits: 1,
@@ -87,7 +82,7 @@ export const defaultConfig: ManagerOption = {
     bufferSize: 4096,
     flowControl: 'none'
   },
-  serialRequsetOption: {
+  requestOption: {
     filters: [
       { usbVendorId: 0x0d28 }
     ]

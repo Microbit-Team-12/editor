@@ -78,7 +78,7 @@ export class SerialParser {
     console.log('Execution done');
     
     if (result !== this.signal.executionDone + '\r\n') {
-      //line1 indicates line in user code exception occured
+      //line1 indicates in which line of user code exception occured
       //which is first line after mainPYException and execException
       const line1 = await this.portReader.unsafeReadline();
       const lineNumberString = line1.split(',', 2)[0];

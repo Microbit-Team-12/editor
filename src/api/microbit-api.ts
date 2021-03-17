@@ -15,7 +15,7 @@ export interface ConnectToMicrobit {
 */
 export interface FailedConnection {
   kind: 'ConnectionFailure',
-  type: 'Browser Not Supported' | 'Failed to Obtain Port' | 'Failed to Open Port' | 'Port No Response'
+  type: 'Failed to Obtain Port' | 'Failed to Open Port' | 'Port No Response'
   reason: string
 }
 

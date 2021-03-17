@@ -1,7 +1,7 @@
 import React from 'react';
 import { Stream } from 'ts-stream';
 import { FailedConnection, MicrobitConnection, MicrobitOutput } from '../api/microbit-api';
-import { connectByPlugIn, connectBySelection } from '../api/microbit/connect';
+import { checkCompatability, connectByPlugIn, connectBySelection, connectByPariedDevice} from '../api/microbit/connect';
 import './APIDemo.css';
 
 type APIDemoState = {
@@ -31,6 +31,8 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     this.onExec = this.onExec.bind(this);
     this.onInterrupt = this.onInterrupt.bind(this);
     this.onRun = this.onRun.bind(this);
+    this.connect = this.connect.bind(this);
+    if(!checkCompatability()) alert('Browser not supported');
   }
 
   render(): JSX.Element {
@@ -51,6 +53,24 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     );
   }
 
+  async connect(connection: Promise<MicrobitConnection | FailedConnection>):Promise<boolean>{
+    const c = await connection;
+    switch (c.kind) {
+      case 'ConnectionFailure':
+        alert(c.reason);
+        return false;
+      case 'MicrobitConnection':
+        globalConnection = c;
+        c.disconnection.then(async () => {
+          alert('Serial disconnected');
+          globalConnection = null;
+          await this.connect(connectByPlugIn());
+          alert('Serial reconnected');
+        });
+        return true;
+    }
+  }
+
   onCodeChange(e: React.ChangeEvent<HTMLTextAreaElement>):void {
     this.setState({
       code: e.target.value
@@ -58,22 +78,9 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
   }
 
   async onStart():Promise<void>{
-    const connect = (connection: MicrobitConnection | FailedConnection) => {
-      switch (connection.kind) {
-        case 'ConnectionFailure':
-          alert(connection.reason);
-          break;
-        case 'MicrobitConnection':
-          globalConnection = connection;
-          connection.disconnection.then(async () => {
-            alert('Serial disconnected');
-            globalConnection = null;
-            connect(await connectByPlugIn());
-            alert('Serial reconnected');
-          });
-      }
-    };
-    connect(await connectBySelection());
+    if(!(await this.connect(connectByPariedDevice())))
+      this.connect(connectBySelection());
+    //this.connect(connectByPlugIn());
   }
 
   async onExec(outputStream: Stream<MicrobitOutput>):Promise<void>{
