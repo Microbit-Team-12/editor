@@ -21,7 +21,6 @@ export class SerialReader {
     while (!termination(this.serialBuffer)) {
       const { value, done } = await this.portReader.read();
       this.serialBuffer += value;
-      console.log(this.serialBuffer);
     }
   }
 
@@ -37,7 +36,6 @@ export class SerialReader {
       if (len >= bufferLimit) this.serialBuffer = this.serialBuffer.substring(len - bufferLimit);
       const { value, done } = await this.portReader.read();
       this.serialBuffer += value;
-      console.log(this.serialBuffer);
     }
   }
 
