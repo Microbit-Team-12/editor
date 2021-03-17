@@ -75,5 +75,45 @@
           "link": null
         }
       ]
+    },
+    "Ask if following tutorial": {
+      "speech": "That's alright. Are you following one of the MicroPython tutorials?",
+      "buttons": [
+        {
+          "text": "Yes I am",
+          "link": "Tutorial selection"
+        },
+        {
+          "text": "No I am not",
+          "link": "Duck gives up"
+        }
+      ]
+    },
+    "Tutorial selection": {
+      "speech": "Which tutorial are you following?",
+      "buttons": [
+        {
+          "text": "None of them",
+          "link": "Duck gives up"
+        },
+        {
+          "text": "Hello, World!",
+          "link": "Compare with tutorial",
+          "params": ["Hello, World"]
+        }
+      ]
+    },
+    "Compare with tutorial": {
+      "speech": "{get_readable_diff(prev_button.params[0], code_at(error_message.line_no))}",
+      "buttons": [
+        {
+          "text": "Thanks, I can fix that now.",
+          "link": "Goodbye"
+        },
+        {
+          "text": "That wasn't what I was trying to write",
+          "link": "Duck gives up"
+        }
+      ]
     }
 }
