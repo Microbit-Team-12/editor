@@ -7,15 +7,15 @@ export interface ConnectToMicrobit {
    * The promise completes with a object holding a connection to micro:bit if successful.
    * Otherwise completes with a ConnectionFailure object.
    */
-  connect: () => Promise<MicrobitConnection|ConnectionFailure>
+  connect: () => Promise<MicrobitConnection | FailedConnection>
 }
 
 /**
  * A description of connection failure
 */
-export interface ConnectionFailure{
+export interface FailedConnection {
   kind: 'ConnectionFailure',
-  type: 'Browser Not Supported' | 'Failed to Obtain Port' | 'Failed to Open Port'
+  type: 'Browser Not Supported' | 'Failed to Obtain Port' | 'Failed to Open Port' | 'Port No Response'
   reason: string
 }
 
@@ -70,12 +70,13 @@ export type MicrobitOutput = NormalOutput | ErrorMessage
 
 /**
  * A piece of content that is output to the standard output of micro:bit.
- * 
- * outputChunk is a new piece of output we have obtained from micro:bit,
- * and may not correspond to a single print() executed on the device.
  */
 export interface NormalOutput {
   kind: 'NormalOutput'
+  /**
+   * outputChunk is a new piece of output we have obtained from micro:bit,
+   * and may not correspond to a single print() executed on the device.
+   */
   outputChunk: string
 }
 
@@ -84,8 +85,18 @@ export interface NormalOutput {
  */
 export interface ErrorMessage {
   kind: 'ErrorMessage'
+  /**
+   * A integer indicating in which line of user code the error occurs
+   */
   line: number
-  file: string
-  reason: string
+  /**
+   * A string indicating type of the exception
+   * For full list of types, see
+   * https://docs.micropython.org/en/latest/library/builtins.html#exceptions
+   */
+  type: string
+  /**
+   * A *simple* explanation of the error
+   */
   message: string
 }

@@ -90,8 +90,7 @@ export class SerialParser {
       outputStream.write({
         kind: 'ErrorMessage',
         line: parseInt(lineNumberString)-1,
-        file: 'main.py',
-        reason: line2split[0],
+        type: line2split[0],
         message: line2split[1]
       });
     }

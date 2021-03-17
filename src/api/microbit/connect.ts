@@ -1,5 +1,5 @@
 import { serial } from 'web-serial-polyfill';
-import { ConnectionFailure, MicrobitConnection } from '../microbit-api';
+import { FailedConnection, MicrobitConnection } from '../microbit-api';
 import { defaultConfig, ManagerOption } from '../microbit-api-config';
 import { ConnectedMicrobitInteract } from './interact';
 
@@ -7,7 +7,7 @@ import { ConnectedMicrobitInteract } from './interact';
  * Given a unopenned serial port and configuration object,
  * create a MicrobitConnection object
  */
-async function createConnection(port: SerialPort, config: ManagerOption): Promise<MicrobitConnection | ConnectionFailure> {
+async function createConnection(port: SerialPort, config: ManagerOption): Promise<MicrobitConnection | FailedConnection> {
   try {
     await port.open(config.serialConnectionOption);
   } catch (error) {
@@ -51,7 +51,7 @@ function checkUSBInfo(info: SerialPortInfo, filters: SerialPortFilter[] | undefi
  * Create a MicrobitConnection object
  * By selecting a serial port in the native permission window.
  */
-export async function connectBySelection(config: ManagerOption = defaultConfig): Promise<MicrobitConnection | ConnectionFailure> {
+export async function connectBySelection(config: ManagerOption = defaultConfig): Promise<MicrobitConnection | FailedConnection> {
   if (!('serial' in navigator)) {
     if ('usb' in navigator) (navigator as any).serial = serial;
     else return {
@@ -85,7 +85,7 @@ export async function connectBySelection(config: ManagerOption = defaultConfig):
  * Create a MicrobitConnection object
  * By user plugging the device
  */
-export async function connectByPlugIn(config: ManagerOption = defaultConfig): Promise<MicrobitConnection | ConnectionFailure> {
+export async function connectByPlugIn(config: ManagerOption = defaultConfig): Promise<MicrobitConnection | FailedConnection> {
   if (!('serial' in navigator)) {
     if ('usb' in navigator) (navigator as any).serial = serial;
     else return {

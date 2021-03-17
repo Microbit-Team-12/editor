@@ -84,7 +84,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
           output: output.outputChunk
         });
       } else {
-        alert(output.reason + output.message);
+        alert(output.type + output.message);
       }
     });
   }
