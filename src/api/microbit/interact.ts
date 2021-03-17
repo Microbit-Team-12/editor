@@ -103,7 +103,7 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
       + 'reset()\r'
     );
     await this.portParser.readUntilExecutionStart();
-    this.portParser.readUntilExecuteDone(outputStream,0).catch(() => { outputStream.end(); });
+    this.portParser.readUntilExecuteDone(outputStream).catch(() => { outputStream.end(); });
     return outputStream;
   }
 
@@ -113,25 +113,23 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
 
     await this.getREPLLine();
     await this.portWriter.write(
-      'print(\'' + this.signal.executionStart + '\');'
-      + 's=\'' + codeInPythonString + '\';'
+      's=\'' + codeInPythonString + '\';'
       + 'exec(s)\r'
     );
     await this.portParser.readUntilExecutionStart();
-    this.portParser.readUntilExecuteDone(outputStream, 1).catch(() => { outputStream.end(); });
+    this.portParser.readUntilExecuteDone(outputStream).catch(() => { outputStream.end(); });
     return outputStream;
   }
 
   async reboot(): Promise<Stream<MicrobitOutput>> {
     await this.getREPLLine();
     await this.portWriter.write(
-      'print(\'' + this.signal.executionStart + '\');'
-      + 'from microbit import *;'
+      'from microbit import *;'
       + 'reset()\r'
     );
     await this.portParser.readUntilExecutionStart();
     const outputStream = new Stream<MicrobitOutput>();
-    this.portParser.readUntilExecuteDone(outputStream, 0).catch(() => { outputStream.end(); });
+    this.portParser.readUntilExecuteDone(outputStream).catch(() => { outputStream.end(); });
     return outputStream;
   }
 

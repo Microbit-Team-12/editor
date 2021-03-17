@@ -20,14 +20,14 @@ import { SerialReader } from './reader';
  * 8|>>>
  * ```
  * 
- * Error Sample (Flashing) linetoIgnroe=0
+ * Error Sample (Flashing)
  * ```
  * Traceback (most recent call last):
  * File "main.py", line 1, in <module>
  * NameError: name 'prit' isn't defined
  * ```
  *
- * REPL Sample (Running) linetoIgnore=1
+ * REPL Sample (Running)
  * ```
  * Traceback (most recent call last):
  * File "<stdin>", line 1, in <module>
@@ -62,10 +62,11 @@ export class SerialParser {
    * Read until indication of execution finishing, 
    * recent output from serial will be sent to `outputStream`
    */
-  async readUntilExecuteDone(outputStream: Stream<MicrobitOutput>, lineToIgnore:number): Promise<void> {
+  async readUntilExecuteDone(outputStream: Stream<MicrobitOutput>): Promise<void> {
     const signals = [
       this.signal.executionDone + '\r\n',
-      this.signal.errorOccured
+      this.signal.mainPYException,
+      this.signal.execException
     ];
     const result = await this.portReader.safeReadUntilWithUpdate(
       signals, 
@@ -76,12 +77,16 @@ export class SerialParser {
     );
     console.log('Execution done');
     
-    if (result === this.signal.errorOccured) {
-      for (let i = 0; i < lineToIgnore; i++) await this.portReader.unsafeReadline();
+    if (result !== this.signal.executionDone + '\r\n') {
+      //line1 indicates line in user code exception occured
+      //which is first line after mainPYException and execException
       const line1 = await this.portReader.unsafeReadline();
-      const line2 = await this.portReader.unsafeReadline();
-      const lineNumberString = line1.split('line ')[1].split(',')[0];
-      const line2split = line2.split(': ');
+      const lineNumberString = line1.split(',', 2)[0];
+      //messageLine is in the form of 'ErrorType:ErrorMessage'
+      //exec is used in user code, the line following line1 may not be mssageLine
+      let messageLine = '  ';
+      while(messageLine.startsWith('  ')) messageLine = await this.portReader.unsafeReadline();
+      const line2split = messageLine.split(': ');
       outputStream.write({
         kind: 'ErrorMessage',
         line: parseInt(lineNumberString)-1,

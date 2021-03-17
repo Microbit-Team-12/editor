@@ -66,7 +66,8 @@ export interface SignalOption {
    * A string printed by microbit serial repl
    * Indicating an error occured
    */
-  errorOccured: string,
+  mainPYException: string,
+  execException: string,
   /**
    * Ms before microbit is rebooted to run `main.py`
    * Allowing output buffer to be emptied before reboot
@@ -93,7 +94,7 @@ export const defaultConfig: ManagerOption = {
   },
   readOption: {
     showLog: true,
-    updateMs: 100,
+    updateMs: 50,
     cutLength: 1000
   },
   //maybe consider using regexp?
@@ -102,7 +103,8 @@ export const defaultConfig: ManagerOption = {
     replLineReady: '>>> ',
     executionDone: 'Execute Done: 0x3f3f3f3f',
     executionStart: 'Execution Start: 0x3f3f3f3f',
-    errorOccured: 'Traceback (most recent call last):\r\n',
+    mainPYException: 'Traceback (most recent call last):\r\n  File "main.py", line ',
+    execException:   'Traceback (most recent call last):\r\n  File "<stdin>", line 1, in <module>\r\n  File "<string>", line ',
     waitMsBeforeReboot: 1
   }
 };
