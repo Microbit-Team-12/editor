@@ -1,0 +1,79 @@
+{
+    "Intro": {
+      "speech": "Quack! Tell me more about the problem by selecting a button below:",
+      "buttons": [
+        {
+          "text": "An error message is displayed",
+          "link": "Select error message"
+        },
+        {
+          "text": "My code doesn't do what I want it to do",
+          "link": "Select the problem with your program"
+        }
+      ]
+    },
+    "An error message is displayed": {
+      "speech": "What type of error is displayed?",
+      "buttons": [
+        {
+          "text": "AttributeError",
+          "link": "AttributeError explanation"
+        },
+        {
+          "text": "SyntaxError",
+          "link": "SyntaxError explanation"
+        },
+        {
+          "text": "TypeError",
+          "link": "TypeError explanation"
+        },
+        {
+          "text": "NameError",
+          "link": "NameError explanation"
+        },
+        {
+          "text": "IndentationError / TabError",
+          "link": "IndentationError"
+        },
+        {
+          "text": "Something else / I don't know",
+          "link": "Less common errors"
+        }
+      ]
+    },
+    "AttributeError explanation": {
+      "speech": "An AttributeError tells you that a certain type (such as int or str) doesn’t have a certain attribute. For instance, if you write display.potato, Python will give an AttributeError to tell you that display has no potato attribute.",
+      "buttons": [
+        {
+          "text": "Tell me more",
+          "link": "More about AttributeError"
+        }
+      ]
+    },
+    "More about AttributeError": {
+      "speech": "To get an AttributeError, you might have accidentally used the wrong datatype or misspelt the function you called? Or perhaps you used a capital letter by mistake – Python treats show and Show as two different things.",
+      "buttons": [
+        {
+          "text": "Ah, that's it!",
+          "link": "Goodbye"
+        },
+        {
+          "text": "I still need help",
+          "link": "Ask if following tutorial"
+        },
+        {
+          "text": "back",
+          "link": "AttributeError explanation"
+        }
+      ]
+    },
+    "Goodbye": {
+      "speech": "I’m happy that I could help you! Now you’ve learnt something new, so you’ll know what to do next time you get that problem.\n\nRemember you can click on my icon any time if you need more help!",
+      "buttons": [
+        {
+          "text": "Thanks Duck, bye for now!",
+          "link": null
+        }
+      ]
+    }
+}
