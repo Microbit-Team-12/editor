@@ -14,6 +14,7 @@ export function checkCompatability(): boolean {
   if ('serial' in navigator) return true;
   else {
     if ('usb' in navigator) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (navigator as any).serial = serial;
       return true;
     } else return false;
@@ -111,6 +112,7 @@ export async function connectByPlugIn(config: ManagerOption = defaultConfig): Pr
      * Resolves the promise when a device is plugged in
      */
     const waitForPort = async(event: Event) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const port: SerialPort = (event as any).port || event.target;
       if (checkUSBInfo(port.getInfo(), config.requestOption.filters)) {
         navigator.serial.removeEventListener('connect', waitForPort);
