@@ -1,6 +1,6 @@
 import React from 'react';
 import { Stream } from 'ts-stream';
-import { MicrobitConnection, MicrobitOutput } from '../api/microbit-api';
+import { FailedConnection, MicrobitConnection, MicrobitOutput } from '../api/microbit-api';
 import { connectByPlugIn, connectBySelection } from '../api/microbit/connect';
 import './APIDemo.css';
 
@@ -58,23 +58,22 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
   }
 
   async onStart():Promise<void>{
-    console.log('on');
-    const connection = await connectBySelection();
-    //const connection = await connectByPlugIn();
-    switch(connection.kind){
-      case 'ConnectionFailure':
-        alert(connection.reason);
-        break;
-      case 'MicrobitConnection':
-        globalConnection = connection;
-        connection.disconnection.then(async ()=>{
-          alert('Serial connection lost');
-          globalConnection = null;
-          const newConnection = await connectByPlugIn();
-          if(newConnection.kind==='MicrobitConnection')
-            globalConnection = newConnection;
-        });
-    }
+    const connect = (connection: MicrobitConnection | FailedConnection) => {
+      switch (connection.kind) {
+        case 'ConnectionFailure':
+          alert(connection.reason);
+          break;
+        case 'MicrobitConnection':
+          globalConnection = connection;
+          connection.disconnection.then(async () => {
+            alert('Serial disconnected');
+            globalConnection = null;
+            connect(await connectByPlugIn());
+            alert('Serial reconnected');
+          });
+      }
+    };
+    connect(await connectBySelection());
   }
 
   async onExec(outputStream: Stream<MicrobitOutput>):Promise<void>{
