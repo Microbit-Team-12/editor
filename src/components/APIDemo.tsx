@@ -1,7 +1,7 @@
 import React from 'react';
 import { Stream } from 'ts-stream';
 import { FailedConnection, MicrobitConnection, MicrobitOutput } from '../api/microbit-api';
-import { checkCompatability, connectByPlugIn, connectBySelection, connectByPariedDevice} from '../api/microbit/connect';
+import { checkCompatability, connectByPariedDevice, connectByPlugIn, connectBySelection } from '../api/microbit/connect';
 import './APIDemo.css';
 
 type APIDemoState = {
@@ -90,7 +90,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
           output: output.outputChunk
         });
       } else {
-        alert(output.type + output.message);
+        alert('Error on line ' + output.line + ':\n' + output.type + ': ' + output.message);
       }
     });
   }
