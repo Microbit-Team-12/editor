@@ -293,5 +293,130 @@
         "params": []
       }
     ]
+  },
+  "Select the problem with your program": {
+    "speech": "Select the problem with your program",
+    "buttons": [
+      {
+        "text": "My program does nothing at all",
+        "link": "Program does nothing",
+        "params": []
+      },
+      {
+        "text": "A condition isn't working (eg: in if statement or while loop)",
+        "link": "Condition isn't working",
+        "params": []
+      },
+      {
+        "text": "Certain parts of my program are skipped",
+        "link": "Certain parts skipped",
+        "params": []
+      },
+      {
+        "text": "A list has changed even though I didn't change it",
+        "link": "List has changed",
+        "params": []
+      },
+      {
+        "text": "Something else",
+        "link": "Ask if following tutorial",
+        "params": []
+      }
+    ]
+  },
+  "Program does nothing": {
+    "speech": "If your program does nothing at all but doesn’t show an error, it might be because you defined a function and forgot to call the function. To call a function, you need round brackets ().",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "No, that's not what I've dome",
+        "link": "More about program does nothing",
+        "params": []
+      }
+    ]
+  },
+  "More about program does nothing": {
+    "speech": "Another reason why your program might do nothing is if you forgot to output anything! Assigning to variables doesn’t show anything on the Micro:Bit display unless you also call display.show. Do not call print because it doesn’t work on the Micro:Bit.",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "I still need help",
+        "link": "Duck gives up",
+        "params": []
+      }
+    ]
+  },
+  "Condition isn't working": {
+    "speech": "You’ve told me that a condition isn’t working. Is your condition simple (just uses one comparison) or complex (uses and / or ) ?",
+    "buttons": [
+      {
+        "text": "Simple",
+        "link": "Simple condition",
+        "params": []
+      },
+      {
+        "text": "Complex",
+        "link": "Complex condition",
+        "params": []
+      }
+    ]
+  },
+  "Simple condition": {
+    "speech": "If two values should compare equal but they don’t, it might be because they’re different types. For example, 3 is an int but “3” is a string, so Python considers them to be totally different things and won’t consider them equal.",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "I still need help",
+        "link": "Duck gives up",
+        "params": []
+      }
+    ]
+  },
+  "Complex condition": {
+    "speech": "When using complex conditions, Python groups and before or. For instance, “a or b and c“ is interpreted as “a or (b and c)”. If this isn’t what you want, then insert parentheses (round brackets).",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "I still need help",
+        "link": "Simple condition",
+        "params": []
+      }
+    ]
+  },
+  "Certain parts skipped": {
+    "speech": "Which of the following match your issue?",
+    "buttons": [
+      {
+        "text": "My list should be modified by every iteration of the loop but it’s only modified by the last iteration",
+        "link": "List outside loop",
+        "params": []
+      },
+      {
+        "text": "The last iteration of my loop is getting skipped",
+        "link": "Last iter skipped",
+        "params": []
+      },
+      {
+        "text": "Something else",
+        "link": "Narrow down decision",
+        "params": []
+      }
+    ]
   }
 }
