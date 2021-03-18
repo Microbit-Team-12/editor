@@ -4,11 +4,13 @@
     "buttons": [
       {
         "text": "An error message is displayed",
-        "link": "Select error message"
+        "link": "Select error message",
+        "params": []
       },
       {
         "text": "My code doesn't do what I want it to do",
-        "link": "Select the problem with your program"
+        "link": "Select the problem with your program",
+        "params": []
       }
     ]
   },
@@ -17,27 +19,33 @@
     "buttons": [
       {
         "text": "AttributeError",
-        "link": "AttributeError explanation"
+        "link": "AttributeError explanation",
+        "params": []
       },
       {
         "text": "SyntaxError",
-        "link": "SyntaxError explanation"
+        "link": "SyntaxError explanation",
+        "params": []
       },
       {
         "text": "TypeError",
-        "link": "TypeError explanation"
+        "link": "TypeError explanation",
+        "params": []
       },
       {
         "text": "NameError",
-        "link": "NameError explanation"
+        "link": "NameError explanation",
+        "params": []
       },
       {
         "text": "IndentationError / TabError",
-        "link": "IndentationError"
+        "link": "IndentationError",
+        "params": []
       },
       {
         "text": "Something else / I don't know",
-        "link": "Less common errors"
+        "link": "Less common errors",
+        "params": []
       }
     ]
   },
@@ -46,7 +54,8 @@
     "buttons": [
       {
         "text": "Tell me more",
-        "link": "More about AttributeError"
+        "link": "More about AttributeError",
+        "params": []
       }
     ]
   },
@@ -55,15 +64,18 @@
     "buttons": [
       {
         "text": "Ah, that's it!",
-        "link": "Goodbye"
+        "link": "Goodbye",
+        "params": []
       },
       {
         "text": "I still need help",
-        "link": "Highlight error"
+        "link": "Highlight error",
+        "params": []
       },
       {
         "text": "back",
-        "link": "AttributeError explanation"
+        "link": "AttributeError explanation",
+        "params": []
       }
     ]
   },
@@ -72,7 +84,8 @@
     "buttons": [
       {
         "text": "Thanks Duck, bye for now!",
-        "link": null
+        "link": null,
+        "params": []
       }
     ]
   },
@@ -81,11 +94,13 @@
     "buttons": [
       {
         "text": "Yes I am",
-        "link": "Tutorial selection"
+        "link": "Tutorial selection",
+        "params": []
       },
       {
         "text": "No I am not",
-        "link": "Duck gives up"
+        "link": "Duck gives up",
+        "params": []
       }
     ]
   },
@@ -94,7 +109,8 @@
     "buttons": [
       {
         "text": "None of them",
-        "link": "Duck gives up"
+        "link": "Duck gives up",
+        "params": []
       },
       {
         "text": "Hello, World!",
@@ -108,11 +124,13 @@
     "buttons": [
       {
         "text": "Thanks, I can fix that now.",
-        "link": "Goodbye"
+        "link": "Goodbye",
+        "params": []
       },
       {
         "text": "That wasn't what I was trying to write",
-        "link": "Duck gives up"
+        "link": "Duck gives up",
+        "params": []
       }
     ]
   },
@@ -126,11 +144,13 @@
     "buttons": [
       {
         "text": "Ah, that's it!",
-        "link": "Goodbye"
+        "link": "Goodbye",
+        "params": []
       },
       {
         "text": "No, I still need help",
-        "link": "More about SyntaxError"
+        "link": "More about SyntaxError",
+        "params": []
       }
     ]
   },
@@ -139,19 +159,23 @@
     "buttons": [
       {
         "text": "Invalid Syntax (no further message)",
-        "link": "Invalid syntax nfm explanation"
+        "link": "Invalid syntax nfm explanation",
+        "params": []
       },
       {
         "text": "Invalid Syntax for (number/integer with base 10)",
-        "link": "Invalid syntax number explanation"
+        "link": "Invalid syntax number explanation",
+        "params": []
       },
       {
         "text": "Can't assign to [something]",
-        "link": "Invalid Syntax can't assign explanation"
+        "link": "Invalid Syntax can't assign explanation",
+        "params": []
       },
       {
         "text": "Something else",
-        "link": "Highlight error"
+        "link": "Highlight error",
+        "params": []
       }
     ]
   },
@@ -160,11 +184,13 @@
     "buttons": [
       {
         "text": "Ah, that's it!",
-        "link": "Goodbye"
+        "link": "Goodbye",
+        "params": []
       },
       {
         "text": "No, I still need help",
-        "link": "Highlight error"
+        "link": "Highlight error",
+        "params": []
       }
     ]
   },
@@ -173,11 +199,13 @@
     "buttons": [
       {
         "text": "Thanks, thank you!",
-        "link": "Goodbye"
+        "link": "Goodbye",
+        "params": []
       },
       {
         "text": "No, I still need help",
-        "link": "Ask if following tutorial"
+        "link": "Ask if following tutorial",
+        "params": []
       }
     ]
   },
@@ -186,11 +214,13 @@
     "buttons": [
       {
         "text": "Ah, that's it!",
-        "link": "Goodbye"
+        "link": "Goodbye",
+        "params": []
       },
       {
         "text": "I still need help",
-        "link": "Highlight error"
+        "link": "Highlight error",
+        "params": []
       }
     ]
   },
@@ -199,7 +229,8 @@
     "buttons": [
       {
         "text": "Tell me more...",
-        "link": "More about assignment error"
+        "link": "More about assignment error",
+        "params": []
       }
     ]
   },
@@ -208,15 +239,18 @@
     "buttons": [
       {
         "text": "Ah, that's it!",
-        "link": "Goodbye"
+        "link": "Goodbye",
+        "params": []
       },
       {
         "text": "I still need help",
-        "link": "Highlight error"
+        "link": "Highlight error",
+        "params": []
       },
       {
         "text": "back",
-        "link": "Invalid Syntax can't assign explanation"
+        "link": "Invalid Syntax can't assign explanation",
+        "params": []
       }
     ]
   }
