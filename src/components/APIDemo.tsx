@@ -89,7 +89,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
         this.setState({
           output: output.outputChunk
         });
-      } else {
+      } else if (output.type !== 'KeyboardInterrupt') {
         alert('Error on line ' + output.line + ':\n' + output.type + ': ' + output.message);
       }
     });
