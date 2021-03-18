@@ -59,7 +59,7 @@
       },
       {
         "text": "I still need help",
-        "link": "Ask if following tutorial"
+        "link": "Highlight error"
       },
       {
         "text": "back",
@@ -113,6 +113,110 @@
       {
         "text": "That wasn't what I was trying to write",
         "link": "Duck gives up"
+      }
+    ]
+  },
+  "Duck gives up": {
+    "speech": "This seems strange... Perhaps you would have better luck reading the tutorial about errors?\nHere is the link: {hyperlink(insert link here)}",
+    "buttons": [
+    ]
+  },
+  "SyntaxError Explanation": {
+    "speech": "A SyntaxError might happen if you used the wrong punctuation (eg: using ‘;’ instead of ‘:’) or if you misspelt a keyword (such as for, while, if, or else). A tiny arrow symbol ( ^ ) normally points to the word that Python is confused about.",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye"
+      },
+      {
+        "text": "No, I still need help",
+        "link": "More about SyntaxError"
+      }
+    ]
+  },
+  "More about SyntaxError": {
+    "speech": "Sometimes a helpful message appears with a SyntaxError, such as “can’t assign to literal”. Which message do you see?",
+    "buttons": [
+      {
+        "text": "Invalid Syntax (no further message)",
+        "link": "Invalid syntax nfm explanation"
+      },
+      {
+        "text": "Invalid Syntax for (number/integer with base 10)",
+        "link": "Invalid syntax number explanation"
+      },
+      {
+        "text": "Can't assign to [something]",
+        "link": "Invalid Syntax can't assign explanation"
+      },
+      {
+        "text": "Something else",
+        "link": "Highlight error"
+      }
+    ]
+  },
+  "Invalid Syntax nfm explanation": {
+    "speech": "You might get this error if you write an “empty” for loop or while loop (one with nothing in it because you didn’t indent), or if you forgot to close the square brackets at the end of a list.",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye"
+      },
+      {
+        "text": "No, I still need help",
+        "link": "Highlight error"
+      }
+    ]
+  },
+  "Highlight error": {
+    "speech": "Your error message tells you that the {error_message.error_type} is on line {error_message.get_line_no_and_highlight()}, so I’ve highlighted that line for you in the editor. Do you spot the mistake now?",
+    "buttons": [
+      {
+        "text": "Thanks, thank you!",
+        "link": "Goodbye"
+      },
+      {
+        "text": "No, I still need help",
+        "link": "Ask if following tutorial"
+      }
+    ]
+  },
+  "Invalid syntax number explanation": {
+    "speech": "Python gives this message when you attach something confusing to the end of a number. Eg: Python knows about 3, but it doesn’t know about 3f or 3.f. If you are trying to multiply a number by a variable, use the * symbol. Or maybe you just made a typo.",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye"
+      },
+      {
+        "text": "I still need help",
+        "link": "Highlight error"
+      }
+    ]
+  },
+  "Invalid Syntax can't assign explanation": {
+    "speech": "Python complains that it “can’t assign to expression” if you use the single equals sign ( = ) in a place where it doesn’t belong. For example, “3 = x” would be read as “change the value of 3 to make it x. But that’s nonsense because you can’t change 3!",
+    "buttons": [
+      {
+        "text": "Tell me more...",
+        "link": "More about assignment error"
+      }
+    ]
+  },
+  "More about assignment error": {
+    "speech": "If you’re trying to change the value of a variable, the variable name (eg: x) needs to go on the left, and the value (eg: “hello”, or 10) needs to go on the right of the = sign.\nIf you’re trying to test if 2 values are equal, use == rather than = .",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye"
+      },
+      {
+        "text": "I still need help",
+        "link": "Highlight error"
+      },
+      {
+        "text": "back",
+        "link": "Invalid Syntax can't assign explanation"
       }
     ]
   }
