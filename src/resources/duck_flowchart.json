@@ -319,7 +319,7 @@
       },
       {
         "text": "Something else",
-        "link": "Ask if following tutorial",
+        "link": "Duck gives up",
         "params": []
       }
     ]
@@ -415,6 +415,81 @@
       {
         "text": "Something else",
         "link": "Narrow down decision",
+        "params": []
+      }
+    ]
+  },
+  "List outside loop": {
+    "speech": "This error happens if you have defined the list inside the loop. Move the definition of the list to before the loop begins, and that should fix your problem!",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "I still need help",
+        "link": "Duck gives up",
+        "params": []
+      }
+    ]
+  },
+  "Last iter skipped": {
+    "speech": "The range function in Python stops before the end value. For instance, range(1,10) will iterate through values 1-9 but miss out 10. Increase the end parameter in your call to range, and see if that fixes the problem.",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "I still need help",
+        "link": "Duck gives up",
+        "params": []
+      }
+    ]
+  },  
+  "Narrow down decision": {
+    "speech": "Try narrowing down exactly where your program “makes the decision” that skips a certain part of the code, by inserting display.show() calls (with different parameters!) after every line.",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "I still need help",
+        "link": "Duck gives up",
+        "params": []
+      }
+    ]
+  },
+  "List has changed": {
+    "speech": "If you define a list in Python and then set a second list equal to the first, then any changes to the first list will happen in the second! Fix this by using the copy function on the first list. For example, instead of typing “list2 = list1”, type “list2 = list1.copy()”    ",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "I still need help",
+        "link": "Duck gives up",
+        "params": []
+      }
+    ]
+  },
+  "Division has given the wrong answer": {
+    "speech": "If you divide two ints (whole numbers) in Python, it rounds the answer down to a whole number, instead of giving it as a decimal or fraction. If you want a decimal answer, write “.0” at the end of your numbers. Eg: type 3.0/4.0 instead of 3/4.",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "I still need help",
+        "link": "Duck gives up",
         "params": []
       }
     ]
