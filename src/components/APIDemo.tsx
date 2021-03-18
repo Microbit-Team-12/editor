@@ -16,7 +16,6 @@ while True:
 
 let globalConnection: MicrobitConnection | null;
 
-
 class APIDemo extends React.Component<unknown, APIDemoState> {
   constructor(props: unknown) {
     super(props);
@@ -32,6 +31,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     this.onInterrupt = this.onInterrupt.bind(this);
     this.onRun = this.onRun.bind(this);
     this.connect = this.connect.bind(this);
+    globalConnection = null;
     if(!checkCompatability()) alert('Browser not supported');
   }
 
