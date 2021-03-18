@@ -120,7 +120,7 @@
     ]
   },
   "Compare with tutorial": {
-    "speech": "{get_readable_diff(prev_button.params[0], code_at(error_message.line_no))}",
+    "speech": "{get_readable_diff(prev_button.params[0], error_message.line_no)}",
     "buttons": [
       {
         "text": "Thanks, I can fix that now.",
