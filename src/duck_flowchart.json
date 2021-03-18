@@ -253,5 +253,45 @@
         "params": []
       }
     ]
+  },
+  "TypeError explanation": {
+    "speech": "Python throws a TypeError if you use a value in a way that doesn’t make sense for its type. For instance, “3” + 5 would throw a TypeError because you cannot add a str to an int.",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "I still need help",
+        "link": "Highlight error",
+        "params": []
+      }
+    ]
+  },
+  "NameError explanation": {
+    "speech": "A NameError tells you that Python doesn’t understand a certain word that you used. Reread the error message to see which word this is. It might just be that you’ve mistyped it! Remember that Python is case-sensitive (so you mustn’t use a capital letter where it expects a lower-case one).",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "I still need help",
+        "link": "Highlight error",
+        "params": []
+      }
+    ]
+  },
+  "IndentationError explanation": {
+    "speech": "The indentation is a fancy way of saying the amount of space at the beginning of the line. Within a given loop, all lines must have the same indentation. You should always use tabs rather than spaces for this.",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      }
+    ]
   }
 }
