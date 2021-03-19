@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 class SpeechBubble extends Component {
   //render should be pure - shouldn't modify component state
   render() {
-    const buttons = this.state.buttonsText
-    const fullText = this.state.text
+    const buttons = this.state.buttonsText;
+    const fullText = this.state.text;
 
     //will return html with the correct space for text and, 
     //                      the correct number of buttons of the correct size 
@@ -12,22 +12,27 @@ class SpeechBubble extends Component {
       <>
         <div>{fullText}</div>
         <ul>
-        {
-          buttons.map(function(button){
-            return <button>{button}</button>
-          })
-        }
+          {
+            buttons.map(function(button){
+              return <button key={button.text}>{button}</button>;
+            })
+          }
         </ul>
       </>
-    )
+    );
   }
 
   constructor(props) {
     super(props);
     this.state = { buttonsText: props.buttonsText, 
-                   text: props.text };
+      text: props.text };
   }
 
 }
 
-export default SpeechBubble
+SpeechBubble.propTypes = {
+  buttonsText: String,
+  text: String
+};
+
+export default SpeechBubble;
