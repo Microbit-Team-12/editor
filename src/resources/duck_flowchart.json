@@ -493,5 +493,35 @@
         "params": []
       }
     ]
+  },
+  "Less common errors": {
+    "speech": "Do any of these match your error?",
+    "buttons": [
+      {
+        "text": "IndexError",
+        "link": "IndexError explanation",
+        "params": []
+      },
+      {
+        "text": "ImportError",
+        "link": "ImportError explanation",
+        "params": []
+      },
+      {
+        "text": "KeyError",
+        "link": "KeyError explanation",
+        "params": []
+      },
+      {
+        "text": "ValueError",
+        "link": "ValueError explanation",
+        "params": []
+      },
+      {
+        "text": "ZeroDivisionError",
+        "link": "ZeroDivisionError explanation",
+        "params": []
+      }
+    ]
   }
 }
