@@ -41,7 +41,6 @@ while True:
 More text
 `;
 
-
 class APIDemo extends React.Component<unknown, APIDemoState> {
   constructor(props: unknown) {
     super(props);
@@ -140,8 +139,8 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
         this.setState({
           output: output.outputChunk
         });
-      } else {
-        alert(output.type + output.message);
+      } else if (output.type !== 'KeyboardInterrupt') {
+        alert('Error on line ' + output.line + ':\n' + output.type + ': ' + output.message);
       }
     });
   }
