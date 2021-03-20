@@ -1,4 +1,4 @@
-.App {
+.APIDemo {
   min-height: 100vh;
 
   display: flex;
@@ -8,7 +8,7 @@
   background-color: #96ceb2;
 }
 
-.App-header {
+.APIDemo-header {
   height: 5vh;
   display: flex;
   flex-direction: row;
@@ -16,12 +16,12 @@
   justify-content: center;
 }
 
-.App-button {
+.APIDemo-button {
   margin: 2vw;
   font-size: calc(10px + 2vmin);  
 }
 
-.App-textareas {
+.APIDemo-textareas {
   width: 100vw;
   height: 90vh;
 
@@ -31,14 +31,14 @@
   justify-content: center;
 }
 
-.App-textareas textarea {
+.APIDemo-textareas textarea {
   width: 40%;
   height: 90vh;
 
   font-size: x-large;
 }
 
-.App-docs {
+.APIDemo-docs {
   text-align: left;
   padding: 5px;
 }

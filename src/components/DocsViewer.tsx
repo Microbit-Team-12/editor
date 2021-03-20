@@ -4,12 +4,10 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { darcula } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { DoubleArrow, FlashOn, Height } from '@material-ui/icons';
 import { IconButton } from '@material-ui/core';
-import Stream from 'ts-stream';
-import { MicrobitOutput } from '../api/microbit-api';
 
 type PythonCodeProps = {
   code: string,
-  onFlash?(code: string): Promise<Stream<MicrobitOutput>>,
+  onFlash?(code: string): Promise<void>,
   onLoad(codeSnippet: string): void,
 }
 
@@ -93,7 +91,7 @@ class PythonCode extends React.Component<PythonCodeProps, PythonCodeState> {
 
 type DocsViewerProps = {
   markdown: string,
-  onFlash?(code: string): Promise<Stream<MicrobitOutput>>,
+  onFlash?(code: string): Promise<void>,
   onLoad(codeSnippet: string): void,
 }
 
@@ -125,7 +123,7 @@ export default class DocsViewer extends React.Component<DocsViewerProps, unknown
   renderers = {code: this.renderCode.bind(this)};
 
   render(): JSX.Element {
-    return <ReactMarkdown className="App-docs" renderers={this.renderers}>
+    return <ReactMarkdown className="AIDemo-docs" renderers={this.renderers}>
       {this.props.markdown}
     </ReactMarkdown>;
   }
