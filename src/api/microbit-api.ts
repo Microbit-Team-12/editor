@@ -14,23 +14,23 @@ export interface ConnectToMicrobit {
  * A description of connection failure
 */
 export interface FailedConnection {
-  kind: 'ConnectionFailure',
-  type: 'Failed to Obtain Port' | 'Failed to Open Port' | 'Port No Response'
-  reason: string
+  readonly kind: 'ConnectionFailure',
+  readonly type: 'Failed to Obtain Port' | 'Failed to Open Port' | 'Port No Response'
+  readonly reason: string
 }
 
 export interface MicrobitConnection {
-  kind: 'MicrobitConnection'
+  readonly kind: 'MicrobitConnection'
   /**
    * An object that allows us to interact with the connected micro:bit.
    */
-  interact: InteractWithConnectedMicrobit
+  readonly interact: InteractWithConnectedMicrobit
 
   /**
    * A promise that completes when the micro:bit connection is no longer active.
    * This promise itself does not try to disconnect micro:bit.
    */
-  disconnection: Promise<void>
+  readonly disconnection: Promise<void>
 }
 
 export interface InteractWithConnectedMicrobit {
@@ -72,31 +72,31 @@ export type MicrobitOutput = NormalOutput | ErrorMessage
  * A piece of content that is output to the standard output of micro:bit.
  */
 export interface NormalOutput {
-  kind: 'NormalOutput'
+  readonly kind: 'NormalOutput'
   /**
    * outputChunk is a new piece of output we have obtained from micro:bit,
    * and may not correspond to a single print() executed on the device.
    */
-  outputChunk: string
+  readonly outputChunk: string
 }
 
 /**
  * A description of a runtime error that occured on micro:bit
  */
 export interface ErrorMessage {
-  kind: 'ErrorMessage'
+  readonly kind: 'ErrorMessage'
   /**
    * A integer indicating in which line of user code the error occurs
    */
-  line: number
+  readonly line: number
   /**
    * A string indicating type of the exception
    * For full list of types, see
    * https://docs.micropython.org/en/latest/library/builtins.html#exceptions
    */
-  type: string
+  readonly type: string
   /**
    * A *simple* explanation of the error
    */
-  message: string
+  readonly message: string
 }
