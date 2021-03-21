@@ -22,7 +22,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# lockfiles
-# we will use npm for both local tests and building
-yarn.lock
-package-lock.json
+# Jetbrains
+.idea
