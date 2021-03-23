@@ -14,7 +14,7 @@
       }
     ]
   },
-  "An error message is displayed": {
+  "Select error message": {
     "speech": "What type of error is displayed?",
     "buttons": [
       {
