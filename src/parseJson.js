@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import React from 'react';
+import React, { useState } from 'react';
 
 const useStyles = makeStyles( (theme) => ({
   button: {
@@ -34,9 +34,9 @@ const useStyles = makeStyles( (theme) => ({
 var jsonData = require('./resources/duck_flowchart.json');
 var slide_names = Object.keys(jsonData);
 
-function MakeButtons(slide) {
+function MakeButtons(initial_slide) {
   const classes = useStyles();
-  console.log(slide);
+  var [slide, setSlide] = useState(initial_slide);
 
   return (
     <Grid container spacing={3}>
@@ -47,7 +47,11 @@ function MakeButtons(slide) {
             return (
               <div key={button}>
                 <Grid item xs>
-                  <Paper className={classes.button}>{button.text}</Paper>
+                  <button 
+                    className={classes.button} 
+                    onClick={() => setSlide(button.link)}>
+                    {button.text}
+                  </button>
                 </Grid>
               </div>);
           })
@@ -57,6 +61,6 @@ function MakeButtons(slide) {
   );
 }
 
-export default function SlideExample() {
-  return MakeButtons(slide_names[1]); // just an example - try plugging in another number
+export default function StartSlides() {
+  return MakeButtons(slide_names[0]);
 }
