@@ -1,7 +1,7 @@
 import React from 'react';
 import { Stream } from 'ts-stream';
 import { FailedConnection, MicrobitConnection, MicrobitOutput } from '../api/microbit-api';
-import { checkCompatability, connectByPlugIn, connectBySelection, connectByPariedDevice} from '../api/microbit/connect';
+import { checkCompatability, connectByPariedDevice, connectByPlugIn, connectBySelection } from '../api/microbit/connect';
 import './APIDemo.css';
 
 type APIDemoState = {

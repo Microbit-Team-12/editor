@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import APIDemo from './components/APIDemo';
 import './index.css';
+import Autogrid from './parseJson.js';
 
 ReactDOM.render(
   <React.StrictMode>
-    <APIDemo />
+    <Autogrid />
   </React.StrictMode>,
   document.getElementById('root')
 );

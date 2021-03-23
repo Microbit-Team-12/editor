@@ -13,6 +13,7 @@
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@types/w3c-web-serial": "^1.0.1",
+    "@material-ui/core": "latest",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.3",
