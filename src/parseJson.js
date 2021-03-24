@@ -35,7 +35,8 @@ var slide_names = Object.keys(jsonData);
 
 function MakeButtons(initial_slide) {
   const classes = useStyles();
-  var [slide, setSlide] = useState(initial_slide);
+  const [slide, setSlide] = useState(initial_slide);  
+  // Here useState is a 'Hook' (from React) which means the slide variable is updated when the setSlide function is run
 
   return (
     <Grid container spacing={3}>
@@ -48,7 +49,15 @@ function MakeButtons(initial_slide) {
                 <Grid item xs>
                   <button 
                     className={classes.button} 
-                    onClick={() => setSlide(button.link)}>
+                    onClick={() => {
+                      if (button.link) {  // this checks button.link isnt null
+                        setSlide(button.link);
+                      }
+                      else {  // whatever we want the null function to be
+                        //window.close();
+                        setSlide(initial_slide);
+                      }
+                    }}>
                     {button.text}
                   </button>
                 </Grid>
