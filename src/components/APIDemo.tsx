@@ -1,5 +1,6 @@
 import React from 'react';
 import { Stream } from 'ts-stream';
+import { Box, Button } from '@material-ui/core';
 import { FailedConnection, MicrobitConnection, MicrobitOutput } from '../api/microbit-api';
 import {
   checkCompatability,
@@ -21,7 +22,9 @@ type APIDemoState = {
 
 const exampleCode = `from microbit import *
 
-display.show(1)`;
+while True:
+    display.scroll('Hello, World!')
+    `;
 
 
 const exampleDocs = `# Title
@@ -72,15 +75,43 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     }
   }
 
+  renderStartButton(): JSX.Element {
+    return <Box paddingLeft={2}>
+      <Button
+        className="APIDemo-button"
+        variant="contained"
+        disabled={this.state.connection !== null}
+        onClick={this.onStart}
+      >
+        Start
+      </Button>
+    </Box>;
+  }
+
+  renderButtonRequiringConnection(text: string, callback: () => void): JSX.Element {
+    return (
+      <Box paddingLeft={2}>
+        <Button
+          className="APIDemo-button"
+          variant="contained"
+          disabled={this.state.connection === null}
+          onClick={() => callback()}
+        >
+          {text}
+        </Button>
+      </Box>
+    );
+  }
+
   render(): JSX.Element {
     return (
       <div className="APIDemo">
         <header className="APIDemo-header">
-          <button className="APIDemo-button" onClick={this.onStart}>Start</button>
-          <button className="APIDemo-button" onClick={() => this.onRun(this.state.code)}>Run Code</button>
-          <button className="APIDemo-button" onClick={() => this.onFlash(this.state.code)}>Flash Code</button>
-          <button className="APIDemo-button" onClick={this.onInterrupt}>Interrupt</button>
-          <button className="APIDemo-button" onClick={this.onReboot}>Reboot</button>
+          {this.renderStartButton()}
+          {this.renderButtonRequiringConnection('Run Code', () => this.onRun(this.state.code))}
+          {this.renderButtonRequiringConnection('Flash Code', () => this.onFlash(this.state.code))}
+          {this.renderButtonRequiringConnection('Interrupt', this.onInterrupt)}
+          {this.renderButtonRequiringConnection('Reboot', this.onReboot)}
         </header>
         <div className="APIDemo-textareas">
           <DocsViewer

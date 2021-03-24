@@ -17,8 +17,8 @@
 }
 
 .APIDemo-button {
-  margin: 2vw;
-  font-size: calc(10px + 2vmin);
+  /*margin: 2vw;*/
+  /*font-size: calc(10px + 2vmin);*/
 }
 
 .APIDemo-textareas {
