@@ -39,7 +39,7 @@
       },
       {
         "text": "IndentationError / TabError",
-        "link": "IndentationError",
+        "link": "IndentationError explanation",
         "params": []
       },
       {
@@ -139,7 +139,7 @@
     "buttons": [
     ]
   },
-  "SyntaxError Explanation": {
+  "SyntaxError explanation": {
     "speech": "A SyntaxError might happen if you used the wrong punctuation (eg: using ‘;’ instead of ‘:’) or if you misspelt a keyword (such as for, while, if, or else). A tiny arrow symbol ( ^ ) normally points to the word that Python is confused about.",
     "buttons": [
       {
