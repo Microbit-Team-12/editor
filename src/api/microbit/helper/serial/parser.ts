@@ -1,5 +1,5 @@
 import Stream from 'ts-stream';
-import { MicrobitOutput } from '../../../microbit-api';
+import { MicroPythonExceptionType, MicrobitOutput } from '../../../microbit-api';
 import { SignalOption } from '../../../microbit-api-config';
 import { SerialReader } from './reader';
 
@@ -90,7 +90,7 @@ export class SerialParser {
       outputStream.write({
         kind: 'ErrorMessage',
         line: parseInt(lineNumberString)-1,
-        type: line2split[0],
+        type: line2split[0] as MicroPythonExceptionType,
         message: line2split[1]
       });
     }
