@@ -18,27 +18,43 @@
 
 .APIDemo-button {
   margin: 2vw;
-  font-size: calc(10px + 2vmin);  
+  font-size: calc(10px + 2vmin);
 }
 
 .APIDemo-textareas {
   width: 100vw;
   height: 90vh;
 
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 1em 20px;
+
+  margin: 10px;
 }
 
 .APIDemo-textareas textarea {
-  width: 40%;
-  height: 90vh;
-
   font-size: x-large;
+
+  margin-right: 20px;
 }
 
 .APIDemo-docs {
+  grid-column: 1;
+  grid-row: 1 / span 3;
+
+}
+
+.APIDemo-docs * {
   text-align: left;
-  padding: 5px;
+}
+
+.APIDemo-code {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+}
+
+.APIDemo-output {
+  grid-column: 2;
+  grid-row: 3 / span 1;
 }

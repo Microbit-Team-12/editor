@@ -123,7 +123,7 @@ export default class DocsViewer extends React.Component<DocsViewerProps, unknown
   renderers = {code: this.renderCode.bind(this)};
 
   render(): JSX.Element {
-    return <ReactMarkdown className="AIDemo-docs" renderers={this.renderers}>
+    return <ReactMarkdown className="APIDemo-docs" renderers={this.renderers}>
       {this.props.markdown}
     </ReactMarkdown>;
   }

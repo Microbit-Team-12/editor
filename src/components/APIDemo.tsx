@@ -13,7 +13,7 @@ import './APIDemo.css';
 type APIDemoState = {
   /** The markdown of the tutorial being displayed. */
   docs: string,
-  /** Thee code in the editor. */
+  /** The code in the editor. */
   code: string,
   output: string,
   connection: MicrobitConnection | null,
