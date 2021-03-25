@@ -1,23 +1,23 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import Editor, { loader, Monaco } from '@monaco-editor/react';
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import React from 'react';
 import { Stream } from 'ts-stream';
 import { FailedConnection, MicrobitConnection, MicrobitOutput } from '../api/microbit-api';
 import {
   checkCompatability,
-  connectByPlugIn,
-  connectBySelection,
-  connectByPariedDevice
+  connectByPariedDevice, connectByPlugIn,
+  connectBySelection
 } from '../api/microbit/connect';
-import Editor from '@monaco-editor/react';
-import DocsViewer from './DocsViewer';
 import './APIDemo.css';
+import DocsViewer from './DocsViewer';
 
 type APIDemoState = {
   /** The markdown of the tutorial being displayed. */
   docs: string,
-  /** Thee code in the editor. */
-  code: string,
   output: string,
   connection: MicrobitConnection | null,
+  editor: monaco.editor.IStandaloneCodeEditor | null
 }
 
 const exampleCode = `from microbit import *
@@ -46,22 +46,24 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
   constructor(props: unknown) {
     super(props);
     this.state = {
-      code: exampleCode,
       docs: exampleDocs,
       output: '',
       connection: null,
+      editor: null
     };
     // Better for performance than binding or using () => ... inside render
     this.onStart = this.onStart.bind(this);
     this.onFlash = this.onFlash.bind(this);
-    this.onCodeChange = this.onCodeChange.bind(this);
     this.onReboot = this.onReboot.bind(this);
     this.onExec = this.onExec.bind(this);
     this.onInterrupt = this.onInterrupt.bind(this);
     this.onRun = this.onRun.bind(this);
     this.connect = this.connect.bind(this);
     this.onLoad = this.onLoad.bind(this);
+    this.handleEditorDidMount = this.handleEditorDidMount.bind(this);
     if (!checkCompatability()) alert('Browser not supported');
+
+    loader.init().then(t=>{console.log(t);});
   }
 
   componentWillUnmount(): void {
@@ -73,13 +75,19 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     }
   }
 
+  handleEditorDidMount(editor: monaco.editor.IStandaloneCodeEditor, monaco: Monaco):void {
+    this.setState({
+      editor: editor
+    });
+  }
+
   render(): JSX.Element {
     return (
       <div className="APIDemo">
         <header className="APIDemo-header">
           <button className="APIDemo-button" onClick={this.onStart}>Start</button>
-          <button className="APIDemo-button" onClick={() => this.onRun(this.state.code)}>Run Code</button>
-          <button className="APIDemo-button" onClick={() => this.onFlash(this.state.code)}>Flash Code</button>
+          <button className="APIDemo-button" onClick={() => this.onRun(this.state.editor!.getValue())}>Run Code</button>
+          <button className="APIDemo-button" onClick={() => this.onFlash(this.state.editor!.getValue())}>Flash Code</button>
           <button className="APIDemo-button" onClick={this.onInterrupt}>Interrupt</button>
           <button className="APIDemo-button" onClick={this.onReboot}>Reboot</button>
         </header>
@@ -89,8 +97,24 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
             onFlash={this.state.connection === null ? undefined : this.onFlash}
             onLoad={this.onLoad}
           />
-          <textarea value={this.state.code} onChange={this.onCodeChange} className="APIDemo-code"/>
-          <textarea value={this.state.output} readOnly className="APIDemo-output"/>
+
+          <Editor
+            width="30vw"
+            height="90vh"
+            defaultLanguage="python"
+            defaultValue={exampleCode}
+            onMount={this.handleEditorDidMount}
+            theme='light'
+            options={{
+              minimap: {
+                enabled: false,
+              },
+              fontSize: 18,
+            }}
+            wrapperClassName="APIDemo-code"
+          />
+
+          <textarea value={this.state.output} readOnly className="APIDemo-output" />
         </div>
       </div>
     );
@@ -103,10 +127,10 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
         alert(c.reason);
         return false;
       case 'MicrobitConnection':
-        this.setState({connection: c});
+        this.setState({ connection: c });
         c.disconnection.then(async () => {
           alert('Serial disconnected');
-          this.setState({connection: null}, async () => {
+          this.setState({ connection: null }, async () => {
             await this.connect(connectByPlugIn());
             alert('Serial reconnected');
           });
@@ -117,15 +141,8 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
 
   onLoad(codeSnippet: string): void {
     // Shouldn't access this.state inside setState
-    const currentCode = this.state.code;
-
-    this.setState({code: currentCode + '\n' + codeSnippet});
-  }
-
-  onCodeChange(e: React.ChangeEvent<HTMLTextAreaElement>): void {
-    this.setState({
-      code: e.target.value
-    });
+    const editor = this.state.editor;
+    editor!.setValue(editor!.getValue() + '\n' + codeSnippet);
   }
 
   async onStart(): Promise<void> {

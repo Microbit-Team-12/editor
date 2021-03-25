@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import APIMonacoDemo from './components/APIMonacoDemo';
+import APIDemo from './components/APIDemo';
 import './index.css';
 
 ReactDOM.render(
   <React.StrictMode>
-    <APIMonacoDemo />
+    <APIDemo />
   </React.StrictMode>,
   document.getElementById('root')
 );
