@@ -31,11 +31,11 @@ const useStyles = makeStyles( (theme) => ({
 }));
 
 var jsonData = require('./resources/duck_flowchart.json');
-var slide_names = Object.keys(jsonData);
+const slideNames = Object.keys(jsonData);
 
-function MakeButtons(initial_slide) {
+function MakeButtons(initialSlide) {
   const classes = useStyles();
-  const [slide, setSlide] = useState(initial_slide);  
+  const [slide, setSlide] = useState(initialSlide);  
   // Here useState is a 'Hook' (from React) which means the slide variable is updated when the setSlide function is run
 
   return (
@@ -55,7 +55,7 @@ function MakeButtons(initial_slide) {
                       }
                       else {  // whatever we want the null function to be
                         //window.close();
-                        setSlide(initial_slide);
+                        setSlide(initialSlide);
                       }
                     }}>
                     {button.text}
@@ -70,5 +70,5 @@ function MakeButtons(initial_slide) {
 }
 
 export default function StartSlides() {
-  return MakeButtons(slide_names[0]);
+  return MakeButtons(slideNames[0]);
 }
