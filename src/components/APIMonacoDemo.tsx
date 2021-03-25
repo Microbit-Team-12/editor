@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import Editor, { loader, Monaco } from '@monaco-editor/react';
-import { editor } from 'monaco-editor/esm/vs/editor/editor.api';
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import React from 'react';
 import { Stream } from 'ts-stream';
 import { FailedConnection, MicrobitConnection, MicrobitOutput } from '../api/microbit-api';
@@ -17,7 +17,7 @@ type APIMonacoDemoState = {
   docs: string,
   output: string,
   connection: MicrobitConnection | null,
-  editor: editor.IStandaloneCodeEditor | null
+  editor: monaco.editor.IStandaloneCodeEditor | null
 }
 
 const exampleCode = `from microbit import *
@@ -75,7 +75,7 @@ class APIMonacoDemo extends React.Component<unknown, APIMonacoDemoState> {
     }
   }
 
-  handleEditorDidMount(editor: editor.IStandaloneCodeEditor, monaco: Monaco):void {
+  handleEditorDidMount(editor: monaco.editor.IStandaloneCodeEditor, monaco: Monaco):void {
     this.setState({
       editor: editor
     });
@@ -104,6 +104,7 @@ class APIMonacoDemo extends React.Component<unknown, APIMonacoDemoState> {
             defaultLanguage="python"
             defaultValue={exampleCode}
             onMount={this.handleEditorDidMount}
+            theme='github'
             options={{
               minimap: {
                 enabled: false,
