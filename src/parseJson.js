@@ -2,8 +2,8 @@
 
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 import React, { useState } from 'react';
+import * as Space from 'react-spaces';
 
 const useStyles = makeStyles( (theme) => ({
   button: {
@@ -69,33 +69,38 @@ function MakeButtons(initialSlide) {
   // Here useState is a 'Hook' (from React) which means the slide variable is updated when the setSlide function is run
 
   return (
-    <Grid container spacing={3}>
-      <Typography className={classes.speech}>{parseSpeech(jsonData[slide].speech)}</Typography>
-      <Grid container spacing={3}>
-        {
-          jsonData[slide].buttons.map(function (button) {
+    <Space.Fixed height={400} width={300}>
+      <Space.Top size={100}>
+        {jsonData[slide].speech}
+      </Space.Top>
+      <Space.Bottom size={300}>
+        <Grid container justify="center" alignItems="flex-start" spacing={2}>
+          {jsonData[slide].buttons.map(function (button) {
             return (
               <div key={button}>
                 <Grid item xs>
-                  <button 
-                    className={classes.button} 
+                  <button
+                    className={classes.button}
                     onClick={() => {
-                      if (button.link) {  // this checks button.link isnt null
+                      if (button.link) {
+                        // this checks button.link isnt null
                         setSlide(button.link);
-                      }
-                      else {  // whatever we want the null function to be
+                      } else {
+                        // whatever we want the null function to be
                         //window.close();
                         setSlide(initialSlide);
                       }
-                    }}>
+                    }}
+                  >
                     {button.text}
                   </button>
                 </Grid>
-              </div>);
-          })
-        }
-      </Grid>
-    </Grid>
+              </div>
+            );
+          })}
+        </Grid>
+      </Space.Bottom>
+    </Space.Fixed>
   );
 }
 
