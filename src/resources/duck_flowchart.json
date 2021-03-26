@@ -135,7 +135,7 @@
     ]
   },
   "Duck gives up": {
-    "speech": "This seems strange... Perhaps you would have better luck reading the tutorial about errors?\nHere is the link: {hyperlink(insert link here)}",
+    "speech": "This seems strange... Perhaps you would have better luck reading the tutorial about errors?\nHere is the link: {linkToTutorialAboutErrors}",
     "buttons": [
     ]
   },

@@ -33,6 +33,36 @@ const useStyles = makeStyles( (theme) => ({
 var jsonData = require('./resources/duck_flowchart.json');
 const slideNames = Object.keys(jsonData);
 
+function executeCorrespondingCommand(commandString) {
+  if (commandString === 'linkToTutorialAboutErrors') {
+    return (
+      <a href="https://example.com/faq.html" target="_blank" rel="noreferrer">
+        Tutorial about errors
+      </a>
+    );
+  }
+  else {
+    return commandString;
+  }
+} 
+
+function parseTextCommand(commandString) {
+  var parsedCommand = commandString;
+  if (commandString.startsWith('{')) { 
+    // must also then end with '}'
+    var rawCommand = commandString.slice(1, -1); // remove surrounding braces
+    parsedCommand = executeCorrespondingCommand(rawCommand);
+  }
+  return parsedCommand;
+}
+
+function parseSpeech(speech) {
+  var re = /(\{[\S\s]+?\})/g;
+  var splitSpeech = speech.split(re).filter(Boolean);
+  var parsedSpeech = splitSpeech.map(parseTextCommand);
+  return parsedSpeech;
+}
+
 function MakeButtons(initialSlide) {
   const classes = useStyles();
   const [slide, setSlide] = useState(initialSlide);  
@@ -40,7 +70,7 @@ function MakeButtons(initialSlide) {
 
   return (
     <Grid container spacing={3}>
-      <Typography className={classes.speech}>{jsonData[slide].speech}</Typography>
+      <Typography className={classes.speech}>{parseSpeech(jsonData[slide].speech)}</Typography>
       <Grid container spacing={3}>
         {
           jsonData[slide].buttons.map(function (button) {
