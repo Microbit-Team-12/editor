@@ -521,6 +521,85 @@
         "text": "ZeroDivisionError",
         "link": "ZeroDivisionError explanation",
         "params": []
+      },
+      {
+        "text": "None of them / I don't know",
+        "link": "Highlight error"
+      }
+    ]
+  },
+  "IndexError explanation": {
+    "speech": "The word \"index\" means \"position in a list\", so an IndexError means that you are trying to access a position in a list that's after the end of the list! For example, if you try to get the 3rd item from a list with only 2 items, Python won't understand that. Remember that lists start at 0, so a list of length 3 will only have indexes 0,1, and 2.",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "I still need help",
+        "link": "Highlight error",
+        "params": []
+      }
+    ]
+  },
+  "ImportError explanation": {
+    "speech": "An ImportError normally means that you have misspelled a module that you're trying to import. For instance, check that you have spelt 'Microbit' correctly (and with a capital M!) in your 'import' statment.",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "I still need help",
+        "link": "Highlight error",
+        "params": []
+      }
+    ]
+  },
+  "KeyError explanation": {
+    "speech": "A KeyError means that you are trying to access a value in a dictionary from a key that doesn't yet exist! This might be because you have misspelt the key, or because you forgot to add something to the dictionary before accessing it.",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "I still need help",
+        "link": "Highlight error",
+        "params": []
+      }
+    ]
+  },
+  "ValueError explanation": {
+    "speech": "A ValueError happens if you call a function with the wrong argument (parameter). Read the error message that comes with the error, to see why your argument doesn't work here.",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "I still need help",
+        "link": "Highlight error",
+        "params": []
+      }
+    ]
+  },
+  "ZeroDivisionError explanation": {
+    "speech": "The rules of maths don't allow you to divide by zero, but a ZeroDivisionError means that you are accidentally trying to divide something by zero!",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "I still need help",
+        "link": "Highlight error",
+        "params": []
       }
     ]
   }
