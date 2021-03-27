@@ -51,6 +51,11 @@ export interface InteractWithConnectedMicrobit {
    * If code is being executed, then there should be a ErrorMessage in the outputStream.
    */
   interrupt: () => Promise<void>
+
+  disconnect: () => Promise<void>
+  /**
+   * Disconnect the paired micro:bit.
+   */
 }
 
 /**

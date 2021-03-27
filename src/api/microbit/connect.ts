@@ -39,8 +39,8 @@ async function createConnection(port: SerialPort, config: ManagerOption): Promis
   return {
     kind: 'MicrobitConnection',
     interact: portInteract,
-    disconnection: new Promise((resolve, reject) => {
-      const onDisconnect = (event: Event) => {
+    disconnection: new Promise((resolve, _) => {
+      const onDisconnect = (_: Event) => {
         console.log('disconnected');
         port.removeEventListener('disconnect', onDisconnect);
         resolve();
@@ -110,7 +110,7 @@ export async function connectByPlugIn(config: ManagerOption = defaultConfig): Pr
     }
   }
   
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, _) => {
     /**
      * A event listener function
      * Resolves the promise when a device is plugged in

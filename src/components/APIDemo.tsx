@@ -60,12 +60,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
   }
 
   componentWillUnmount(): void {
-    if (this.state.connection !== null) {
-      // TODO disconnect here
-      // It makes more sense to have connection as part of the state
-      // rather than a global variable, since there will only be one
-      // instance of APIDemo / App running anyways.
-    }
+    this.state.connection?.interact.disconnect();
   }
 
   renderStartButton(): JSX.Element {

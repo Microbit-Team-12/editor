@@ -12,17 +12,22 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
   portParser!: SerialParser
   signal: SignalOption;
 
+  private portWriterStreamClosed: Promise<void> | null = null;
+  private portReaderStreamClosed: Promise<void> | null = null;
+
   constructor(port: SerialPort, config: ManagerOption) {
     this.port = port;
     this.signal = config.signalOption;
     if (port.writable != null) {
       const encoder = new TextEncoderStream();
-      encoder.readable.pipeTo(port.writable).catch((err) => { console.log('disconnected in pipe'); });
+      this.portWriterStreamClosed = encoder.readable.pipeTo(port.writable)
+        .catch((_) => { console.log('disconnected in pipe'); });
       this.portWriter = encoder.writable.getWriter();
     }
     if (port.readable != null) {
       const decoder = new TextDecoderStream();
-      port.readable.pipeTo(decoder.writable).catch((err) => { console.log('disconnected in pipe'); });
+      this.portReaderStreamClosed = port.readable.pipeTo(decoder.writable)
+        .catch((_) => { console.log('disconnected in pipe'); });
       this.portReader = decoder.readable.getReader();
 
       const portReaderHelper = new SerialReader(this.portReader, config.readOption);
@@ -137,5 +142,15 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
     await this.portWriter.write(ctrlC);
     //Not reading for new REPL line here
     //because portParser might already be reading.
+  }
+
+  async disconnect(): Promise<void> {
+    await this.portReader.cancel('App will unmount');
+    await this.portReaderStreamClosed;
+
+    await this.portWriter.abort('App will unmount');
+    await this.portWriterStreamClosed;
+
+    await this.port.close();
   }
 }
