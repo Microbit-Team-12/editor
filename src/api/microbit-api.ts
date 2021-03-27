@@ -1,15 +1,5 @@
 import Stream from 'ts-stream';
 
-export interface ConnectToMicrobit {
-  /**
-   * Get a connection to micro:bit by letting the user select connected devices.
-   * 
-   * The promise completes with a object holding a connection to micro:bit if successful.
-   * Otherwise completes with a ConnectionFailure object.
-   */
-  connect: () => Promise<MicrobitConnection | FailedConnection>
-}
-
 /**
  * A description of connection failure
 */
@@ -80,6 +70,25 @@ export interface NormalOutput {
   readonly outputChunk: string
 }
 
+export type MicroPythonExceptionType = 'AssertionError'
+  | 'AttributeError'
+  | 'Exception'
+  | 'ImportError'
+  | 'IndexError'
+  | 'KeyboardInterrupt'
+  | 'KeyError'
+  | 'MemoryError'
+  | 'NameError'
+  | 'NotImplementedError'
+  | 'OSError'
+  | 'RuntimeError'
+  | 'StopIteration'
+  | 'SyntaxError'
+  | 'SystemExit'
+  | 'TypeError'
+  | 'ValueError'
+  | 'ZeroDivisionError'
+
 /**
  * A description of a runtime error that occured on micro:bit
  */
@@ -94,7 +103,7 @@ export interface ErrorMessage {
    * For full list of types, see
    * https://docs.micropython.org/en/latest/library/builtins.html#exceptions
    */
-  readonly type: string
+  readonly type: MicroPythonExceptionType
   /**
    * A *simple* explanation of the error
    */
