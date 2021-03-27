@@ -37,7 +37,7 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
     }
   }
 
-  getState(): MicrobitState{
+  getState(): MicrobitState {
     return this.state;
   }
 
@@ -60,10 +60,10 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
         replaceAll require ESNext.
         But web serial already require a high version of chrome.
     */
-    return (  'print(\'' + this.signal.executionStart + '\')'
-            + '\r\n' + code + '\r\n'
-            + 'print(\'' + this.signal.executionDone + '\')'
-    ) .replaceAll('\\', '\\\\')
+    return ('print(\'' + this.signal.executionStart + '\')'
+      + '\r\n' + code + '\r\n'
+      + 'print(\'' + this.signal.executionDone + '\')'
+    ).replaceAll('\\', '\\\\')
       .replaceAll('\'', '\\\'')
       .replaceAll(/\r?\n/g, '\\r\\n');
   }
@@ -101,8 +101,8 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
       - reboot
           To run `main.py` in a fresh state
     */
-    if(this.state===MicrobitState.Busy) throw Error('Device not free');
-    this.state=MicrobitState.Busy;
+    if (this.state === MicrobitState.Busy) throw Error('Flash Failed: Device not free');
+    this.state = MicrobitState.Busy;
 
     const codeInPythonString = this.codeToPythonString(code);
     const outputStream = new Stream<MicrobitOutput>();
@@ -123,7 +123,7 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
   }
 
   async execute(code: string): Promise<Stream<MicrobitOutput>> {
-    if (this.state === MicrobitState.Busy) throw Error('Device not free');
+    if (this.state === MicrobitState.Busy) throw Error('Execute Failed: Device not free');
     this.state = MicrobitState.Busy;
 
     const codeInPythonString = this.codeToPythonString(code);
@@ -141,7 +141,7 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
   }
 
   async reboot(): Promise<Stream<MicrobitOutput>> {
-    if (this.state === MicrobitState.Busy) throw Error('Device not free');
+    if (this.state === MicrobitState.Busy) throw Error('Reboot Failed: Device not free');
     this.state = MicrobitState.Busy;
 
     await this.getREPLLine();
@@ -156,8 +156,21 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
     return outputStream;
   }
 
+  private waitUntil(cond: () => boolean): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const timer = setInterval(() => {
+        if (cond()) {
+          clearInterval(timer);
+          resolve();
+        }
+      }, 200);
+    });
+  }
+
   async interrupt(): Promise<void> {
+    if (this.state === MicrobitState.Free) throw Error('Interupt Failed: Device not running code');
     await this.portWriter.write(ctrlC);
+    await this.waitUntil(() => this.state === MicrobitState.Busy);
     //Not reading for new REPL line here
     //because portParser might already be reading.
   }
