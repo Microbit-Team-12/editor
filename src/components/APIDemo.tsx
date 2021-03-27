@@ -155,8 +155,36 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
 
   onLoad(codeSnippet: string): void {
     const editor = this.state.editor;
-    editor!.setValue(editor!.getValue() + '\n' + codeSnippet);
+    if (editor == null) {
+      alert('Editor is not loaded');
+      return;
+    }
+
+    const selection = editor.getSelection();
+    if (selection == null) {
+      alert('selection is null');
+      return;
+    }
+    const position = selection.getPosition();
+    const range: monaco.IRange = {
+      startLineNumber: position.lineNumber,
+      endLineNumber: position.lineNumber,
+      startColumn: position.column,
+      endColumn: position.column,
+    };
+    editor.getModel()?.pushEditOperations(
+      [selection],
+      [
+        {
+          range,
+          text: codeSnippet,
+        }
+      ],
+      (_) => null,
+    ); // second parameter set to true to enable undo's
+    editor.focus();
   }
+
 
   async onStart(): Promise<void> {
     if (!(await this.connect(connectByPariedDevice())))
