@@ -57,15 +57,13 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
         Should be [\r][\n] in main.py
         [\][r][\][n] in python string
     */
-    const codeWithPrint = 'print(\'' + this.signal.executionStart + '\')'
+    return (
+      'print(\'' + this.signal.executionStart + '\')'
       + '\r\n' + code + '\r\n'
-      + 'print(\'' + this.signal.executionDone + '\')';
-    if (!String.prototype.replaceAll) return codeWithPrint.replace(/\\/g,'\\\\')
+      + 'print(\'' + this.signal.executionDone + '\')'
+    ) .replace(/\\/g,'\\\\')
       .replace(/'/g,'\\\'')
       .replace(/\r?\n/g, '\\r\\n');
-    else return codeWithPrint.replaceAll('\\', '\\\\')
-      .replaceAll('\'', '\\\'')
-      .replaceAll(/\r?\n/g, '\\r\\n');
   }
 
   /**
