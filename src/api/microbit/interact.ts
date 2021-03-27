@@ -145,11 +145,15 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
   }
 
   async disconnect(): Promise<void> {
+    console.log('Disconnection initiated:');
+
     await this.portReader.cancel('App will unmount');
     await this.portReaderStreamClosed;
+    console.log('Reader closed;');
 
     await this.portWriter.abort('App will unmount');
     await this.portWriterStreamClosed;
+    console.log('Writer closed.');
 
     await this.port.close();
   }

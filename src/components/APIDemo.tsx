@@ -22,10 +22,21 @@ type APIDemoState = {
 }
 
 const exampleCode = `from microbit import *
+import music
 
 while True:
-    display.scroll('Hello, World!')
-    `;
+    if accelerometer.was_gesture('shake'):
+        display.show(Image.CONFUSED)
+        sleep(1500)
+    if accelerometer.was_gesture('face up'):
+        display.show(Image.HAPPY)
+    if accelerometer.was_gesture('left'):
+        display.show('<')
+        music.play(music.JUMP_UP)
+    if accelerometer.was_gesture('right'):
+        display.show('>')
+        music.play(music.JUMP_DOWN)
+`;
 
 
 const exampleDocs = `# Title
@@ -33,13 +44,19 @@ const exampleDocs = `# Title
 Did you know you can use tildes instead of backticks?
 
 ~~~py
-# LINES 5-6
+# LINES 6-10
 from microbit import *
+import music
 
 while True:
-    display.scroll('Hello, World!')
-    display.show(Image.HEART)
-    sleep(2000)
+    if button_a.is_pressed():
+        display.show(Image.MUSIC_QUAVER)
+        music.play(music.NYAN)
+    if button_b.is_pressed():
+        display.show(Image.MEH)
+        music.play(music.POWER_DOWN)
+    
+    display.show(Image.COW)
 ~~~
 
 More text
