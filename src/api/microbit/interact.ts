@@ -56,14 +56,14 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
       (3) new line created by user
         Should be [\r][\n] in main.py
         [\][r][\][n] in python string
-      Note:
-        replaceAll require ESNext.
-        But web serial already require a high version of chrome.
     */
-    return ('print(\'' + this.signal.executionStart + '\')'
+    const codeWithPrint = 'print(\'' + this.signal.executionStart + '\')'
       + '\r\n' + code + '\r\n'
-      + 'print(\'' + this.signal.executionDone + '\')'
-    ).replaceAll('\\', '\\\\')
+      + 'print(\'' + this.signal.executionDone + '\')';
+    if (!String.prototype.replaceAll) return codeWithPrint.replace(/\\/g,'\\\\')
+      .replace(/'/g,'\\\'')
+      .replace(/\r?\n/g, '\\r\\n');
+    else return codeWithPrint.replaceAll('\\', '\\\\')
       .replaceAll('\'', '\\\'')
       .replaceAll(/\r?\n/g, '\\r\\n');
   }
