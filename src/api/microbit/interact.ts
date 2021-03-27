@@ -116,8 +116,7 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
       + 'from microbit import *;'
       + 'reset()\r'
     );
-    await this.portParser.readUntilExecutionStart();
-    this.portParser.readUntilExecuteDone(outputStream)
+    this.portParser.readCodeOutput(outputStream)
       .then(() => { this.state = MicrobitState.Free; })
       .catch(() => { outputStream.end(); });
     return outputStream;
@@ -135,8 +134,7 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
       's=\'' + codeInPythonString + '\';'
       + 'exec(s)\r'
     );
-    await this.portParser.readUntilExecutionStart();
-    this.portParser.readUntilExecuteDone(outputStream)
+    this.portParser.readCodeOutput(outputStream)
       .then(() => { this.state = MicrobitState.Free; })
       .catch(() => { outputStream.end(); });
     return outputStream;
@@ -151,9 +149,8 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
       'from microbit import *;'
       + 'reset()\r'
     );
-    await this.portParser.readUntilExecutionStart();
     const outputStream = new Stream<MicrobitOutput>();
-    this.portParser.readUntilExecuteDone(outputStream)
+    this.portParser.readCodeOutput(outputStream)
       .then(() => { this.state = MicrobitState.Free; })
       .catch(() => { outputStream.end(); });
     return outputStream;
