@@ -23,7 +23,25 @@ export interface MicrobitConnection {
   readonly disconnection: Promise<void>
 }
 
+export enum MicrobitState{
+  /**
+   * Nothing is running,
+   * You can flash/execute/reboot
+   */
+  Free,
+  /**
+   * Code is running,
+   * You cannot flash/execute/reboot
+   */
+  Busy
+}
+
 export interface InteractWithConnectedMicrobit {
+  /**
+   * Return State of Microbit in `MicrobitState`
+   */
+  getState(): MicrobitState
+
   /**
    * Flash ROM of the connected micro:bit.
    * 
@@ -34,6 +52,7 @@ export interface InteractWithConnectedMicrobit {
 
   /**
    * Run code in REPL.
+   * Microbit is not rebooted. So all previous variables are kept.
    */
   execute: (code: string) => Promise<Stream<MicrobitOutput>>
 
@@ -50,12 +69,12 @@ export interface InteractWithConnectedMicrobit {
    * The promise completes when the interruption is successful.
    * If code is being executed, then there should be a ErrorMessage in the outputStream.
    */
-  interrupt: () => Promise<void>
+  interrupt: () => Promise<void> 
 
-  disconnect: () => Promise<void>
   /**
    * Disconnect the paired micro:bit.
    */
+  disconnect: () => Promise<void>
 }
 
 /**

@@ -1,5 +1,5 @@
 import Stream from 'ts-stream';
-import { InteractWithConnectedMicrobit, MicrobitOutput } from '../microbit-api';
+import { InteractWithConnectedMicrobit, MicrobitOutput, MicrobitState } from '../microbit-api';
 import { ManagerOption, SignalOption } from '../microbit-api-config';
 import { SerialParser } from './helper/serial/parser';
 import { SerialReader } from './helper/serial/reader';
@@ -11,6 +11,7 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
   portReader!: ReadableStreamDefaultReader<string>;
   portParser!: SerialParser
   signal: SignalOption;
+  state: MicrobitState;
 
   private portWriterStreamClosed: Promise<void> | null = null;
   private portReaderStreamClosed: Promise<void> | null = null;
@@ -18,6 +19,7 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
   constructor(port: SerialPort, config: ManagerOption) {
     this.port = port;
     this.signal = config.signalOption;
+    this.state = MicrobitState.Free;
     if (port.writable != null) {
       const encoder = new TextEncoderStream();
       this.portWriterStreamClosed = encoder.readable.pipeTo(port.writable)
@@ -33,6 +35,10 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
       const portReaderHelper = new SerialReader(this.portReader, config.readOption);
       this.portParser = new SerialParser(portReaderHelper, config.signalOption);
     }
+  }
+
+  getState(): MicrobitState{
+    return this.state;
   }
 
   /**
@@ -95,6 +101,9 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
       - reboot
           To run `main.py` in a fresh state
     */
+    if(this.state===MicrobitState.Busy) throw Error('Device not free');
+    this.state=MicrobitState.Busy;
+
     const codeInPythonString = this.codeToPythonString(code);
     const outputStream = new Stream<MicrobitOutput>();
 
@@ -108,11 +117,16 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
       + 'reset()\r'
     );
     await this.portParser.readUntilExecutionStart();
-    this.portParser.readUntilExecuteDone(outputStream).catch(() => { outputStream.end(); });
+    this.portParser.readUntilExecuteDone(outputStream)
+      .then(() => { this.state = MicrobitState.Free; })
+      .catch(() => { outputStream.end(); });
     return outputStream;
   }
 
   async execute(code: string): Promise<Stream<MicrobitOutput>> {
+    if (this.state === MicrobitState.Busy) throw Error('Device not free');
+    this.state = MicrobitState.Busy;
+
     const codeInPythonString = this.codeToPythonString(code);
     const outputStream = new Stream<MicrobitOutput>();
 
@@ -122,11 +136,16 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
       + 'exec(s)\r'
     );
     await this.portParser.readUntilExecutionStart();
-    this.portParser.readUntilExecuteDone(outputStream).catch(() => { outputStream.end(); });
+    this.portParser.readUntilExecuteDone(outputStream)
+      .then(() => { this.state = MicrobitState.Free; })
+      .catch(() => { outputStream.end(); });
     return outputStream;
   }
 
   async reboot(): Promise<Stream<MicrobitOutput>> {
+    if (this.state === MicrobitState.Busy) throw Error('Device not free');
+    this.state = MicrobitState.Busy;
+
     await this.getREPLLine();
     await this.portWriter.write(
       'from microbit import *;'
@@ -134,7 +153,9 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
     );
     await this.portParser.readUntilExecutionStart();
     const outputStream = new Stream<MicrobitOutput>();
-    this.portParser.readUntilExecuteDone(outputStream).catch(() => { outputStream.end(); });
+    this.portParser.readUntilExecuteDone(outputStream)
+      .then(() => { this.state = MicrobitState.Free; })
+      .catch(() => { outputStream.end(); });
     return outputStream;
   }
 
