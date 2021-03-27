@@ -76,8 +76,7 @@ export class SerialParser {
     //read until executionStart signal appears on signal
     const result1 = await this.portReader.safeReadUntilWithUpdate(
       this.startSignals,
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      str => {}
+      str => null
     );
     if(result1!== this.startSignals[0]) this.readErrors(outputStream);
     else{

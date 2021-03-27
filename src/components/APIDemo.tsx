@@ -221,7 +221,9 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
           console.log('ResetPressed');
           break;
         case 'ErrorMessage':
-          alert('Error on line ' + output.line + ':\n' + output.type + ': ' + output.message);
+          if (output.type !== 'KeyboardInterrupt'){
+            alert('Error on line ' + output.line + ':\n' + output.type + ': ' + output.message);
+          }
       }
     });
   }
