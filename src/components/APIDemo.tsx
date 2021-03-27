@@ -54,16 +54,6 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
       connection: null,
       editor: null,
     };
-    // Better for performance than binding or using () => ... inside render
-    this.onStart = this.onStart.bind(this);
-    this.onFlash = this.onFlash.bind(this);
-    this.onReboot = this.onReboot.bind(this);
-    this.onExec = this.onExec.bind(this);
-    this.onInterrupt = this.onInterrupt.bind(this);
-    this.onRun = this.onRun.bind(this);
-    this.connect = this.connect.bind(this);
-    this.onLoad = this.onLoad.bind(this);
-    this.handleEditorDidMount = this.handleEditorDidMount.bind(this);
     if (!checkCompatability()) alert('Browser not supported');
 
     loader.init().then(t=>{console.log(t);});
@@ -84,7 +74,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
         className="APIDemo-button"
         variant="contained"
         disabled={this.state.connection !== null}
-        onClick={this.onStart}
+        onClick={this.onStart.bind(this)}
       >
         Start
       </Button>
@@ -119,20 +109,20 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
           {this.renderStartButton()}
           {this.renderButtonRequiringConnection('Run Code', () => this.onRun(this.state.editor!.getValue()))}
           {this.renderButtonRequiringConnection('Flash Code', () => this.onFlash(this.state.editor!.getValue()))}
-          {this.renderButtonRequiringConnection('Interrupt', this.onInterrupt)}
-          {this.renderButtonRequiringConnection('Reboot', this.onReboot)}
+          {this.renderButtonRequiringConnection('Interrupt', this.onInterrupt.bind(this))}
+          {this.renderButtonRequiringConnection('Reboot', this.onReboot.bind(this))}
         </header>
         <div className="APIDemo-textareas">
           <DocsViewer
             markdown={this.state.docs}
-            onFlash={this.state.connection === null ? undefined : this.onFlash}
-            onLoad={this.onLoad}
+            onFlash={this.state.connection === null ? undefined : this.onFlash.bind(this)}
+            onLoad={this.onLoad.bind(this)}
           />
 
           <Editor
             defaultLanguage="python"
             defaultValue={exampleCode}
-            onMount={this.handleEditorDidMount}
+            onMount={this.handleEditorDidMount.bind(this)}
             theme='light'
             options={{
               minimap: {
@@ -169,7 +159,6 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
   }
 
   onLoad(codeSnippet: string): void {
-    // Shouldn't access this.state inside setState
     const editor = this.state.editor;
     editor!.setValue(editor!.getValue() + '\n' + codeSnippet);
   }

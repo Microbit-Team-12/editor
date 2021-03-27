@@ -47,10 +47,6 @@ class PythonCode extends React.Component<PythonCodeProps, PythonCodeState> {
         }
       }
     }
-
-    this.onExpand = this.onExpand.bind(this);
-    this.onFlash = this.onFlash.bind(this);
-    this.onLoad = this.onLoad.bind(this);
   }
 
   onExpand(): void {
@@ -81,9 +77,9 @@ class PythonCode extends React.Component<PythonCodeProps, PythonCodeState> {
       >
         {this.lines.slice(start, end).join('\n')}
       </SyntaxHighlighter>
-      <IconButton onClick={this.onExpand} disabled={!this.isExpandable}><Height/></IconButton>
-      <IconButton onClick={this.onFlash} disabled={this.props.onFlash === undefined}><FlashOn/></IconButton>
-      <IconButton onClick={this.onLoad}><DoubleArrow/></IconButton>
+      <IconButton onClick={this.onExpand.bind(this)} disabled={!this.isExpandable}><Height/></IconButton>
+      <IconButton onClick={this.onFlash.bind(this)} disabled={this.props.onFlash === undefined}><FlashOn/></IconButton>
+      <IconButton onClick={this.onLoad.bind(this)}><DoubleArrow/></IconButton>
     </div>;
   }
 }
