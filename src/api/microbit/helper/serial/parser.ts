@@ -102,6 +102,9 @@ export class SerialParser {
     }
   }
 
+  /**
+   * Read and parse micropython error output
+   */
   async readErrors(outputStream: Stream<MicrobitOutput>):Promise<void>{
     //line1 indicates in which line of user code exception occured
     //which is first line after mainPYException and execException

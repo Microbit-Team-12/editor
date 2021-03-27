@@ -26,12 +26,18 @@ export interface MicrobitConnection {
 export enum MicrobitState{
   /**
    * Nothing is running,
-   * You can flash/execute/reboot
+   * 
+   * Allowed: flash/execute/reboot
+   * 
+   * Not Allowed: interrupt
    */
   Free,
   /**
    * Code is running,
-   * You cannot flash/execute/reboot
+   * 
+   * Allowed: Interrupt
+   * 
+   * Not Allowed: flash/execute/reboot
    */
   Busy
 }
@@ -96,6 +102,8 @@ export interface NormalOutput {
 
 /**
  * An object indicate reset button is pressed on the microbit
+ * 
+ * OutputStream will continue to output
  */
 export interface ResetPressed{
   readonly kind: 'ResetPressed'

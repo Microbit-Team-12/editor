@@ -18,9 +18,11 @@ export class SerialReader {
    * Buffer will not be cut in this function.
    */
   private async readLoop(termination: (text: string) => boolean): Promise<void> {
+    if(this.config.showLog) console.log(this.serialBuffer);
     while (!termination(this.serialBuffer)) {
       const { value } = await this.portReader.read();
       this.serialBuffer += value;
+      if (this.config.showLog) console.log(this.serialBuffer);
     }
   }
 
@@ -31,11 +33,13 @@ export class SerialReader {
    * this readLoop cuts unnecessary part of the buffer
    */
   private async readLoopWithCut(termination: (text: string) => boolean, bufferLimit: number): Promise<void> {
+    if (this.config.showLog) console.log(this.serialBuffer);
     while (!termination(this.serialBuffer)) {
       const len = this.serialBuffer.length;
       if (len >= bufferLimit) this.serialBuffer = this.serialBuffer.substring(len - bufferLimit);
       const { value } = await this.portReader.read();
       this.serialBuffer += value;
+      if (this.config.showLog) console.log(this.serialBuffer);
     }
   }
 
