@@ -16,8 +16,6 @@ import DocsViewer from './DocsViewer';
 type APIDemoState = {
   /** The markdown of the tutorial being displayed. */
   docs: string,
-  /** The code in the editor. */
-  code: string,
   output: string,
   connection: MicrobitConnection | null,
   editor: monaco.editor.IStandaloneCodeEditor | null,
@@ -52,7 +50,6 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     super(props);
     this.state = {
       docs: exampleDocs,
-      code: exampleCode,
       output: '',
       connection: null,
       editor: null,
@@ -120,15 +117,10 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
       <div className="APIDemo">
         <header className="APIDemo-header">
           {this.renderStartButton()}
-          {this.renderButtonRequiringConnection('Run Code', () => this.onRun(this.state.code))}
-          {this.renderButtonRequiringConnection('Flash Code', () => this.onFlash(this.state.code))}
+          {this.renderButtonRequiringConnection('Run Code', () => this.onRun(this.state.editor!.getValue()))}
+          {this.renderButtonRequiringConnection('Flash Code', () => this.onFlash(this.state.editor!.getValue()))}
           {this.renderButtonRequiringConnection('Interrupt', this.onInterrupt)}
           {this.renderButtonRequiringConnection('Reboot', this.onReboot)}
-          <button className="APIDemo-button" onClick={this.onStart}>Start</button>
-          <button className="APIDemo-button" onClick={() => this.onRun(this.state.editor!.getValue())}>Run Code</button>
-          <button className="APIDemo-button" onClick={() => this.onFlash(this.state.editor!.getValue())}>Flash Code</button>
-          <button className="APIDemo-button" onClick={this.onInterrupt}>Interrupt</button>
-          <button className="APIDemo-button" onClick={this.onReboot}>Reboot</button>
         </header>
         <div className="APIDemo-textareas">
           <DocsViewer
@@ -138,8 +130,6 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
           />
 
           <Editor
-            width="30vw"
-            height="90vh"
             defaultLanguage="python"
             defaultValue={exampleCode}
             onMount={this.handleEditorDidMount}

@@ -6,23 +6,21 @@
 
   text-align: center;
   background-color: #96ceb2;
+
+  align-items: center;
 }
 
 .APIDemo-header {
   height: 5vh;
+  margin: 5px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
 }
 
-.APIDemo-button {
-  /*margin: 2vw;*/
-  /*font-size: calc(10px + 2vmin);*/
-}
-
 .APIDemo-textareas {
-  width: 100vw;
+  width: 90vw;
   height: 90vh;
 
   display: grid;
@@ -35,9 +33,9 @@
 
 .APIDemo-textareas textarea {
   font-size: x-large;
-
-  margin-right: 20px;
 }
+
+/* Column layout using grid */
 
 .APIDemo-docs {
   grid-column: 1;
