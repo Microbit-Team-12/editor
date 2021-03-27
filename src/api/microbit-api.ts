@@ -80,7 +80,7 @@ export interface InteractWithConnectedMicrobit {
 /**
  * Data that we expect to receive from micro:bit as a result of execututing the flashed code.
  */
-export type MicrobitOutput = NormalOutput | ErrorMessage
+export type MicrobitOutput = NormalOutput | ErrorMessage | ResetPressed
 
 /**
  * A piece of content that is output to the standard output of micro:bit.
@@ -92,6 +92,13 @@ export interface NormalOutput {
    * and may not correspond to a single print() executed on the device.
    */
   readonly outputChunk: string
+}
+
+/**
+ * An object indicate reset button is pressed on the microbit
+ */
+export interface ResetPressed{
+  readonly kind: 'ResetPressed'
 }
 
 export type MicroPythonExceptionType = 'AssertionError'

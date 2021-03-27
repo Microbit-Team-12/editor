@@ -51,6 +51,7 @@ export class SerialParser {
     ];
     this.endSignals = [
       config.executionDone + '\r\n',
+      config.executionStart + '\r\n',
       config.mainPYException,
       config.execException
     ];
@@ -83,16 +84,22 @@ export class SerialParser {
       console.log('Execution Start');
       //Now user code will run
       //read until executionEnd signal appear on signal
-      const result2 = await this.portReader.safeReadUntilWithUpdate(
-        this.endSignals, 
-        str => outputStream.write({
-          kind: 'NormalOutput',
-          outputChunk: str
-        })
-      );
-      console.log('Execution done');
+      let result2 = this.endSignals[1];
+      while (result2===this.endSignals[1]){
+        result2 = await this.portReader.safeReadUntilWithUpdate(
+          this.endSignals,
+          str => outputStream.write({
+            kind: 'NormalOutput',
+            outputChunk: str
+          })
+        );
+        if(result2 === this.endSignals[1]) outputStream.write({
+          kind: 'ResetPressed'
+        });
+      }
       if (result2 !== this.endSignals[0]) this.readErrors(outputStream);
       else outputStream.end();
+      console.log('Execution done');
     }
   }
 
