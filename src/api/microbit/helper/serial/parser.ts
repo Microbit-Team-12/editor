@@ -78,13 +78,13 @@ export class SerialParser {
       this.startSignals,
       str => null
     );
-    if(result1!== this.startSignals[0]) this.readErrors(outputStream);
+    if(result1!==0) this.readErrors(outputStream);
     else{
       console.log('Execution Start');
       //Now user code will run
       //read until executionEnd signal appear on signal
-      let result2 = this.endSignals[1];
-      while (result2===this.endSignals[1]){
+      let result2 = 1;
+      while (result2===1){
         result2 = await this.portReader.safeReadUntilWithUpdate(
           this.endSignals,
           str => outputStream.write({
@@ -92,11 +92,11 @@ export class SerialParser {
             outputChunk: str
           })
         );
-        if(result2 === this.endSignals[1]) outputStream.write({
+        if(result2 === 1) outputStream.write({
           kind: 'ResetPressed'
         });
       }
-      if (result2 !== this.endSignals[0]) this.readErrors(outputStream);
+      if (result2 !== 0) this.readErrors(outputStream);
       else outputStream.end();
       console.log('Execution done');
     }

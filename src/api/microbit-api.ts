@@ -127,6 +127,7 @@ export type MicroPythonExceptionType = 'AssertionError'
   | 'TypeError'
   | 'ValueError'
   | 'ZeroDivisionError'
+  | 'IndentationError'
 
 /**
  * A description of a runtime error that occured on micro:bit
