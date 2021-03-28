@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { Box, Button } from '@material-ui/core';
 import Editor, { loader, Monaco } from '@monaco-editor/react';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import React from 'react';
 import { Stream } from 'ts-stream';
-import { Box, Button } from '@material-ui/core';
 import { FailedConnection, MicrobitConnection, MicrobitOutput } from '../api/microbit-api';
 import {
   checkCompatability,
@@ -211,12 +211,19 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
 
   async onExec(outputStream: Stream<MicrobitOutput>): Promise<void> {
     await outputStream.forEach(output => {
-      if (output.kind === 'NormalOutput') {
-        this.setState({
-          output: output.outputChunk
-        });
-      } else if (output.type !== 'KeyboardInterrupt') {
-        alert('Error on line ' + output.line + ':\n' + output.type + ': ' + output.message);
+      switch (output.kind){
+        case 'NormalOutput':
+          this.setState({
+            output: output.outputChunk
+          });
+          break;
+        case 'ResetPressed':
+          console.log('ResetPressed');
+          break;
+        case 'ErrorMessage':
+          if (output.type !== 'KeyboardInterrupt'){
+            alert('Error on line ' + output.line + ':\n' + output.type + ': ' + output.message);
+          }
       }
     });
   }

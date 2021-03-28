@@ -1,5 +1,5 @@
 import Stream from 'ts-stream';
-import { MicroPythonExceptionType, MicrobitOutput } from '../../../microbit-api';
+import { MicrobitOutput, MicroPythonExceptionType } from '../../../microbit-api';
 import { SignalOption } from '../../../microbit-api-config';
 import { SerialReader } from './reader';
 
@@ -38,10 +38,24 @@ import { SerialReader } from './reader';
 export class SerialParser {
   portReader: SerialReader;
   signal: SignalOption;
+  startSignals: string[];
+  endSignals: string[];
 
   constructor(portReader: SerialReader, config: SignalOption) {
     this.portReader = portReader;
     this.signal = config;
+    this.startSignals = [
+      config.executionStart + '\r\n',
+      config.mainPYException,
+      config.execException
+    ];
+    this.endSignals = [
+      config.executionDone + '\r\n',
+      config.executionStart + '\r\n',
+      config.mainPYException,
+      config.execException
+    ];
+
   }
 
   /**
@@ -52,48 +66,61 @@ export class SerialParser {
   }
 
   /**
-   * Read until indication of execution starting
+   * Read the whole process of user code output
+   * 
+   * - First it look for executionStart Signal from serial.
+   * - Pipe user code output to outputStream
+   * - Until executionDone Signal from serial
    */
-  readUntilExecutionStart(): Promise<void> {
-    return this.portReader.safeReadUntil(this.signal.executionStart + '\r\n');
+  async readCodeOutput(outputStream: Stream<MicrobitOutput>): Promise<void> {
+    //read until executionStart signal appears on signal
+    const result1 = await this.portReader.safeReadUntilWithUpdate(
+      this.startSignals,
+      str => null
+    );
+    if(result1!== this.startSignals[0]) this.readErrors(outputStream);
+    else{
+      console.log('Execution Start');
+      //Now user code will run
+      //read until executionEnd signal appear on signal
+      let result2 = this.endSignals[1];
+      while (result2===this.endSignals[1]){
+        result2 = await this.portReader.safeReadUntilWithUpdate(
+          this.endSignals,
+          str => outputStream.write({
+            kind: 'NormalOutput',
+            outputChunk: str
+          })
+        );
+        if(result2 === this.endSignals[1]) outputStream.write({
+          kind: 'ResetPressed'
+        });
+      }
+      if (result2 !== this.endSignals[0]) this.readErrors(outputStream);
+      else outputStream.end();
+      console.log('Execution done');
+    }
   }
 
   /**
-   * Read until indication of execution finishing, 
-   * recent output from serial will be sent to `outputStream`
+   * Read and parse micropython error output
    */
-  async readUntilExecuteDone(outputStream: Stream<MicrobitOutput>): Promise<void> {
-    const signals = [
-      this.signal.executionDone + '\r\n',
-      this.signal.mainPYException,
-      this.signal.execException
-    ];
-    const result = await this.portReader.safeReadUntilWithUpdate(
-      signals, 
-      str => outputStream.write({
-        kind: 'NormalOutput',
-        outputChunk: str
-      })
-    );
-    console.log('Execution done');
-    
-    if (result !== this.signal.executionDone + '\r\n') {
-      //line1 indicates in which line of user code exception occured
-      //which is first line after mainPYException and execException
-      const line1 = await this.portReader.unsafeReadline();
-      const lineNumberString = line1.split(',', 2)[0];
-      //messageLine is in the form of 'ErrorType:ErrorMessage'
-      //exec is used in user code, the line following line1 may not be mssageLine
-      let messageLine = '  ';
-      while(messageLine.startsWith('  ')) messageLine = await this.portReader.unsafeReadline();
-      const line2split = messageLine.split(': ');
-      outputStream.write({
-        kind: 'ErrorMessage',
-        line: parseInt(lineNumberString)-1,
-        type: line2split[0] as MicroPythonExceptionType,
-        message: line2split[1]
-      });
-    }
+  async readErrors(outputStream: Stream<MicrobitOutput>):Promise<void>{
+    //line1 indicates in which line of user code exception occured
+    //which is first line after mainPYException and execException
+    const line1 = await this.portReader.unsafeReadline();
+    const lineNumberString = line1.split(',', 2)[0];
+    //messageLine is in the form of 'ErrorType:ErrorMessage'
+    //exec is used in user code, the line following line1 may not be mssageLine
+    let messageLine = '  ';
+    while (messageLine.startsWith('  ')) messageLine = await this.portReader.unsafeReadline();
+    const line2split = messageLine.split(': ');
+    outputStream.write({
+      kind: 'ErrorMessage',
+      line: parseInt(lineNumberString) - 1,
+      type: line2split[0] as MicroPythonExceptionType,
+      message: line2split[1]
+    });
     outputStream.end();
   }
 }

@@ -23,7 +23,31 @@ export interface MicrobitConnection {
   readonly disconnection: Promise<void>
 }
 
+export enum MicrobitState{
+  /**
+   * Nothing is running,
+   * 
+   * Allowed: flash/execute/reboot
+   * 
+   * Not Allowed: interrupt
+   */
+  Free,
+  /**
+   * Code is running,
+   * 
+   * Allowed: Interrupt
+   * 
+   * Not Allowed: flash/execute/reboot
+   */
+  Busy
+}
+
 export interface InteractWithConnectedMicrobit {
+  /**
+   * Return State of Microbit in `MicrobitState`
+   */
+  getState(): MicrobitState
+
   /**
    * Flash ROM of the connected micro:bit.
    * 
@@ -34,6 +58,7 @@ export interface InteractWithConnectedMicrobit {
 
   /**
    * Run code in REPL.
+   * Microbit is not rebooted. So all previous variables are kept.
    */
   execute: (code: string) => Promise<Stream<MicrobitOutput>>
 
@@ -50,18 +75,18 @@ export interface InteractWithConnectedMicrobit {
    * The promise completes when the interruption is successful.
    * If code is being executed, then there should be a ErrorMessage in the outputStream.
    */
-  interrupt: () => Promise<void>
+  interrupt: () => Promise<void> 
 
-  disconnect: () => Promise<void>
   /**
    * Disconnect the paired micro:bit.
    */
+  disconnect: () => Promise<void>
 }
 
 /**
  * Data that we expect to receive from micro:bit as a result of execututing the flashed code.
  */
-export type MicrobitOutput = NormalOutput | ErrorMessage
+export type MicrobitOutput = NormalOutput | ErrorMessage | ResetPressed
 
 /**
  * A piece of content that is output to the standard output of micro:bit.
@@ -73,6 +98,15 @@ export interface NormalOutput {
    * and may not correspond to a single print() executed on the device.
    */
   readonly outputChunk: string
+}
+
+/**
+ * An object indicate reset button is pressed on the microbit
+ * 
+ * OutputStream will continue to output
+ */
+export interface ResetPressed{
+  readonly kind: 'ResetPressed'
 }
 
 export type MicroPythonExceptionType = 'AssertionError'

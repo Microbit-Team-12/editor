@@ -1,5 +1,5 @@
 import Stream from 'ts-stream';
-import { InteractWithConnectedMicrobit, MicrobitOutput } from '../microbit-api';
+import { InteractWithConnectedMicrobit, MicrobitOutput, MicrobitState } from '../microbit-api';
 import { ManagerOption, SignalOption } from '../microbit-api-config';
 import { SerialParser } from './helper/serial/parser';
 import { SerialReader } from './helper/serial/reader';
@@ -11,6 +11,7 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
   portReader!: ReadableStreamDefaultReader<string>;
   portParser!: SerialParser
   signal: SignalOption;
+  state: MicrobitState;
 
   private portWriterStreamClosed: Promise<void> | null = null;
   private portReaderStreamClosed: Promise<void> | null = null;
@@ -18,6 +19,7 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
   constructor(port: SerialPort, config: ManagerOption) {
     this.port = port;
     this.signal = config.signalOption;
+    this.state = MicrobitState.Free;
     if (port.writable != null) {
       const encoder = new TextEncoderStream();
       this.portWriterStreamClosed = encoder.readable.pipeTo(port.writable)
@@ -35,6 +37,10 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
     }
   }
 
+  getState(): MicrobitState {
+    return this.state;
+  }
+
   /**
    * Convert a javascript string of python code to readable python code
    */
@@ -50,16 +56,14 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
       (3) new line created by user
         Should be [\r][\n] in main.py
         [\][r][\][n] in python string
-      Note:
-        replaceAll require ESNext.
-        But web serial already require a high version of chrome.
     */
-    return (  'print(\'' + this.signal.executionStart + '\')'
-            + '\r\n' + code + '\r\n'
-            + 'print(\'' + this.signal.executionDone + '\')'
-    ) .replaceAll('\\', '\\\\')
-      .replaceAll('\'', '\\\'')
-      .replaceAll(/\r?\n/g, '\\r\\n');
+    return (
+      'print(\'' + this.signal.executionStart + '\')'
+      + '\r\n' + code + '\r\n'
+      + 'print(\'' + this.signal.executionDone + '\')'
+    ) .replace(/\\/g,'\\\\')
+      .replace(/'/g,'\\\'')
+      .replace(/\r?\n/g, '\\r\\n');
   }
 
   /**
@@ -95,6 +99,9 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
       - reboot
           To run `main.py` in a fresh state
     */
+    if (this.state === MicrobitState.Busy) throw Error('Flash Failed: Device not free');
+    this.state = MicrobitState.Busy;
+
     const codeInPythonString = this.codeToPythonString(code);
     const outputStream = new Stream<MicrobitOutput>();
 
@@ -107,12 +114,16 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
       + 'from microbit import *;'
       + 'reset()\r'
     );
-    await this.portParser.readUntilExecutionStart();
-    this.portParser.readUntilExecuteDone(outputStream).catch(() => { outputStream.end(); });
+    this.portParser.readCodeOutput(outputStream)
+      .then(() => { this.state = MicrobitState.Free; })
+      .catch(() => { outputStream.end(); });
     return outputStream;
   }
 
   async execute(code: string): Promise<Stream<MicrobitOutput>> {
+    if (this.state === MicrobitState.Busy) throw Error('Execute Failed: Device not free');
+    this.state = MicrobitState.Busy;
+
     const codeInPythonString = this.codeToPythonString(code);
     const outputStream = new Stream<MicrobitOutput>();
 
@@ -121,25 +132,43 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
       's=\'' + codeInPythonString + '\';'
       + 'exec(s)\r'
     );
-    await this.portParser.readUntilExecutionStart();
-    this.portParser.readUntilExecuteDone(outputStream).catch(() => { outputStream.end(); });
+    this.portParser.readCodeOutput(outputStream)
+      .then(() => { this.state = MicrobitState.Free; })
+      .catch(() => { outputStream.end(); });
     return outputStream;
   }
 
   async reboot(): Promise<Stream<MicrobitOutput>> {
+    if (this.state === MicrobitState.Busy) throw Error('Reboot Failed: Device not free');
+    this.state = MicrobitState.Busy;
+
     await this.getREPLLine();
     await this.portWriter.write(
       'from microbit import *;'
       + 'reset()\r'
     );
-    await this.portParser.readUntilExecutionStart();
     const outputStream = new Stream<MicrobitOutput>();
-    this.portParser.readUntilExecuteDone(outputStream).catch(() => { outputStream.end(); });
+    this.portParser.readCodeOutput(outputStream)
+      .then(() => { this.state = MicrobitState.Free; })
+      .catch(() => { outputStream.end(); });
     return outputStream;
   }
 
+  private waitUntil(cond: () => boolean): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const timer = setInterval(() => {
+        if (cond()) {
+          clearInterval(timer);
+          resolve();
+        }
+      }, 200);
+    });
+  }
+
   async interrupt(): Promise<void> {
+    if (this.state === MicrobitState.Free) throw Error('Interupt Failed: Device not running code');
     await this.portWriter.write(ctrlC);
+    await this.waitUntil(() => this.state === MicrobitState.Busy);
     //Not reading for new REPL line here
     //because portParser might already be reading.
   }
