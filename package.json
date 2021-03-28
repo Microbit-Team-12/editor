@@ -20,7 +20,7 @@
     "react-spaces": "latest",
     "ts-stream": "^3.0.0",
     "typescript": "^4.2.3",
-    "web-serial-polyfill": "^1.0.6",
+    "web-serial-polyfill": "1.0.6",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
