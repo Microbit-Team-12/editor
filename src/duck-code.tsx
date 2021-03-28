@@ -1,8 +1,10 @@
 /* eslint @typescript-eslint/no-var-requires: "off" */
 
+import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
-import React, { useState } from 'react';
+import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/styles';
+import { default as React, useState } from 'react';
 import * as Space from 'react-spaces';
 
 type SlideButton = {
@@ -10,17 +12,26 @@ type SlideButton = {
   text: string
 }
 
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#ffcc00', // feel free to change this colour
+    }
+  },
+});
+
+
 const useStyles = makeStyles( (theme) => ({
   button: {
     flexGrow: 1,
-    background: '#FE6B8B',
     border: 1,
     borderRadius: 3,
     color: 'black',
     height: 48,
     padding: theme.spacing(2),
     margin: 8,
-    textAlign: 'center'
+    textAlign: 'center',
+    textTransform: 'none'
   },
   speech: {
     flexGrow: 1,
@@ -84,21 +95,25 @@ function MakeButtons(initialSlide: string) {
             return (
               <div key={button.text}>
                 <Grid item xs>
-                  <button
-                    className={classes.button}
-                    onClick={() => {
-                      if (button.link) {
-                        // this checks button.link isnt null
-                        setSlide(button.link);
-                      } else {
-                        // whatever we want the null function to be
-                        //window.close();
-                        setSlide(initialSlide);
-                      }
-                    }}
-                  >
-                    {button.text}
-                  </button>
+                  <ThemeProvider theme={theme}>
+                    <Button
+                      className={classes.button}
+                      variant="contained"
+                      color="primary"
+                      onClick={() => {
+                        if (button.link) {
+                          // this checks button.link isnt null
+                          setSlide(button.link);
+                        } else {
+                          // whatever we want the null function to be
+                          //window.close();
+                          setSlide(initialSlide);
+                        }
+                      }}
+                    >
+                      {button.text}
+                    </Button>
+                  </ThemeProvider>
                 </Grid>
               </div>
             );
