@@ -71,7 +71,7 @@ function MakeButtons(initialSlide) {
   return (
     <Space.Fixed height={400} width={300}>
       <Space.Top size={100}>
-        {jsonData[slide].speech}
+        {parseSpeech(jsonData[slide].speech)}
       </Space.Top>
       <Space.Bottom size={300}>
         <Grid container justify="center" alignItems="flex-start" spacing={2}>
