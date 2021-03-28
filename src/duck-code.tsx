@@ -5,6 +5,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import React, { useState } from 'react';
 import * as Space from 'react-spaces';
 
+type SlideButton = {
+  link: string,
+  text: string
+}
+
 const useStyles = makeStyles( (theme) => ({
   button: {
     flexGrow: 1,
@@ -30,10 +35,10 @@ const useStyles = makeStyles( (theme) => ({
   },
 }));
 
-var jsonData = require('./resources/duck_flowchart.json');
+const jsonData = require('./resources/duck_flowchart.json');
 const slideNames = Object.keys(jsonData);
 
-function executeCorrespondingCommand(commandString) {
+function executeCorrespondingCommand(commandString: string) {
   if (commandString === 'linkToTutorialAboutErrors') {
     return (
       <a href="https://example.com/faq.html" target="_blank" rel="noreferrer">
@@ -46,24 +51,24 @@ function executeCorrespondingCommand(commandString) {
   }
 } 
 
-function parseTextCommand(commandString) {
-  var parsedCommand = commandString;
+function parseTextCommand(commandString: string) {
+  let parsedCommand: string|JSX.Element = commandString;
   if (commandString.startsWith('{')) { 
     // must also then end with '}'
-    var rawCommand = commandString.slice(1, -1); // remove surrounding braces
+    const rawCommand = commandString.slice(1, -1); // remove surrounding braces
     parsedCommand = executeCorrespondingCommand(rawCommand);
   }
   return parsedCommand;
 }
 
-function parseSpeech(speech) {
-  var re = /(\{[\S\s]+?\})/g;
-  var splitSpeech = speech.split(re).filter(Boolean);
-  var parsedSpeech = splitSpeech.map(parseTextCommand);
+function parseSpeech(speech: string) {
+  const re = /(\{[\S\s]+?\})/g;
+  const splitSpeech = speech.split(re).filter(Boolean);
+  const parsedSpeech = splitSpeech.map(parseTextCommand);
   return parsedSpeech;
 }
 
-function MakeButtons(initialSlide) {
+function MakeButtons(initialSlide: string) {
   const classes = useStyles();
   const [slide, setSlide] = useState(initialSlide);  
   // Here useState is a 'Hook' (from React) which means the slide variable is updated when the setSlide function is run
@@ -75,9 +80,9 @@ function MakeButtons(initialSlide) {
       </Space.Top>
       <Space.Bottom size={300}>
         <Grid container justify="center" alignItems="flex-start" spacing={2}>
-          {jsonData[slide].buttons.map(function (button) {
+          {jsonData[slide].buttons.map(function (button: SlideButton) {
             return (
-              <div key={button}>
+              <div key={button.text}>
                 <Grid item xs>
                   <button
                     className={classes.button}

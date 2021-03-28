@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Autogrid from './duck-code';
 import './index.css';
-import Autogrid from './parseJson.js';
 
 ReactDOM.render(
   <React.StrictMode>
