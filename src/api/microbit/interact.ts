@@ -143,7 +143,7 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
   }
 
   async reboot(): Promise<Stream<MicrobitOutput>> {
-    if(this.state===MicrobitState.Busy) await this.interrupt().catch(()=>null);
+    if (this.state === MicrobitState.Busy) throw Error('Execute Failed: Device not free');
     this.state = MicrobitState.Busy;
 
     await this.getREPLLine();
