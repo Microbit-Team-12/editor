@@ -143,7 +143,7 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
   }
 
   async reboot(): Promise<Stream<MicrobitOutput>> {
-    if (this.state === MicrobitState.Busy) throw Error('Reboot Failed: Device not free');
+    if(this.state===MicrobitState.Busy) await this.interrupt().catch(()=>null);
     this.state = MicrobitState.Busy;
 
     await this.getREPLLine();
@@ -174,7 +174,7 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
   async interrupt(): Promise<void> {
     if (this.state === MicrobitState.Free) throw Error('Interupt Failed: Device not running code');
     await this.portWriter.write(ctrlC);
-    await this.waitUntil(() => this.state === MicrobitState.Busy);
+    await this.waitUntil(() => this.state === MicrobitState.Free);
     //Not reading for new REPL line here
     //because portParser might already be reading.
   }

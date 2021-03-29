@@ -35,9 +35,9 @@ export enum MicrobitState{
   /**
    * Code is running,
    * 
-   * Allowed: Interrupt
+   * Allowed: Interrupt/reboot
    * 
-   * Not Allowed: flash/execute/reboot
+   * Not Allowed: flash/execute
    */
   Busy
 }
