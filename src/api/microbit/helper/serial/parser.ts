@@ -66,46 +66,54 @@ export class SerialParser {
   }
 
   /**
-   * Read the whole process of user code output
-   * 
-   * - First it look for executionStart Signal from serial.
-   * - Pipe user code output to outputStream
-   * - Until executionDone Signal from serial
+   * Read until executionStart appears on serial
+   * - If there is no error, this Returns true 
+   * - If (indentation/bracket) error occurs, the stream will be closed and false is returned
    */
-  async readCodeOutput(outputStream: Stream<MicrobitOutput>): Promise<void> {
-    //read until executionStart signal appears on signal
-    const result1 = await this.portReader.safeReadUntilWithUpdate(
+  async readUntilExecStart(outputStream: Stream<MicrobitOutput>): Promise<boolean>{
+    console.log('Waiting for Execution Start');
+    const result = await this.portReader.safeReadUntilWithUpdate(
       this.startSignals,
       str => null
     );
-    if(result1!==0) this.readErrors(outputStream);
-    else{
-      console.log('Execution Start');
-      //Now user code will run
-      //read until executionEnd signal appear on signal
-      let result2 = 1;
-      while (result2===1){
-        result2 = await this.portReader.safeReadUntilWithUpdate(
-          this.endSignals,
-          str => outputStream.write({
-            kind: 'NormalOutput',
-            outputChunk: str
-          })
-        );
-        if(result2 === 1) outputStream.write({
-          kind: 'ResetPressed'
-        });
-      }
-      if (result2 !== 0) this.readErrors(outputStream);
-      else outputStream.end();
-      console.log('Execution done');
+    if (result !== 0) {
+      this.readErrors(outputStream);
+      return false;
+    }else return true;
+  }
+
+  /**
+   * Read output of user code, periodcally update output to stream
+   * 
+   * Require executeStart printed earlier
+   */
+  async readUntilExecDone(outputStream: Stream<MicrobitOutput>): Promise<void> {
+    console.log('Execution Start');
+    //Now user code will run
+    //read until executionEnd signal appear on signal
+    let result = 1;
+    while (result===1){
+      result = await this.portReader.safeReadUntilWithUpdate(
+        this.endSignals,
+        str => outputStream.write({
+          kind: 'NormalOutput',
+          outputChunk: str
+        })
+      );
+      if(result === 1) outputStream.write({
+        kind: 'ResetPressed'
+      });
     }
+    if (result !== 0) this.readErrors(outputStream);
+    else outputStream.end();
+    console.log('Execution done');
   }
 
   /**
    * Read and parse micropython error output
    */
   async readErrors(outputStream: Stream<MicrobitOutput>):Promise<void>{
+    console.log('Execution Error');
     //line1 indicates in which line of user code exception occured
     //which is first line after mainPYException and execException
     const line1 = await this.portReader.unsafeReadline();

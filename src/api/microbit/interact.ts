@@ -114,9 +114,11 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
       + 'from microbit import *;'
       + 'reset()\r'
     );
-    this.portParser.readCodeOutput(outputStream)
-      .then(() => { this.state = MicrobitState.Free; })
-      .catch(() => { outputStream.end(); });
+    if (await this.portParser.readUntilExecStart(outputStream)) {
+      this.portParser.readUntilExecDone(outputStream)
+        .then(() => { this.state = MicrobitState.Free; })
+        .catch(() => { outputStream.end(); });
+    } else this.state = MicrobitState.Free;
     return outputStream;
   }
 
@@ -132,9 +134,11 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
       's=\'' + codeInPythonString + '\';'
       + 'exec(s)\r'
     );
-    this.portParser.readCodeOutput(outputStream)
-      .then(() => { this.state = MicrobitState.Free; })
-      .catch(() => { outputStream.end(); });
+    if(await this.portParser.readUntilExecStart(outputStream)){
+      this.portParser.readUntilExecDone(outputStream)
+        .then(() => { this.state = MicrobitState.Free; })
+        .catch(() => { outputStream.end(); });
+    } else this.state = MicrobitState.Free;
     return outputStream;
   }
 
@@ -148,9 +152,11 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
       + 'reset()\r'
     );
     const outputStream = new Stream<MicrobitOutput>();
-    this.portParser.readCodeOutput(outputStream)
-      .then(() => { this.state = MicrobitState.Free; })
-      .catch(() => { outputStream.end(); });
+    if (await this.portParser.readUntilExecStart(outputStream)) {
+      this.portParser.readUntilExecDone(outputStream)
+        .then(() => { this.state = MicrobitState.Free; })
+        .catch(() => { outputStream.end(); });
+    } else this.state = MicrobitState.Free;
     return outputStream;
   }
 
