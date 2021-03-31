@@ -1,11 +1,14 @@
 /* eslint @typescript-eslint/no-var-requires: "off" */
 
+import { Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import { default as React, useState } from 'react';
 import * as Space from 'react-spaces';
+import duck from './resources/Duck.jpg';
+import './styles.css';
 
 type SlideButton = {
   link: string,
@@ -85,41 +88,57 @@ function MakeButtons(initialSlide: string) {
   // Here useState is a 'Hook' (from React) which means the slide variable is updated when the setSlide function is run
 
   return (
-    <Space.Fixed height={400} width={300}>
-      <Space.Top size={100}>
-        {parseSpeech(jsonData[slide].speech)}
-      </Space.Top>
-      <Space.Bottom size={300}>
-        <Grid container justify="center" alignItems="flex-start" spacing={2}>
-          {jsonData[slide].buttons.map(function (button: SlideButton) {
-            return (
-              <div key={button.text}>
-                <Grid item xs>
-                  <ThemeProvider theme={theme}>
-                    <Button
-                      className={classes.button}
-                      variant="contained"
-                      color="primary"
-                      onClick={() => {
-                        if (button.link) {
-                          // this checks button.link isnt null
-                          setSlide(button.link);
-                        } else {
-                          // whatever we want the null function to be
-                          //window.close();
-                          setSlide(initialSlide);
-                        }
-                      }}
-                    >
-                      {button.text}
-                    </Button>
-                  </ThemeProvider>
-                </Grid>
-              </div>
-            );
-          })}
-        </Grid>
-      </Space.Bottom>
+    <Space.Fixed height={600} width={600}>
+      <div>
+        <img src={duck} height={600} width={600} alt="this is duck image" />
+      </div>
+
+      <Space.Left size={60}></Space.Left>
+
+      <Space.Fill>
+        <Space.Top size={40}></Space.Top>
+        <Space.Top size={80} scrollable={true}>
+          <Typography className={classes.speech}>
+            {parseSpeech(jsonData[slide].speech)}
+          </Typography>
+        </Space.Top>
+        <Space.Fill>
+          <Space.Top size={30}></Space.Top>
+          <Space.Fill scrollable={true}>
+            <Grid container justify="center" alignItems="flex-start" spacing={2}>
+              {jsonData[slide].buttons.map(function (button: SlideButton) {
+                return (
+                  <div key={button.text}>
+                    <Grid item xs>
+                      <ThemeProvider theme={theme}>
+                        <Button
+                          className={classes.button}
+                          variant="contained"
+                          color="primary"
+                          onClick={() => {
+                            if (button.link) {
+                              // this checks button.link isnt null
+                              setSlide(button.link);
+                            } else {
+                              // whatever we want the null function to be
+                              //window.close();
+                              setSlide(initialSlide);
+                            }
+                          }}
+                        >
+                          {button.text}
+                        </Button>
+                      </ThemeProvider>
+                    </Grid>
+                  </div>
+                );
+              })}
+            </Grid>
+          </Space.Fill>
+        </Space.Fill>
+        <Space.Bottom size={200}></Space.Bottom>
+      </Space.Fill>
+      <Space.Right size={250}></Space.Right>
     </Space.Fixed>
   );
 }
