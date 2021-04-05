@@ -38,11 +38,9 @@ const useStyles = makeStyles( (theme) => ({
   },
   speech: {
     flexGrow: 1,
-    background: '#FFFFFF',
     border: 1,
     borderRadius: 3,
     color: 'black',
-    height: 48,
     padding: theme.spacing(2),
     margin: 8,
     textAlign: 'left'
@@ -96,15 +94,13 @@ function MakeButtons(initialSlide: string) {
       <Space.Left size={60}></Space.Left>
 
       <Space.Fill>
-        <Space.Top size={40}></Space.Top>
-        <Space.Top size={80} scrollable={true}>
-          <Typography className={classes.speech}>
-            {parseSpeech(jsonData[slide].speech)}
-          </Typography>
-        </Space.Top>
+        <Space.Top size={20}></Space.Top>
         <Space.Fill>
-          <Space.Top size={30}></Space.Top>
-          <Space.Fill scrollable={true}>
+          
+          <Space.Fill>
+            <Typography className={classes.speech}>
+              {parseSpeech(jsonData[slide].speech)}
+            </Typography>
             <Grid container justify="center" alignItems="flex-start" spacing={2}>
               {jsonData[slide].buttons.map(function (button: SlideButton) {
                 return (
