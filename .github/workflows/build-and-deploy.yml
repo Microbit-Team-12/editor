@@ -11,11 +11,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2.3.1
-
-      - name: Install and Build
-        run: |
-          npm install
-          npm run build
+        
+      - name: Install
+        uses: bahmutov/npm-install@HEAD
+        
+      - name: Build
+        run: yarn run build
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@4.1.0

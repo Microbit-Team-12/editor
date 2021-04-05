@@ -1,5 +1,5 @@
 import Stream from 'ts-stream';
-import { InteractWithConnectedMicrobit, MicrobitOutput } from '../microbit-api';
+import { InteractWithConnectedMicrobit, MicrobitOutput, MicrobitState } from '../microbit-api';
 import { ManagerOption, SignalOption } from '../microbit-api-config';
 import { SerialParser } from './helper/serial/parser';
 import { SerialReader } from './helper/serial/reader';
@@ -11,23 +11,34 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
   portReader!: ReadableStreamDefaultReader<string>;
   portParser!: SerialParser
   signal: SignalOption;
+  state: MicrobitState;
+
+  private portWriterStreamClosed: Promise<void> | null = null;
+  private portReaderStreamClosed: Promise<void> | null = null;
 
   constructor(port: SerialPort, config: ManagerOption) {
     this.port = port;
     this.signal = config.signalOption;
+    this.state = MicrobitState.Free;
     if (port.writable != null) {
       const encoder = new TextEncoderStream();
-      encoder.readable.pipeTo(port.writable).catch((err) => { console.log('disconnected in pipe'); });
+      this.portWriterStreamClosed = encoder.readable.pipeTo(port.writable)
+        .catch((_) => { console.log('disconnected in pipe'); });
       this.portWriter = encoder.writable.getWriter();
     }
     if (port.readable != null) {
       const decoder = new TextDecoderStream();
-      port.readable.pipeTo(decoder.writable).catch((err) => { console.log('disconnected in pipe'); });
+      this.portReaderStreamClosed = port.readable.pipeTo(decoder.writable)
+        .catch((_) => { console.log('disconnected in pipe'); });
       this.portReader = decoder.readable.getReader();
 
       const portReaderHelper = new SerialReader(this.portReader, config.readOption);
       this.portParser = new SerialParser(portReaderHelper, config.signalOption);
     }
+  }
+
+  getState(): MicrobitState {
+    return this.state;
   }
 
   /**
@@ -45,16 +56,14 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
       (3) new line created by user
         Should be [\r][\n] in main.py
         [\][r][\][n] in python string
-      Note:
-        replaceAll require ESNext.
-        But web serial already require a high version of chrome.
     */
-    return (  'print(\'' + this.signal.executionStart + '\')'
-            + '\r\n' + code + '\r\n'
-            + 'print(\'' + this.signal.executionDone + '\')'
-    ) .replaceAll('\\', '\\\\')
-      .replaceAll('\'', '\\\'')
-      .replaceAll(/\r?\n/g, '\\r\\n');
+    return (
+      'print(\'' + this.signal.executionStart + '\')'
+      + '\r\n' + code + '\r\n'
+      + 'print(\'' + this.signal.executionDone + '\')'
+    ) .replace(/\\/g,'\\\\')
+      .replace(/'/g,'\\\'')
+      .replace(/\r?\n/g, '\\r\\n');
   }
 
   /**
@@ -90,6 +99,9 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
       - reboot
           To run `main.py` in a fresh state
     */
+    if (this.state === MicrobitState.Busy) throw Error('Flash Failed: Device not free');
+    this.state = MicrobitState.Busy;
+
     const codeInPythonString = this.codeToPythonString(code);
     const outputStream = new Stream<MicrobitOutput>();
 
@@ -102,12 +114,18 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
       + 'from microbit import *;'
       + 'reset()\r'
     );
-    await this.portParser.readUntilExecutionStart();
-    this.portParser.readUntilExecuteDone(outputStream).catch(() => { outputStream.end(); });
+    if (await this.portParser.readUntilExecStart(outputStream)) {
+      this.portParser.readUntilExecDone(outputStream)
+        .then(() => { this.state = MicrobitState.Free; })
+        .catch(() => { outputStream.end(); });
+    } else this.state = MicrobitState.Free;
     return outputStream;
   }
 
   async execute(code: string): Promise<Stream<MicrobitOutput>> {
+    if (this.state === MicrobitState.Busy) throw Error('Execute Failed: Device not free');
+    this.state = MicrobitState.Busy;
+
     const codeInPythonString = this.codeToPythonString(code);
     const outputStream = new Stream<MicrobitOutput>();
 
@@ -116,26 +134,62 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
       's=\'' + codeInPythonString + '\';'
       + 'exec(s)\r'
     );
-    await this.portParser.readUntilExecutionStart();
-    this.portParser.readUntilExecuteDone(outputStream).catch(() => { outputStream.end(); });
+    if(await this.portParser.readUntilExecStart(outputStream)){
+      this.portParser.readUntilExecDone(outputStream)
+        .then(() => { this.state = MicrobitState.Free; })
+        .catch(() => { outputStream.end(); });
+    } else this.state = MicrobitState.Free;
     return outputStream;
   }
 
   async reboot(): Promise<Stream<MicrobitOutput>> {
+    if (this.state === MicrobitState.Busy) throw Error('Reboot Failed: Device not free');
+    this.state = MicrobitState.Busy;
+
     await this.getREPLLine();
     await this.portWriter.write(
       'from microbit import *;'
       + 'reset()\r'
     );
-    await this.portParser.readUntilExecutionStart();
     const outputStream = new Stream<MicrobitOutput>();
-    this.portParser.readUntilExecuteDone(outputStream).catch(() => { outputStream.end(); });
+    if (await this.portParser.readUntilExecStart(outputStream)) {
+      this.portParser.readUntilExecDone(outputStream)
+        .then(() => { this.state = MicrobitState.Free; })
+        .catch(() => { outputStream.end(); });
+    } else this.state = MicrobitState.Free;
     return outputStream;
   }
 
+  private waitUntil(cond: () => boolean): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const timer = setInterval(() => {
+        if (cond()) {
+          clearInterval(timer);
+          resolve();
+        }
+      }, 200);
+    });
+  }
+
   async interrupt(): Promise<void> {
+    if (this.state === MicrobitState.Free) throw Error('Interupt Failed: Device not running code');
     await this.portWriter.write(ctrlC);
+    await this.waitUntil(() => this.state === MicrobitState.Free);
     //Not reading for new REPL line here
     //because portParser might already be reading.
+  }
+
+  async disconnect(): Promise<void> {
+    console.log('Disconnection initiated:');
+
+    await this.portReader.cancel('App will unmount');
+    await this.portReaderStreamClosed;
+    console.log('Reader closed;');
+
+    await this.portWriter.abort('App will unmount');
+    await this.portWriterStreamClosed;
+    console.log('Writer closed.');
+
+    await this.port.close();
   }
 }

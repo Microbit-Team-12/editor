@@ -1,39 +1,53 @@
 import Stream from 'ts-stream';
 
-export interface ConnectToMicrobit {
-  /**
-   * Get a connection to micro:bit by letting the user select connected devices.
-   * 
-   * The promise completes with a object holding a connection to micro:bit if successful.
-   * Otherwise completes with a ConnectionFailure object.
-   */
-  connect: () => Promise<MicrobitConnection | FailedConnection>
-}
-
 /**
  * A description of connection failure
 */
 export interface FailedConnection {
-  kind: 'ConnectionFailure',
-  type: 'Failed to Obtain Port' | 'Failed to Open Port' | 'Port No Response'
-  reason: string
+  readonly kind: 'ConnectionFailure',
+  readonly type: 'Failed to Obtain Port' | 'Failed to Open Port' | 'Port No Response'
+  readonly reason: string
 }
 
 export interface MicrobitConnection {
-  kind: 'MicrobitConnection'
+  readonly kind: 'MicrobitConnection'
   /**
    * An object that allows us to interact with the connected micro:bit.
    */
-  interact: InteractWithConnectedMicrobit
+  readonly interact: InteractWithConnectedMicrobit
 
   /**
    * A promise that completes when the micro:bit connection is no longer active.
    * This promise itself does not try to disconnect micro:bit.
    */
-  disconnection: Promise<void>
+  readonly disconnection: Promise<void>
+}
+
+export enum MicrobitState{
+  /**
+   * Nothing is running,
+   * 
+   * Allowed: flash/execute/reboot
+   * 
+   * Not Allowed: interrupt
+   */
+  Free,
+  /**
+   * Code is running,
+   * 
+   * Allowed: Interrupt
+   * 
+   * Not Allowed: flash/execute/reboot
+   */
+  Busy
 }
 
 export interface InteractWithConnectedMicrobit {
+  /**
+   * Return State of Microbit in `MicrobitState`
+   */
+  getState(): MicrobitState
+
   /**
    * Flash ROM of the connected micro:bit.
    * 
@@ -44,6 +58,7 @@ export interface InteractWithConnectedMicrobit {
 
   /**
    * Run code in REPL.
+   * Microbit is not rebooted. So all previous variables are kept.
    */
   execute: (code: string) => Promise<Stream<MicrobitOutput>>
 
@@ -60,43 +75,77 @@ export interface InteractWithConnectedMicrobit {
    * The promise completes when the interruption is successful.
    * If code is being executed, then there should be a ErrorMessage in the outputStream.
    */
-  interrupt: () => Promise<void>
+  interrupt: () => Promise<void> 
+
+  /**
+   * Disconnect the paired micro:bit.
+   */
+  disconnect: () => Promise<void>
 }
 
 /**
  * Data that we expect to receive from micro:bit as a result of execututing the flashed code.
  */
-export type MicrobitOutput = NormalOutput | ErrorMessage
+export type MicrobitOutput = NormalOutput | ErrorMessage | ResetPressed
 
 /**
  * A piece of content that is output to the standard output of micro:bit.
  */
 export interface NormalOutput {
-  kind: 'NormalOutput'
+  readonly kind: 'NormalOutput'
   /**
    * outputChunk is a new piece of output we have obtained from micro:bit,
    * and may not correspond to a single print() executed on the device.
    */
-  outputChunk: string
+  readonly outputChunk: string
 }
+
+/**
+ * An object indicate reset button is pressed on the microbit
+ * 
+ * OutputStream will continue to output
+ */
+export interface ResetPressed{
+  readonly kind: 'ResetPressed'
+}
+
+export type MicroPythonExceptionType = 'AssertionError'
+  | 'AttributeError'
+  | 'Exception'
+  | 'ImportError'
+  | 'IndexError'
+  | 'KeyboardInterrupt'
+  | 'KeyError'
+  | 'MemoryError'
+  | 'NameError'
+  | 'NotImplementedError'
+  | 'OSError'
+  | 'RuntimeError'
+  | 'StopIteration'
+  | 'SyntaxError'
+  | 'SystemExit'
+  | 'TypeError'
+  | 'ValueError'
+  | 'ZeroDivisionError'
+  | 'IndentationError'
 
 /**
  * A description of a runtime error that occured on micro:bit
  */
 export interface ErrorMessage {
-  kind: 'ErrorMessage'
+  readonly kind: 'ErrorMessage'
   /**
    * A integer indicating in which line of user code the error occurs
    */
-  line: number
+  readonly line: number
   /**
    * A string indicating type of the exception
    * For full list of types, see
    * https://docs.micropython.org/en/latest/library/builtins.html#exceptions
    */
-  type: string
+  readonly type: MicroPythonExceptionType
   /**
    * A *simple* explanation of the error
    */
-  message: string
+  readonly message: string
 }

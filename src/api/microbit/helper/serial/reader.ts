@@ -18,9 +18,11 @@ export class SerialReader {
    * Buffer will not be cut in this function.
    */
   private async readLoop(termination: (text: string) => boolean): Promise<void> {
+    if(this.config.showLog) console.log(this.serialBuffer);
     while (!termination(this.serialBuffer)) {
       const { value } = await this.portReader.read();
       this.serialBuffer += value;
+      if (this.config.showLog) console.log(this.serialBuffer);
     }
   }
 
@@ -31,11 +33,13 @@ export class SerialReader {
    * this readLoop cuts unnecessary part of the buffer
    */
   private async readLoopWithCut(termination: (text: string) => boolean, bufferLimit: number): Promise<void> {
+    if (this.config.showLog) console.log(this.serialBuffer);
     while (!termination(this.serialBuffer)) {
       const len = this.serialBuffer.length;
       if (len >= bufferLimit) this.serialBuffer = this.serialBuffer.substring(len - bufferLimit);
       const { value } = await this.portReader.read();
       this.serialBuffer += value;
+      if (this.config.showLog) console.log(this.serialBuffer);
     }
   }
 
@@ -96,13 +100,13 @@ export class SerialReader {
    * New content only come out after every thing gets outputted
    * (So user can input)
    */
-  async safeReadUntilWithUpdate(tokens: Array<string>, update: (text: string) => void): Promise<string> {
+  async safeReadUntilWithUpdate(tokens: Array<string>, update: (text: string) => void): Promise<number> {
     let bufferUpdated = false;
-    let matchedToken = '';
+    let matchedTokenID = -1;
     const termination = (str: string) => {
       bufferUpdated = true;
-      tokens.forEach(token => { if (str.includes(token)) matchedToken = token; });
-      return matchedToken !== '';
+      tokens.forEach((token,index) => { if (str.includes(token)) matchedTokenID = index; });
+      return matchedTokenID !== -1;
     };
     const updateTimer = setInterval(() => {
       if (bufferUpdated) {
@@ -112,7 +116,7 @@ export class SerialReader {
     }, this.config.updateMs);
     await this.readLoopWithCut(termination, this.config.cutLength);
     clearInterval(updateTimer);
-    update(this.splitBufferOnFirst(matchedToken));
-    return matchedToken;
+    update(this.splitBufferOnFirst(tokens[matchedTokenID]));
+    return matchedTokenID;
   }
 }

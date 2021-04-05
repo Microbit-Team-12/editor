@@ -39,8 +39,8 @@ async function createConnection(port: SerialPort, config: ManagerOption): Promis
   return {
     kind: 'MicrobitConnection',
     interact: portInteract,
-    disconnection: new Promise((resolve, reject) => {
-      const onDisconnect = (event: Event) => {
+    disconnection: new Promise((resolve, _) => {
+      const onDisconnect = (_: Event) => {
         console.log('disconnected');
         port.removeEventListener('disconnect', onDisconnect);
         resolve();
@@ -80,10 +80,14 @@ export async function connectBySelection(config: ManagerOption = defaultConfig):
 export async function connectByPariedDevice(config: ManagerOption = defaultConfig): Promise<MicrobitConnection | FailedConnection> {
   const ports = await navigator.serial.getPorts();
   if (ports.length === 1) return createConnection(ports[0], config);
-  else return {
+  else if(ports.length === 0) return {
     kind: 'ConnectionFailure',
     type: 'Failed to Obtain Port',
-    reason: 'Multiple or No Serial Devices Available'
+    reason: 'No Paired Serial Devices Available'
+  }; else return {
+    kind: 'ConnectionFailure',
+    type: 'Failed to Obtain Port',
+    reason: 'Multiple Paired Serial Devices Available'
   };
 }
 
@@ -106,7 +110,7 @@ export async function connectByPlugIn(config: ManagerOption = defaultConfig): Pr
     }
   }
   
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, _) => {
     /**
      * A event listener function
      * Resolves the promise when a device is plugged in
