@@ -88,7 +88,7 @@ function MakeButtons(initialSlide: string) {
   return (
     <Space.Fixed height={600} width={600}>
       <div>
-        <img src={duck} height={600} width={600} alt="this is duck image" />
+        <img src={duck} height={600} width={600} alt="cartoon duck" />
       </div>
 
       <Space.Left size={60}></Space.Left>
@@ -96,7 +96,6 @@ function MakeButtons(initialSlide: string) {
       <Space.Fill>
         <Space.Top size={20}></Space.Top>
         <Space.Fill>
-          
           <Space.Fill>
             <Typography className={classes.speech}>
               {parseSpeech(jsonData[slide].speech)}
