@@ -244,6 +244,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
           break;
         case 'ErrorMessage':
           if (output.type !== 'KeyboardInterrupt'){
+            this.summonDuck();
             alert('Error on line ' + output.line + ':\n' + output.type + ': ' + output.message);
           }
       }
