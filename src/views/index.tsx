@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from '../components/APIDemo';
+import Autogrid from '../duck-code';
 import './index.css';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Autogrid />
   </React.StrictMode>,
   document.getElementById('root')
 );
