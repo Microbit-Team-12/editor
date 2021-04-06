@@ -114,7 +114,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
   renderTutorialOrDuck(): JSX.Element {
     let extraComponent;
     if (this.state.needDuck) {
-      extraComponent = <Autogrid onX={this.exileDuck.bind(this)}/>;
+      extraComponent = <Autogrid closeDuck={this.exileDuck.bind(this)}/>;
     }
     else {
       extraComponent = <DocsViewer

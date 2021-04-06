@@ -5,13 +5,14 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
+import PropTypes from 'prop-types';
 import { default as React, useState } from 'react';
 import * as Space from 'react-spaces';
 import duck from './resources/Duck.jpg';
 import './styles.css';
 
 type DuckProps = {
-  onX(): void,
+  closeDuck(): void,
 }
 
 
@@ -127,9 +128,7 @@ function MakeButtons(initialSlide: string, props: DuckProps) {
                               // this checks button.link isnt null
                               setSlide(button.link);
                             } else {
-                              // whatever we want the null function to be
-                              //window.close();
-                              setSlide(initialSlide);
+                              props.closeDuck();
                             }
                           }}
                         >
@@ -150,6 +149,10 @@ function MakeButtons(initialSlide: string, props: DuckProps) {
           <Button
             className={classes.xButton}
             variant="contained"
+            onClick={() => {
+              props.closeDuck();
+            }
+            }
           >
             {'X'}
           </Button>
@@ -158,6 +161,9 @@ function MakeButtons(initialSlide: string, props: DuckProps) {
     </Space.Fixed>
   );
 }
+MakeButtons.propTypes = {
+  closeDuck: PropTypes.func
+};
 
 export default function StartSlides(props: DuckProps) {
   return MakeButtons(slideNames[0], props);
