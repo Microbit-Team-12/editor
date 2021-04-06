@@ -10,6 +10,11 @@ import * as Space from 'react-spaces';
 import duck from './resources/Duck.jpg';
 import './styles.css';
 
+type DuckProps = {
+  onX(): void,
+}
+
+
 type SlideButton = {
   link: string,
   text: string
@@ -36,6 +41,13 @@ const useStyles = makeStyles( (theme) => ({
     textAlign: 'center',
     textTransform: 'none'
   },
+  xButton: {
+    color: 'white',
+    backgroundColor: '#ff0000',
+    height: 20,
+    padding: theme.spacing(2),
+    textAlign: 'center'
+  },
   speech: {
     flexGrow: 1,
     border: 1,
@@ -44,7 +56,7 @@ const useStyles = makeStyles( (theme) => ({
     padding: theme.spacing(2),
     margin: 8,
     textAlign: 'left'
-  },
+  }
 }));
 
 const jsonData = require('./resources/duck_flowchart.json');
@@ -80,7 +92,7 @@ function parseSpeech(speech: string) {
   return parsedSpeech;
 }
 
-function MakeButtons(initialSlide: string) {
+function MakeButtons(initialSlide: string, props: DuckProps) {
   const classes = useStyles();
   const [slide, setSlide] = useState(initialSlide);  
   // Here useState is a 'Hook' (from React) which means the slide variable is updated when the setSlide function is run
@@ -133,11 +145,20 @@ function MakeButtons(initialSlide: string) {
         </Space.Fill>
         <Space.Bottom size={200}></Space.Bottom>
       </Space.Fill>
-      <Space.Right size={250}></Space.Right>
+      <Space.Right size={250}>
+        <Space.Right size={65}>
+          <Button
+            className={classes.xButton}
+            variant="contained"
+          >
+            {'X'}
+          </Button>
+        </Space.Right>
+      </Space.Right>
     </Space.Fixed>
   );
 }
 
-export default function StartSlides() {
-  return MakeButtons(slideNames[0]);
+export default function StartSlides(props: DuckProps) {
+  return MakeButtons(slideNames[0], props);
 }

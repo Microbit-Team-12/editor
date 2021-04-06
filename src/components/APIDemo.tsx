@@ -114,7 +114,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
   renderTutorialOrDuck(): JSX.Element {
     let extraComponent;
     if (this.state.needDuck) {
-      extraComponent = <Autogrid/>;
+      extraComponent = <Autogrid onX={this.exileDuck.bind(this)}/>;
     }
     else {
       extraComponent = <DocsViewer
@@ -144,11 +144,6 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
           {this.renderButtonRequiringConnection('Debugging help', this.summonDuck.bind(this))}
         </header>
         <div className="APIDemo-textareas">
-          {/* <DocsViewer
-            markdown={this.state.docs}
-            onFlash={this.state.connection === null ? undefined : this.onFlash.bind(this)}
-            onLoad={this.onLoad.bind(this)}
-          /> */}
           {this.renderTutorialOrDuck()}
           <Editor
             defaultLanguage="python"
@@ -224,6 +219,10 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
 
   summonDuck(): void {
     this.setState({ needDuck: true });
+  }
+
+  exileDuck(): void {
+    this.setState({ needDuck: false });
   }
 
   async onStart(): Promise<void> {
