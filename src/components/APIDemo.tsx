@@ -10,7 +10,7 @@ import {
   connectByPariedDevice, connectByPlugIn,
   connectBySelection
 } from '../api/microbit/connect';
-import Autogrid from '../duck-code';
+import DuckViewer from '../duck-code';
 import './APIDemo.css';
 import DocsViewer from './DocsViewer';
 
@@ -114,7 +114,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
   renderTutorialOrDuck(): JSX.Element {
     let extraComponent;
     if (this.state.needDuck) {
-      extraComponent = <Autogrid closeDuck={this.exileDuck.bind(this)}/>;
+      extraComponent = <DuckViewer closeDuck={this.exileDuck.bind(this)}/>;
     }
     else {
       extraComponent = <DocsViewer
