@@ -1,0 +1,606 @@
+{
+  "Intro": {
+    "speech": "Quack! Tell me more about the problem by selecting a button below:",
+    "buttons": [
+      {
+        "text": "An error message is displayed",
+        "link": "Select error message",
+        "params": []
+      },
+      {
+        "text": "My code doesn't do what I want it to do",
+        "link": "Select the problem with your program",
+        "params": []
+      }
+    ]
+  },
+  "Select error message": {
+    "speech": "What type of error is displayed?",
+    "buttons": [
+      {
+        "text": "AttributeError",
+        "link": "AttributeError explanation",
+        "params": []
+      },
+      {
+        "text": "SyntaxError",
+        "link": "SyntaxError explanation",
+        "params": []
+      },
+      {
+        "text": "TypeError",
+        "link": "TypeError explanation",
+        "params": []
+      },
+      {
+        "text": "NameError",
+        "link": "NameError explanation",
+        "params": []
+      },
+      {
+        "text": "IndentationError / TabError",
+        "link": "IndentationError explanation",
+        "params": []
+      },
+      {
+        "text": "Something else / I don't know",
+        "link": "Less common errors",
+        "params": []
+      }
+    ]
+  },
+  "AttributeError explanation": {
+    "speech": "An AttributeError tells you that a certain type (such as int or str) doesn’t have a certain attribute. For instance, if you write display.potato, Python will give an AttributeError to tell you that display has no potato attribute.",
+    "buttons": [
+      {
+        "text": "Tell me more",
+        "link": "More about AttributeError",
+        "params": []
+      }
+    ]
+  },
+  "More about AttributeError": {
+    "speech": "To get an AttributeError, you might have accidentally used the wrong datatype or misspelt the function you called? Or perhaps you used a capital letter by mistake – Python treats show and Show as two different things.",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "I still need help",
+        "link": "Highlight error",
+        "params": []
+      },
+      {
+        "text": "back",
+        "link": "AttributeError explanation",
+        "params": []
+      }
+    ]
+  },
+  "Goodbye": {
+    "speech": "I’m happy that I could help you! Now you’ve learnt something new, so you’ll know what to do next time you get that problem.\n\nRemember you can click on my icon any time if you need more help!",
+    "buttons": [
+      {
+        "text": "Thanks Duck, bye for now!",
+        "link": null,
+        "params": []
+      }
+    ]
+  },
+  "Ask if following tutorial": {
+    "speech": "That's alright. Are you following one of the MicroPython tutorials?",
+    "buttons": [
+      {
+        "text": "Yes I am",
+        "link": "Tutorial selection",
+        "params": []
+      },
+      {
+        "text": "No I am not",
+        "link": "Duck gives up",
+        "params": []
+      }
+    ]
+  },
+  "Tutorial selection": {
+    "speech": "Which tutorial are you following?",
+    "buttons": [
+      {
+        "text": "None of them",
+        "link": "Duck gives up",
+        "params": []
+      },
+      {
+        "text": "Hello, World!",
+        "link": "Compare with tutorial",
+        "params": ["Hello, World"]
+      }
+    ]
+  },
+  "Compare with tutorial": {
+    "speech": "{get_readable_diff(prev_button.params[0], error_message.line_no)}",
+    "buttons": [
+      {
+        "text": "Thanks, I can fix that now.",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "That wasn't what I was trying to write",
+        "link": "Duck gives up",
+        "params": []
+      }
+    ]
+  },
+  "Duck gives up": {
+    "speech": "This seems strange... Perhaps you would have better luck reading the tutorial about errors?\nHere is the link: {linkToTutorialAboutErrors}",
+    "buttons": [
+    ]
+  },
+  "SyntaxError explanation": {
+    "speech": "A SyntaxError might happen if you used the wrong punctuation (eg: using ‘;’ instead of ‘:’) or if you misspelt a keyword (such as for, while, if, or else). A tiny arrow symbol ( ^ ) normally points to the word that Python is confused about.",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "No, I still need help",
+        "link": "More about SyntaxError",
+        "params": []
+      }
+    ]
+  },
+  "More about SyntaxError": {
+    "speech": "Sometimes a helpful message appears with a SyntaxError, such as “can’t assign to literal”. Which message do you see?",
+    "buttons": [
+      {
+        "text": "Invalid Syntax (no further message)",
+        "link": "Invalid Syntax nfm explanation",
+        "params": []
+      },
+      {
+        "text": "Invalid Syntax for (number/integer with base 10)",
+        "link": "Invalid Syntax number explanation",
+        "params": []
+      },
+      {
+        "text": "Can't assign to [something]",
+        "link": "Invalid Syntax can't assign explanation",
+        "params": []
+      },
+      {
+        "text": "Something else",
+        "link": "Highlight error",
+        "params": []
+      }
+    ]
+  },
+  "Invalid Syntax nfm explanation": {
+    "speech": "You might get this error if you write an “empty” for loop or while loop (one with nothing in it because you didn’t indent), or if you forgot to close the square brackets at the end of a list.",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "No, I still need help",
+        "link": "Highlight error",
+        "params": []
+      }
+    ]
+  },
+  "Highlight error": {
+    "speech": "Your error message tells you that the {error_message.error_type} is on line {error_message.get_line_no_and_highlight()}, so I’ve highlighted that line for you in the editor. Do you spot the mistake now?",
+    "buttons": [
+      {
+        "text": "Thanks, thank you!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "No, I still need help",
+        "link": "Ask if following tutorial",
+        "params": []
+      }
+    ]
+  },
+  "Invalid Syntax number explanation": {
+    "speech": "Python gives this message when you attach something confusing to the end of a number. Eg: Python knows about 3, but it doesn’t know about 3f or 3.f. If you are trying to multiply a number by a variable, use the * symbol. Or maybe you just made a typo.",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "I still need help",
+        "link": "Highlight error",
+        "params": []
+      }
+    ]
+  },
+  "Invalid Syntax can't assign explanation": {
+    "speech": "Python complains that it “can’t assign to expression” if you use the single equals sign ( = ) in a place where it doesn’t belong. For example, “3 = x” would be read as “change the value of 3 to make it x. But that’s nonsense because you can’t change 3!",
+    "buttons": [
+      {
+        "text": "Tell me more...",
+        "link": "More about assignment error",
+        "params": []
+      }
+    ]
+  },
+  "More about assignment error": {
+    "speech": "If you’re trying to change the value of a variable, the variable name (eg: x) needs to go on the left, and the value (eg: “hello”, or 10) needs to go on the right of the = sign.\nIf you’re trying to test if 2 values are equal, use == rather than = .",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "I still need help",
+        "link": "Highlight error",
+        "params": []
+      },
+      {
+        "text": "back",
+        "link": "Invalid Syntax can't assign explanation",
+        "params": []
+      }
+    ]
+  },
+  "TypeError explanation": {
+    "speech": "Python throws a TypeError if you use a value in a way that doesn’t make sense for its type. For instance, “3” + 5 would throw a TypeError because you cannot add a str to an int.",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "I still need help",
+        "link": "Highlight error",
+        "params": []
+      }
+    ]
+  },
+  "NameError explanation": {
+    "speech": "A NameError tells you that Python doesn’t understand a certain word that you used. Reread the error message to see which word this is. It might just be that you’ve mistyped it! Remember that Python is case-sensitive (so you mustn’t use a capital letter where it expects a lower-case one).",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "I still need help",
+        "link": "Highlight error",
+        "params": []
+      }
+    ]
+  },
+  "IndentationError explanation": {
+    "speech": "The indentation is a fancy way of saying the amount of space at the beginning of the line. Within a given loop, all lines must have the same indentation. You should always use tabs rather than spaces for this.",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      }
+    ]
+  },
+  "Select the problem with your program": {
+    "speech": "Select the problem with your program",
+    "buttons": [
+      {
+        "text": "My program does nothing at all",
+        "link": "Program does nothing",
+        "params": []
+      },
+      {
+        "text": "A condition isn't working (eg: in if statement or while loop)",
+        "link": "Condition isn't working",
+        "params": []
+      },
+      {
+        "text": "Certain parts of my program are skipped",
+        "link": "Certain parts skipped",
+        "params": []
+      },
+      {
+        "text": "A list has changed even though I didn't change it",
+        "link": "List has changed",
+        "params": []
+      },
+      {
+        "text": "Something else",
+        "link": "Duck gives up",
+        "params": []
+      }
+    ]
+  },
+  "Program does nothing": {
+    "speech": "If your program does nothing at all but doesn’t show an error, it might be because you defined a function and forgot to call the function. To call a function, you need round brackets ().",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "No, that's not what I've dome",
+        "link": "More about program does nothing",
+        "params": []
+      }
+    ]
+  },
+  "More about program does nothing": {
+    "speech": "Another reason why your program might do nothing is if you forgot to output anything! Assigning to variables doesn’t show anything on the Micro:Bit display unless you also call display.show. Do not call print because it doesn’t work on the Micro:Bit.",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "I still need help",
+        "link": "Duck gives up",
+        "params": []
+      }
+    ]
+  },
+  "Condition isn't working": {
+    "speech": "You’ve told me that a condition isn’t working. Is your condition simple (just uses one comparison) or complex (uses and / or ) ?",
+    "buttons": [
+      {
+        "text": "Simple",
+        "link": "Simple condition",
+        "params": []
+      },
+      {
+        "text": "Complex",
+        "link": "Complex condition",
+        "params": []
+      }
+    ]
+  },
+  "Simple condition": {
+    "speech": "If two values should compare equal but they don’t, it might be because they’re different types. For example, 3 is an int but “3” is a string, so Python considers them to be totally different things and won’t consider them equal.",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "I still need help",
+        "link": "Duck gives up",
+        "params": []
+      }
+    ]
+  },
+  "Complex condition": {
+    "speech": "When using complex conditions, Python groups and before or. For instance, “a or b and c“ is interpreted as “a or (b and c)”. If this isn’t what you want, then insert parentheses (round brackets).",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "I still need help",
+        "link": "Simple condition",
+        "params": []
+      }
+    ]
+  },
+  "Certain parts skipped": {
+    "speech": "Which of the following match your issue?",
+    "buttons": [
+      {
+        "text": "My list should be modified by every iteration of the loop but it’s only modified by the last iteration",
+        "link": "List outside loop",
+        "params": []
+      },
+      {
+        "text": "The last iteration of my loop is getting skipped",
+        "link": "Last iter skipped",
+        "params": []
+      },
+      {
+        "text": "Something else",
+        "link": "Narrow down decision",
+        "params": []
+      }
+    ]
+  },
+  "List outside loop": {
+    "speech": "This error happens if you have defined the list inside the loop. Move the definition of the list to before the loop begins, and that should fix your problem!",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "I still need help",
+        "link": "Duck gives up",
+        "params": []
+      }
+    ]
+  },
+  "Last iter skipped": {
+    "speech": "The range function in Python stops before the end value. For instance, range(1,10) will iterate through values 1-9 but miss out 10. Increase the end parameter in your call to range, and see if that fixes the problem.",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "I still need help",
+        "link": "Duck gives up",
+        "params": []
+      }
+    ]
+  },  
+  "Narrow down decision": {
+    "speech": "Try narrowing down exactly where your program “makes the decision” that skips a certain part of the code, by inserting display.show() calls (with different parameters!) after every line.",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "I still need help",
+        "link": "Duck gives up",
+        "params": []
+      }
+    ]
+  },
+  "List has changed": {
+    "speech": "If you define a list in Python and then set a second list equal to the first, then any changes to the first list will happen in the second! Fix this by using the copy function on the first list. For example, instead of typing “list2 = list1”, type “list2 = list1.copy()”    ",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "I still need help",
+        "link": "Duck gives up",
+        "params": []
+      }
+    ]
+  },
+  "Division has given the wrong answer": {
+    "speech": "If you divide two ints (whole numbers) in Python, it rounds the answer down to a whole number, instead of giving it as a decimal or fraction. If you want a decimal answer, write “.0” at the end of your numbers. Eg: type 3.0/4.0 instead of 3/4.",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "I still need help",
+        "link": "Duck gives up",
+        "params": []
+      }
+    ]
+  },
+  "Less common errors": {
+    "speech": "Do any of these match your error?",
+    "buttons": [
+      {
+        "text": "IndexError",
+        "link": "IndexError explanation",
+        "params": []
+      },
+      {
+        "text": "ImportError",
+        "link": "ImportError explanation",
+        "params": []
+      },
+      {
+        "text": "KeyError",
+        "link": "KeyError explanation",
+        "params": []
+      },
+      {
+        "text": "ValueError",
+        "link": "ValueError explanation",
+        "params": []
+      },
+      {
+        "text": "ZeroDivisionError",
+        "link": "ZeroDivisionError explanation",
+        "params": []
+      },
+      {
+        "text": "None of them / I don't know",
+        "link": "Highlight error"
+      }
+    ]
+  },
+  "IndexError explanation": {
+    "speech": "The word \"index\" means \"position in a list\", so an IndexError means that you are trying to access a position in a list that's after the end of the list! For example, if you try to get the 3rd item from a list with only 2 items, Python won't understand that. Remember that lists start at 0, so a list of length 3 will only have indexes 0,1, and 2.",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "I still need help",
+        "link": "Highlight error",
+        "params": []
+      }
+    ]
+  },
+  "ImportError explanation": {
+    "speech": "An ImportError normally means that you have misspelled a module that you're trying to import. For instance, check that you have spelt 'Microbit' correctly (and with a capital M!) in your 'import' statment.",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "I still need help",
+        "link": "Highlight error",
+        "params": []
+      }
+    ]
+  },
+  "KeyError explanation": {
+    "speech": "A KeyError means that you are trying to access a value in a dictionary from a key that doesn't yet exist! This might be because you have misspelt the key, or because you forgot to add something to the dictionary before accessing it.",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "I still need help",
+        "link": "Highlight error",
+        "params": []
+      }
+    ]
+  },
+  "ValueError explanation": {
+    "speech": "A ValueError happens if you call a function with the wrong argument (parameter). Read the error message that comes with the error, to see why your argument doesn't work here.",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "I still need help",
+        "link": "Highlight error",
+        "params": []
+      }
+    ]
+  },
+  "ZeroDivisionError explanation": {
+    "speech": "The rules of maths don't allow you to divide by zero, but a ZeroDivisionError means that you are accidentally trying to divide something by zero!",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye",
+        "params": []
+      },
+      {
+        "text": "I still need help",
+        "link": "Highlight error",
+        "params": []
+      }
+    ]
+  }
+}

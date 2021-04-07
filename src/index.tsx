@@ -5,7 +5,7 @@ import './index.css';
 
 ReactDOM.render(
   <React.StrictMode>
-    <APIDemo />
+    <APIDemo/>
   </React.StrictMode>,
   document.getElementById('root')
 );

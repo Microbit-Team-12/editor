@@ -10,6 +10,7 @@ import {
   connectByPariedDevice, connectByPlugIn,
   connectBySelection
 } from '../api/microbit/connect';
+import DuckViewer from '../duck-code';
 import './APIDemo.css';
 import DocsViewer from './DocsViewer';
 
@@ -19,6 +20,7 @@ type APIDemoState = {
   output: string,
   connection: MicrobitConnection | null,
   editor: monaco.editor.IStandaloneCodeEditor | null,
+  needDuck: boolean
 }
 
 const exampleCode = `from microbit import *
@@ -70,6 +72,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
       output: '',
       connection: null,
       editor: null,
+      needDuck: false
     };
     if (!checkCompatability()) alert('Browser not supported');
 
@@ -108,6 +111,21 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     );
   }
 
+  renderTutorialOrDuck(): JSX.Element {
+    let extraComponent;
+    if (this.state.needDuck) {
+      extraComponent = <DuckViewer closeDuck={this.exileDuck.bind(this)}/>;
+    }
+    else {
+      extraComponent = <DocsViewer
+        markdown={this.state.docs}
+        onFlash={this.state.connection === null ? undefined : this.onFlash.bind(this)}
+        onLoad={this.onLoad.bind(this)}
+      />;
+    }
+    return extraComponent;
+  }
+
   handleEditorDidMount(editor: monaco.editor.IStandaloneCodeEditor, _: Monaco):void {
     this.setState({
       editor: editor,
@@ -123,14 +141,10 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
           {this.renderButtonRequiringConnection('Flash Code', () => this.onFlash(this.state.editor!.getValue()))}
           {this.renderButtonRequiringConnection('Interrupt', this.onInterrupt.bind(this))}
           {this.renderButtonRequiringConnection('Reboot', this.onReboot.bind(this))}
+          {this.renderButtonRequiringConnection('Debugging help', this.summonDuck.bind(this))}
         </header>
         <div className="APIDemo-textareas">
-          <DocsViewer
-            markdown={this.state.docs}
-            onFlash={this.state.connection === null ? undefined : this.onFlash.bind(this)}
-            onLoad={this.onLoad.bind(this)}
-          />
-
+          {this.renderTutorialOrDuck()}
           <Editor
             defaultLanguage="python"
             defaultValue={exampleCode}
@@ -146,6 +160,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
           />
 
           <textarea value={this.state.output} readOnly className="APIDemo-output" />
+          
         </div>
       </div>
     );
@@ -202,6 +217,13 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     editor.focus();
   }
 
+  summonDuck(): void {
+    this.setState({ needDuck: true });
+  }
+
+  exileDuck(): void {
+    this.setState({ needDuck: false });
+  }
 
   async onStart(): Promise<void> {
     if (!(await this.connect(connectByPariedDevice())))
@@ -222,6 +244,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
           break;
         case 'ErrorMessage':
           if (output.type !== 'KeyboardInterrupt'){
+            this.summonDuck();
             alert('Error on line ' + output.line + ':\n' + output.type + ': ' + output.message);
           }
       }
@@ -238,7 +261,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
   }
 
   async onRun(code: string): Promise<void> {
-    console.log('onFlash');
+    console.log('onRun');
     if (this.state.connection !== null) {
       await this.onExec(await this.state.connection.interact.execute(code));
     } else {
