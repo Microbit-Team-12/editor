@@ -165,6 +165,6 @@ MakeButtons.propTypes = {
   closeDuck: PropTypes.func
 };
 
-export default function StartSlides(props: DuckProps) {
+export default function StartSlides(props: DuckProps): JSX.Element {
   return MakeButtons(slideNames[0], props);
 }
