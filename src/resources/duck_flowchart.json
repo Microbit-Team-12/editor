@@ -159,12 +159,12 @@
     "buttons": [
       {
         "text": "Invalid Syntax (no further message)",
-        "link": "Invalid syntax nfm explanation",
+        "link": "Invalid Syntax nfm explanation",
         "params": []
       },
       {
         "text": "Invalid Syntax for (number/integer with base 10)",
-        "link": "Invalid syntax number explanation",
+        "link": "Invalid Syntax number explanation",
         "params": []
       },
       {
@@ -209,7 +209,7 @@
       }
     ]
   },
-  "Invalid syntax number explanation": {
+  "Invalid Syntax number explanation": {
     "speech": "Python gives this message when you attach something confusing to the end of a number. Eg: Python knows about 3, but it doesn’t know about 3f or 3.f. If you are trying to multiply a number by a variable, use the * symbol. Or maybe you just made a typo.",
     "buttons": [
       {
