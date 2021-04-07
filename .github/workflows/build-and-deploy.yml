@@ -1,9 +1,7 @@
 name: Build and Deploy
 
-on: 
-  push:
-    branches:
-      - master
+# We want to build on all branches, deploy on master
+on: push
 
 jobs:
   build-and-deploy:
@@ -19,6 +17,7 @@ jobs:
         run: yarn run build
 
       - name: Deploy
+        if: ${{ github.ref == 'refs/heads/master' }}
         uses: JamesIves/github-pages-deploy-action@4.1.0
         with:
           branch: gh-pages
