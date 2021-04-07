@@ -11687,10 +11687,10 @@ wbuf@^1.1.0, wbuf@^1.7.3:
   dependencies:
     minimalistic-assert "^1.0.0"
 
-web-serial-polyfill@1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/web-serial-polyfill/-/web-serial-polyfill-1.0.6.tgz#42d7726226f728379792197a8eab55b86555b0cd"
-  integrity sha512-0pdZYgRG2pmpwS2wuAG+9cJP7pngtMNCWWNL2OybG037F+4J3vnJ+s8BkT1NagSGDLx+rkyBSRg/hKRjAPeB6Q==
+web-serial-polyfill@^1.0.10:
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/web-serial-polyfill/-/web-serial-polyfill-1.0.10.tgz#df3cdc58021361b4dbf68ad87b1abf9fe6bfcaa5"
+  integrity sha512-pXyzpkVMRu65I/D8fo66Ts/bexW1AFw+kdCiMlUpvKZ+191yYYFG6OcGNS8WZmrtFNlTrGRp1LW7OrNwic8uZQ==
 
 web-vitals@^1.0.1:
   version "1.1.1"
