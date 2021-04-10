@@ -140,7 +140,7 @@
     ]
   },
   "SyntaxError explanation": {
-    "speech": "A SyntaxError might happen if you used the wrong punctuation (eg: using ‘;’ instead of ‘:’) or if you misspelt a keyword (such as for, while, if, or else). A tiny arrow symbol ( ^ ) normally points to the word that Python is confused about.",
+    "speech": "A SyntaxError might happen if you used the wrong punctuation (eg: using ‘;’ instead of ‘:’) or if you misspelt a keyword (such as for, while, if, or else).",
     "buttons": [
       {
         "text": "Ah, that's it!",
