@@ -20,7 +20,9 @@ type APIDemoState = {
   output: string,
   connection: MicrobitConnection | null,
   editor: monaco.editor.IStandaloneCodeEditor | null,
-  needDuck: boolean
+  needDuck: boolean,
+  /** The most recent error message for the user, if one exists (otherwise, empty string) */
+  errorString: string
 }
 
 const exampleCode = `from microbit import *
@@ -72,7 +74,8 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
       output: '',
       connection: null,
       editor: null,
-      needDuck: false
+      needDuck: false,
+      errorString: ''
     };
     if (!checkCompatability()) alert('Browser not supported');
 
@@ -114,7 +117,12 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
   renderTutorialOrDuck(): JSX.Element {
     let extraComponent;
     if (this.state.needDuck) {
-      extraComponent = <DuckViewer closeDuck={this.exileDuck.bind(this)}/>;
+      extraComponent = <div>
+        <h1>
+          {this.state.errorString}
+        </h1>
+        <DuckViewer closeDuck={this.exileDuck.bind(this)} />
+      </div>;
     }
     else {
       extraComponent = <DocsViewer
@@ -236,7 +244,8 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
       switch (output.kind){
         case 'NormalOutput':
           this.setState({
-            output: output.outputChunk
+            output: output.outputChunk,
+            errorString: ''
           });
           break;
         case 'ResetPressed':
@@ -244,8 +253,10 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
           break;
         case 'ErrorMessage':
           if (output.type !== 'KeyboardInterrupt'){
+            console.log(output.message);
+            this.setState({ errorString: 'Error on line ' + output.line + ':\n' + output.type + ': ' + output.message });
             this.summonDuck();
-            alert('Error on line ' + output.line + ':\n' + output.type + ': ' + output.message);
+            alert(this.state.errorString);
           }
       }
     });
