@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
+import Fuse from 'fuse.js';
 import PropTypes from 'prop-types';
 import { default as React, useState } from 'react';
 import * as Space from 'react-spaces';
@@ -63,6 +64,19 @@ const useStyles = makeStyles( (theme) => ({
 const jsonData = require('./resources/duck_flowchart.json');
 const slideNames = Object.keys(jsonData);
 
+const tutorials = {
+  HelloWorld: 
+`from microbit import *
+display.scroll("Hello, World!")`,
+  
+  SimpleButtons: 
+`if button_a.is_pressed():
+    display.show(Image.MUSIC_QUAVER)
+    music.play(music.NYAN)
+if button_b.is_pressed():
+    display.show(Image.MEH)`
+};
+
 function executeCorrespondingCommand(commandString: string) {
   if (commandString === 'linkToTutorialAboutErrors') {
     return (
@@ -70,6 +84,18 @@ function executeCorrespondingCommand(commandString: string) {
         Tutorial about errors
       </a>
     );
+  }
+  else if (commandString === 'get_readable_diff(prev_button.params[0], error_message.line_no)') {
+    const list = tutorials.HelloWorld.split('\n');
+
+    const fuse = new Fuse(list);
+    const result = fuse.search('hellon');
+    if (result.length > 0) {
+      return ('The closest matching line is line ' + result[0].refIndex + ' which reads: ' + result[0].item);
+    }
+    else {
+      return ('Unfortunately, your line does not look like any of the lines in the tutorial.');
+    }
   }
   else {
     return commandString;
