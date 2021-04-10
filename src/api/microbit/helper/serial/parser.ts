@@ -122,16 +122,16 @@ export class SerialParser {
     //exec is used in user code, the line following line1 may not be mssageLine
     let lineCount = 0;
     let messageLine = '';
-    while (lineCount===0 || messageLine.startsWith('  ')) {
+    while (lineCount === 0 || messageLine.startsWith('  ')) {
       messageLine = await this.portReader.unsafeReadline();
-      lineCount+=1;
+      lineCount += 1;
     }
     const line2split = messageLine.split(': ');
     outputStream.write({
       kind: 'ErrorMessage',
       line: parseInt(lineNumberString) - 1,
       type: line2split[0] as MicroPythonExceptionType,
-      message: (lineCount === 1) ? '' :'In eval, '+line2split[1]
+      message: (line2split.length === 1) ? '' : line2split[1]
     });
     outputStream.end();
   }
