@@ -104,13 +104,13 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     </Box>;
   }
 
-  renderButtonRequiringConnection(text: string, callback: () => void, isDisabled: boolean): JSX.Element {
+  renderButtonRequiringConnection(text: string, callback: () => void, isEnabled: boolean): JSX.Element {
     return (
       <Box paddingLeft={2}>
         <Button
           className="APIDemo-button"
           variant="contained"
-          disabled={isDisabled}
+          disabled={!isEnabled}
           onClick={() => callback()}
         >
           {text}
