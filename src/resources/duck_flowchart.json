@@ -127,7 +127,7 @@
     ]
   },
   "Compare with tutorial": {
-    "speech": "{get_readable_diff(prev_button.params[0], error_message.line_no)}",
+    "speech": "{get_readable_diff}",
     "buttons": [
       {
         "text": "Thanks, I can fix that now.",
@@ -142,7 +142,7 @@
     ]
   },
   "Duck gives up": {
-    "speech": "This seems strange... Perhaps you would have better luck reading the tutorial about errors?\nHere is the link: {linkToTutorialAboutErrors}",
+    "speech": "This seems strange... Perhaps you would have better luck reading the tutorial about errors?\nHere is the link: {link_to_tutorial_about_errors}",
     "buttons": [
     ]
   },

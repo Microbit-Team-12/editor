@@ -81,14 +81,14 @@ if button_b.is_pressed():
 };
 
 function executeCorrespondingCommand(commandString: string, props: DuckProps) {
-  if (commandString === 'linkToTutorialAboutErrors') {
+  if (commandString === 'link_to_tutorial_about_errors') {
     return (
       <a href="https://example.com/faq.html" target="_blank" rel="noreferrer">
         Tutorial about errors
       </a>
     );
   }
-  else if (commandString === 'get_readable_diff(prev_button.params[0], error_message.line_no)') {
+  else if (commandString === 'get_readable_diff') {
     return readableDiffMessage(props);
 
   }
