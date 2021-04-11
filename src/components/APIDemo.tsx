@@ -22,7 +22,8 @@ type APIDemoState = {
   editor: monaco.editor.IStandaloneCodeEditor | null,
   needDuck: boolean,
   /** The most recent error message for the user, if one exists (otherwise, empty string) */
-  errorString: string
+  errorString: string,
+  errorLine: number
 }
 
 const exampleCode = `from microbit import *
@@ -75,7 +76,8 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
       connection: null,
       editor: null,
       needDuck: false,
-      errorString: ''
+      errorString: '',
+      errorLine: 0
     };
     if (!checkCompatability()) alert('Browser not supported');
 
@@ -114,6 +116,21 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     );
   }
 
+  renderDuck(): JSX.Element {
+    let renderedDuck;
+    if (this.state.errorString !== '') {
+      renderedDuck = <DuckViewer 
+        closeDuck={this.exileDuck.bind(this)} 
+        lineNumber={this.state.errorLine}
+        lineText={this.state.editor!.getValue().split('\n')[this.state.errorLine - 1]} 
+      />;
+    }
+    else {
+      renderedDuck = <DuckViewer closeDuck={this.exileDuck.bind(this)} />;
+    }
+    return renderedDuck;
+  }
+
   renderTutorialOrDuck(): JSX.Element {
     let extraComponent;
     if (this.state.needDuck) {
@@ -121,7 +138,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
         <h1>
           {this.state.errorString}
         </h1>
-        <DuckViewer closeDuck={this.exileDuck.bind(this)} />
+        {this.renderDuck()}
       </div>;
     }
     else {
@@ -254,7 +271,10 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
         case 'ErrorMessage':
           if (output.type !== 'KeyboardInterrupt'){
             console.log(output.message);
-            this.setState({ errorString: 'Error on line ' + output.line + ':\n' + output.type + ': ' + output.message });
+            this.setState({ 
+              errorString: 'Error on line ' + output.line + ':\n' + output.type + ': ' + output.message ,
+              errorLine: output.line
+            });
             this.summonDuck();
             alert(this.state.errorString);
           }

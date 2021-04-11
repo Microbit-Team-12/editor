@@ -14,6 +14,8 @@ import './styles.css';
 
 type DuckProps = {
   closeDuck(): void,
+  lineNumber?: number,
+  lineText?: string
 }
 
 
@@ -77,7 +79,7 @@ if button_b.is_pressed():
     display.show(Image.MEH)`
 };
 
-function executeCorrespondingCommand(commandString: string) {
+function executeCorrespondingCommand(commandString: string, props: DuckProps) {
   if (commandString === 'linkToTutorialAboutErrors') {
     return (
       <a href="https://example.com/faq.html" target="_blank" rel="noreferrer">
@@ -86,36 +88,47 @@ function executeCorrespondingCommand(commandString: string) {
     );
   }
   else if (commandString === 'get_readable_diff(prev_button.params[0], error_message.line_no)') {
-    const list = tutorials.HelloWorld.split('\n');
+    return readableDiffMessage(props);
 
-    const fuse = new Fuse(list);
-    const result = fuse.search('hellon');
-    if (result.length > 0) {
-      return ('The closest matching line is line ' + result[0].refIndex + ' which reads: ' + result[0].item);
-    }
-    else {
-      return ('Unfortunately, your line does not look like any of the lines in the tutorial.');
-    }
   }
   else {
     return commandString;
   }
 } 
 
-function parseTextCommand(commandString: string) {
+function readableDiffMessage(props: DuckProps) {
+  if (props.lineNumber && props.lineText) {
+    const strippedText = props.lineText.trim();
+    const list = tutorials.HelloWorld.split('\n').map(x => x.trim());
+    const fuse = new Fuse(list);
+    const result = fuse.search(strippedText);
+    if (result.length > 0) {
+      return (<div> 
+        The closest matching line in the tutorial is line
+        {result[0].refIndex} which reads: <br></br>  {result[0].item}
+      </div>);
+    }
+    else {
+      return ('Unfortunately, your line does not look like any of the lines in the tutorial.');
+    }
+  }
+  else return ('I cannot see your error message. Perhaps press \'RUN CODE\' again, and double check that an error message is visible?');
+}
+
+function parseTextCommand(commandString: string, props: DuckProps) {
   let parsedCommand: string|JSX.Element = commandString;
   if (commandString.startsWith('{')) { 
     // must also then end with '}'
     const rawCommand = commandString.slice(1, -1); // remove surrounding braces
-    parsedCommand = executeCorrespondingCommand(rawCommand);
+    parsedCommand = executeCorrespondingCommand(rawCommand, props);
   }
   return parsedCommand;
 }
 
-function parseSpeech(speech: string) {
+function parseSpeech(speech: string, props: DuckProps) {
   const re = /(\{[\S\s]+?\})/g;
   const splitSpeech = speech.split(re).filter(Boolean);
-  const parsedSpeech = splitSpeech.map(parseTextCommand);
+  const parsedSpeech = splitSpeech.map(x => parseTextCommand(x, props));
   return parsedSpeech;
 }
 
@@ -137,7 +150,7 @@ function MakeButtons(initialSlide: string, props: DuckProps) {
         <Space.Fill>
           <Space.Fill>
             <Typography className={classes.speech}>
-              {parseSpeech(jsonData[slide].speech)}
+              {parseSpeech(jsonData[slide].speech, props)}
             </Typography>
             <Grid container justify="center" alignItems="flex-start" spacing={2}>
               {jsonData[slide].buttons.map(function (button: SlideButton) {
