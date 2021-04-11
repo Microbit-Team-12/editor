@@ -113,7 +113,7 @@ function readableDiffMessage(props: DuckProps) {
     const result = fuse.search(strippedCodeLine);
     if (result.length > 0) {
       const closestLine = result[0];
-      const backwardsFuse = new Fuse([strippedCodeLine], { includeMatches: true, isCaseSensitive: true });
+      //const backwardsFuse = new Fuse([strippedCodeLine], { includeMatches: true, isCaseSensitive: true });
       return (<div> 
         The closest matching line in the tutorial is line 
         {closestLine.refIndex} which reads: 
