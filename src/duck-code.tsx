@@ -73,11 +73,18 @@ const tutorials = {
 display.scroll("Hello, World!")`,
   
   'SimpleButtons': 
-`if button_a.is_pressed():
-    display.show(Image.MUSIC_QUAVER)
-    music.play(music.NYAN)
-if button_b.is_pressed():
-    display.show(Image.MEH)`
+`from microbit import *
+import music
+
+while True:
+    if button_a.is_pressed():
+        display.show(Image.MUSIC_QUAVER)
+        music.play(music.NYAN)
+    if button_b.is_pressed():
+        display.show(Image.MEH)
+        music.play(music.POWER_DOWN)
+
+    display.show(Image.COW)`
 };
 
 function executeCorrespondingCommand(commandString: string, props: DuckProps) {
@@ -99,15 +106,20 @@ function executeCorrespondingCommand(commandString: string, props: DuckProps) {
 
 function readableDiffMessage(props: DuckProps) {
   if (props.lineNumber && props.lineText) {
-    const strippedText = props.lineText.trim();
+    const strippedCodeLine = props.lineText.trim();
     const tutorial = tutorials[prevSlideParams[0] as keyof typeof tutorials];
-    const list = tutorial.split('\n').map(x => x.trim());
-    const fuse = new Fuse(list);
-    const result = fuse.search(strippedText);
+    const strippedTutorialLines = tutorial.split('\n').map(x => x.trim());
+    const fuse = new Fuse(strippedTutorialLines, {includeMatches: true, isCaseSensitive: true});
+    const result = fuse.search(strippedCodeLine);
     if (result.length > 0) {
+      const closestLine = result[0];
+      const backwardsFuse = new Fuse([strippedCodeLine], { includeMatches: true, isCaseSensitive: true });
       return (<div> 
         The closest matching line in the tutorial is line 
-        {result[0].refIndex} which reads: <br></br>  {result[0].item}
+        {closestLine.refIndex} which reads: 
+        <Typography color='secondary' variant="h6">{closestLine.item}</Typography>
+        whereas your line reads: 
+        <Typography color='secondary' variant="h6">{strippedCodeLine}</Typography>
       </div>);
     }
     else {
@@ -115,6 +127,35 @@ function readableDiffMessage(props: DuckProps) {
     }
   }
   else return ('I cannot see your error message. Perhaps press \'RUN CODE\' again, and double check that an error message is visible?');
+}
+
+function highlightDiffLine(givenLine: Fuse.FuseResult<string>) {
+  if (givenLine.matches) {
+    console.log(givenLine.matches);
+    const lineText = givenLine.item;
+    const matchIndices = givenLine.matches[0].indices;
+    let prevMatchEnd = -1;
+    const highlightedDiffs: JSX.Element[] = [];
+
+    for (let currentMatch = 0; currentMatch < matchIndices.length; currentMatch++) {
+      const nextMatchStart = matchIndices[currentMatch][0];
+      const nextUnmatchingPortion = 
+        <Typography color='secondary' display="inline">
+          {lineText.substring(prevMatchEnd + 1, nextMatchStart)}
+        </Typography>;
+      prevMatchEnd = matchIndices[currentMatch][1];
+      const nextMatchingPortion = 
+        <Typography display="inline">
+          {lineText.substring(nextMatchStart, prevMatchEnd + 1)}
+        </Typography>;
+      highlightedDiffs.push(<span>{nextUnmatchingPortion}{nextMatchingPortion}</span>);
+    }
+    
+    return highlightedDiffs;
+  }
+  else{
+    return givenLine.item;
+  } 
 }
 
 function parseTextCommand(commandString: string, props: DuckProps) {
@@ -168,7 +209,6 @@ function MakeButtons(initialSlide: string, props: DuckProps) {
                             if (button.link) {
                               // this checks button.link isnt null
                               prevSlideParams = button.params;
-                              console.log(prevSlideParams);
                               setSlide(button.link);
                             } else {
                               props.closeDuck();
