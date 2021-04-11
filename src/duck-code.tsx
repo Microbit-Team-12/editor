@@ -129,6 +129,7 @@ function readableDiffMessage(props: DuckProps) {
   else return ('I cannot see your error message. Perhaps press \'RUN CODE\' again, and double check that an error message is visible?');
 }
 
+/** Not currently used - however, it highlights the difference between the tutorial line and the user's erroneous code line. */
 function highlightDiffLine(givenLine: Fuse.FuseResult<string>) {
   if (givenLine.matches) {
     console.log(givenLine.matches);
