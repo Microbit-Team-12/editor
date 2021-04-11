@@ -4,10 +4,11 @@ import Editor, { loader, Monaco } from '@monaco-editor/react';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import React from 'react';
 import { Stream } from 'ts-stream';
-import { FailedConnection, MicrobitConnection, MicrobitOutput } from '../api/microbit-api';
+import { FailedConnection, MicrobitConnection, MicrobitOutput, MicrobitState } from '../api/microbit-api';
 import {
   checkCompatability,
-  connectByPariedDevice, connectByPlugIn,
+  connectByPariedDevice,
+  connectByPlugIn,
   connectBySelection
 } from '../api/microbit/connect';
 import DuckViewer from '../duck-code';
@@ -81,7 +82,9 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     };
     if (!checkCompatability()) alert('Browser not supported');
 
-    loader.init().then(t=>{console.log(t);});
+    loader.init().then(t => {
+      console.log(t);
+    });
   }
 
   componentWillUnmount(): void {
@@ -101,13 +104,13 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     </Box>;
   }
 
-  renderButtonRequiringConnection(text: string, callback: () => void): JSX.Element {
+  renderButtonRequiringConnection(text: string, callback: () => void, isDisabled: boolean): JSX.Element {
     return (
       <Box paddingLeft={2}>
         <Button
           className="APIDemo-button"
           variant="contained"
-          disabled={this.state.connection === null}
+          disabled={isDisabled}
           onClick={() => callback()}
         >
           {text}
@@ -116,17 +119,25 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     );
   }
 
+  hasFreeConnection(): boolean {
+    return this.state.connection?.interact.getState() === MicrobitState.Free;
+  }
+
+  hasBusyConnection(): boolean {
+    return this.state.connection?.interact.getState() === MicrobitState.Busy;
+  }
+
+
   renderDuck(): JSX.Element {
     let renderedDuck;
     if (this.state.errorString !== '') {
-      renderedDuck = <DuckViewer 
-        closeDuck={this.exileDuck.bind(this)} 
+      renderedDuck = <DuckViewer
+        closeDuck={this.exileDuck.bind(this)}
         lineNumber={this.state.errorLine}
-        lineText={this.state.editor!.getValue().split('\n')[this.state.errorLine - 1]} 
+        lineText={this.state.editor!.getValue().split('\n')[this.state.errorLine - 1]}
       />;
-    }
-    else {
-      renderedDuck = <DuckViewer closeDuck={this.exileDuck.bind(this)} />;
+    } else {
+      renderedDuck = <DuckViewer closeDuck={this.exileDuck.bind(this)}/>;
     }
     return renderedDuck;
   }
@@ -140,8 +151,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
         </h1>
         {this.renderDuck()}
       </div>;
-    }
-    else {
+    } else {
       extraComponent = <DocsViewer
         markdown={this.state.docs}
         onFlash={this.state.connection === null ? undefined : this.onFlash.bind(this)}
@@ -151,7 +161,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     return extraComponent;
   }
 
-  handleEditorDidMount(editor: monaco.editor.IStandaloneCodeEditor, _: Monaco):void {
+  handleEditorDidMount(editor: monaco.editor.IStandaloneCodeEditor, _: Monaco): void {
     this.setState({
       editor: editor,
     });
@@ -162,11 +172,9 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
       <div className="APIDemo">
         <header className="APIDemo-header">
           {this.renderStartButton()}
-          {this.renderButtonRequiringConnection('Run Code', () => this.onRun(this.state.editor!.getValue()))}
-          {this.renderButtonRequiringConnection('Flash Code', () => this.onFlash(this.state.editor!.getValue()))}
-          {this.renderButtonRequiringConnection('Interrupt', this.onInterrupt.bind(this))}
-          {this.renderButtonRequiringConnection('Reboot', this.onReboot.bind(this))}
-          {this.renderButtonRequiringConnection('Debugging help', this.summonDuck.bind(this))}
+          {this.renderButtonRequiringConnection('Interrupt', this.onInterrupt.bind(this), this.hasBusyConnection())}
+          {this.renderButtonRequiringConnection('Reboot', this.onReboot.bind(this), this.hasFreeConnection())}
+          {this.renderButtonRequiringConnection('Debugging help', this.summonDuck.bind(this), false)}
         </header>
         <div className="APIDemo-textareas">
           {this.renderTutorialOrDuck()}
@@ -184,8 +192,8 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
             wrapperClassName="APIDemo-code"
           />
 
-          <textarea value={this.state.output} readOnly className="APIDemo-output" />
-          
+          <textarea value={this.state.output} readOnly className="APIDemo-output"/>
+
         </div>
       </div>
     );
@@ -198,10 +206,10 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
         alert(c.reason);
         return false;
       case 'MicrobitConnection':
-        this.setState({ connection: c });
+        this.setState({connection: c});
         c.disconnection.then(async () => {
           alert('Serial disconnected');
-          this.setState({ connection: null }, async () => {
+          this.setState({connection: null}, async () => {
             await this.connect(connectByPlugIn());
             alert('Serial reconnected');
           });
@@ -243,11 +251,11 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
   }
 
   summonDuck(): void {
-    this.setState({ needDuck: true });
+    this.setState({needDuck: true});
   }
 
   exileDuck(): void {
-    this.setState({ needDuck: false });
+    this.setState({needDuck: false});
   }
 
   async onStart(): Promise<void> {
@@ -258,7 +266,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
 
   async onExec(outputStream: Stream<MicrobitOutput>): Promise<void> {
     await outputStream.forEach(output => {
-      switch (output.kind){
+      switch (output.kind) {
         case 'NormalOutput':
           this.setState({
             output: output.outputChunk,
@@ -269,10 +277,10 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
           console.log('ResetPressed');
           break;
         case 'ErrorMessage':
-          if (output.type !== 'KeyboardInterrupt'){
+          if (output.type !== 'KeyboardInterrupt') {
             console.log(output.message);
-            this.setState({ 
-              errorString: 'Error on line ' + output.line + ':\n' + output.type + ': ' + output.message ,
+            this.setState({
+              errorString: 'Error on line ' + output.line + ':\n' + output.type + ': ' + output.message,
               errorLine: output.line
             });
             this.summonDuck();
