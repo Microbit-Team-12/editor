@@ -18,10 +18,10 @@ type DuckProps = {
   lineText?: string
 }
 
-
 type SlideButton = {
   link: string,
-  text: string
+  text: string,
+  params: string[]
 }
 
 const theme = createMuiTheme({
@@ -63,15 +63,16 @@ const useStyles = makeStyles( (theme) => ({
   }
 }));
 
+let prevSlideParams: string[] = [];
 const jsonData = require('./resources/duck_flowchart.json');
 const slideNames = Object.keys(jsonData);
 
 const tutorials = {
-  HelloWorld: 
+  'HelloWorld': 
 `from microbit import *
 display.scroll("Hello, World!")`,
   
-  SimpleButtons: 
+  'SimpleButtons': 
 `if button_a.is_pressed():
     display.show(Image.MUSIC_QUAVER)
     music.play(music.NYAN)
@@ -99,12 +100,13 @@ function executeCorrespondingCommand(commandString: string, props: DuckProps) {
 function readableDiffMessage(props: DuckProps) {
   if (props.lineNumber && props.lineText) {
     const strippedText = props.lineText.trim();
-    const list = tutorials.HelloWorld.split('\n').map(x => x.trim());
+    const tutorial = tutorials[prevSlideParams[0] as keyof typeof tutorials];
+    const list = tutorial.split('\n').map(x => x.trim());
     const fuse = new Fuse(list);
     const result = fuse.search(strippedText);
     if (result.length > 0) {
       return (<div> 
-        The closest matching line in the tutorial is line
+        The closest matching line in the tutorial is line 
         {result[0].refIndex} which reads: <br></br>  {result[0].item}
       </div>);
     }
@@ -165,6 +167,8 @@ function MakeButtons(initialSlide: string, props: DuckProps) {
                           onClick={() => {
                             if (button.link) {
                               // this checks button.link isnt null
+                              prevSlideParams = button.params;
+                              console.log(prevSlideParams);
                               setSlide(button.link);
                             } else {
                               props.closeDuck();
