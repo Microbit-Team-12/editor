@@ -130,6 +130,8 @@ function readableDiffMessage(props: DuckProps) {
 }
 
 /** Not currently used - however, it highlights the difference between the tutorial line and the user's erroneous code line. */
+
+/*
 function highlightDiffLine(givenLine: Fuse.FuseResult<string>) {
   if (givenLine.matches) {
     console.log(givenLine.matches);
@@ -157,7 +159,7 @@ function highlightDiffLine(givenLine: Fuse.FuseResult<string>) {
   else{
     return givenLine.item;
   } 
-}
+}*/
 
 function parseTextCommand(commandString: string, props: DuckProps) {
   let parsedCommand: string|JSX.Element = commandString;
