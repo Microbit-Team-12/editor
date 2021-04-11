@@ -275,6 +275,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
               errorString: 'Error on line ' + output.line + ':\n' + output.type + ': ' + output.message ,
               errorLine: output.line
             });
+            this.exileDuck(); // close Duck before reopening, to reset it.
             this.summonDuck();
             alert(this.state.errorString);
           }
