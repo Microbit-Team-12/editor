@@ -68,6 +68,13 @@ while True:
 More text
 `;
 
+/**
+ * Difference between flashing and running the code:
+ * - flashing the code is like restarting the kernel in jupyter.
+ *   To reflect this, all output cells are cleared.
+ * - running the code, on the other hand, has access to previous local variables.
+ *   The output is shown below the code block executed, and all other output cells are left intact.
+ */
 class APIDemo extends React.Component<unknown, APIDemoState> {
   constructor(props: unknown) {
     super(props);
