@@ -68,13 +68,6 @@ while True:
 More text
 `;
 
-/**
- * Difference between flashing and running the code:
- * - flashing the code is like restarting the kernel in jupyter.
- *   To reflect this, all output cells are cleared.
- * - running the code, on the other hand, has access to previous local variables.
- *   The output is shown below the code block executed, and all other output cells are left intact.
- */
 class APIDemo extends React.Component<unknown, APIDemoState> {
   constructor(props: unknown) {
     super(props);
@@ -161,7 +154,8 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     } else {
       extraComponent = <DocsViewer
         markdown={this.state.docs}
-        onFlash={this.state.connection === null ? undefined : this.onFlash.bind(this)}
+        onRun={this.state.connection?.interact.execute.bind(this.state.connection?.interact)}
+        hasFreeConnection={this.hasFreeConnection.bind(this)}
         onLoad={this.onLoad.bind(this)}
       />;
     }
@@ -179,9 +173,11 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
       <div className="APIDemo">
         <header className="APIDemo-header">
           {this.renderStartButton()}
+          {this.renderButtonRequiringConnection('Flash', () => this.onFlash(this.state.editor!.getValue()), this.hasFreeConnection())}
+          {this.renderButtonRequiringConnection('Run', () => this.onRun(this.state.editor!.getValue()), this.hasFreeConnection())}
           {this.renderButtonRequiringConnection('Interrupt', this.onInterrupt.bind(this), this.hasBusyConnection())}
           {this.renderButtonRequiringConnection('Reboot', this.onReboot.bind(this), this.hasFreeConnection())}
-          {this.renderButtonRequiringConnection('Debugging help', this.summonDuck.bind(this), false)}
+          {this.renderButtonRequiringConnection('Help', this.summonDuck.bind(this), false)}
         </header>
         <div className="APIDemo-textareas">
           {this.renderTutorialOrDuck()}
