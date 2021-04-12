@@ -178,7 +178,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
           {this.renderButtonRequiringConnection('Flash', () => this.onFlash(this.state.editor!.getValue()), this.hasFreeConnection())}
           {this.renderButtonRequiringConnection('Run', () => this.onRun(this.state.editor!.getValue()), this.hasFreeConnection())}
           {this.renderButtonRequiringConnection('Interrupt', this.onInterrupt.bind(this), this.hasBusyConnection())}
-          {this.renderButtonRequiringConnection('Reboot and Run', this.onReboot.bind(this), this.hasFreeConnection())}
+          {this.renderButtonRequiringConnection('Reboot', this.onReboot.bind(this), this.hasFreeConnection())}
           {this.renderButtonRequiringConnection('Help', this.summonDuck.bind(this), false)}
         </header>
         <div className="APIDemo-textareas">
