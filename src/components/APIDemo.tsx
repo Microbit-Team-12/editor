@@ -50,15 +50,17 @@ const exampleDocs = `# Title
 Did you know you can use tildes instead of backticks?
 
 ~~~py
-# LINES 6-10
+# LINES 6-9
 from microbit import *
 import music
 
 while True:
     if button_a.is_pressed():
+        print('A')
         display.show(Image.MUSIC_QUAVER)
         music.play(music.NYAN)
     if button_b.is_pressed():
+        print('B')
         display.show(Image.MEH)
         music.play(music.POWER_DOWN)
     
@@ -154,7 +156,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     } else {
       extraComponent = <DocsViewer
         markdown={this.state.docs}
-        onRun={this.state.connection?.interact.execute.bind(this.state.connection?.interact)}
+        onRun={this.onRunCell.bind(this)}
         hasFreeConnection={this.hasFreeConnection.bind(this)}
         onLoad={this.onLoad.bind(this)}
       />;
@@ -176,7 +178,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
           {this.renderButtonRequiringConnection('Flash', () => this.onFlash(this.state.editor!.getValue()), this.hasFreeConnection())}
           {this.renderButtonRequiringConnection('Run', () => this.onRun(this.state.editor!.getValue()), this.hasFreeConnection())}
           {this.renderButtonRequiringConnection('Interrupt', this.onInterrupt.bind(this), this.hasBusyConnection())}
-          {this.renderButtonRequiringConnection('Reboot', this.onReboot.bind(this), this.hasFreeConnection())}
+          {this.renderButtonRequiringConnection('Reboot and Run', this.onReboot.bind(this), this.hasFreeConnection())}
           {this.renderButtonRequiringConnection('Help', this.summonDuck.bind(this), false)}
         </header>
         <div className="APIDemo-textareas">
@@ -287,7 +289,6 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
               errorLine: output.line
             });
             this.summonDuck();
-            alert(this.state.errorString);
           }
       }
     });
@@ -295,37 +296,31 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
 
   async onFlash(code: string): Promise<void> {
     console.log('onFlash');
-    if (this.state.connection !== null) {
-      await this.onExec(await this.state.connection.interact.flash(code));
-    } else {
-      alert('No device is connected. Press \'Start\' to connect a device.');
-    }
+    await this.onExec(await this.state.connection!.interact.flash(code));
+    this.setState({}); // to update the buttons at the top
   }
 
   async onRun(code: string): Promise<void> {
     console.log('onRun');
-    if (this.state.connection !== null) {
-      await this.onExec(await this.state.connection.interact.execute(code));
-    } else {
-      alert('No device is connected. Press \'Start\' to connect a device.');
-    }
+    await this.onExec(await this.state.connection!.interact.execute(code));
+    this.setState({});
+  }
+
+  async onRunCell(code: string): Promise<Stream<MicrobitOutput>> {
+    console.log('onRunCell');
+    this.setState({});
+    return await this.state.connection!.interact.execute(code);
   }
 
   async onReboot(): Promise<void> {
     console.log('onReboot');
-    if (this.state.connection !== null) {
-      await this.onExec(await this.state.connection.interact.reboot());
-    } else {
-      alert('No device is connected. Press \'Start\' to connect a device.');
-    }
+    await this.onExec(await this.state.connection!.interact.reboot());
+    this.setState({});
   }
 
   async onInterrupt(): Promise<void> {
-    if (this.state.connection !== null) {
-      await this.state.connection.interact.interrupt();
-    } else {
-      alert('No device is connected. Press \'Start\' to connect a device.');
-    }
+    await this.state.connection!.interact.interrupt();
+    this.setState({});
   }
 }
 

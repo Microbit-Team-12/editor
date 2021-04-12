@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
+import './DocsViewer.css';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { darcula } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { DoubleArrow, Height, PlayArrow } from '@material-ui/icons';
@@ -69,8 +70,12 @@ class PythonCode extends React.Component<PythonCodeProps, PythonCodeState> {
             });
             break;
           case 'ErrorMessage':
+            if (output.type === 'KeyboardInterrupt') break;
+            const oldOutput = this.state.output;
             this.setState({
-              output: 'Error on line ' + output.line + ':\n' + output.type + ': ' + output.message,
+              output: `${oldOutput}
+Error on line ${output.line}:
+${output.type}: ${output.message}`,
             });
         }
       });
@@ -109,7 +114,7 @@ class PythonCode extends React.Component<PythonCodeProps, PythonCodeState> {
         <DoubleArrow/>
       </IconButton>
 
-      <div>
+      <div className="Docs-output">
         {this.state.output}
       </div>
     </div>;
