@@ -85,23 +85,36 @@ ${output.type}: ${output.message}`,
     }
   }
 
-  onLoad(): void {
+  onInsertIntoEditor(): void {
     this.props.onInsertIntoEditor(this.lines.slice(this.highlightStart, this.highlightEnd).join('\n'));
   }
 
-  render(): JSX.Element {
+  getDisplayedText(): string {
     const [start, end] =
       this.state.isExpanded ?
         [0, this.lines.length] :
         [this.highlightStart, this.highlightEnd];
 
+    let lines = this.lines.slice(start, end);
+
+    if (start > 0) {
+      lines = ['# ...', ...lines];
+    }
+    if (end < this.lines.length) {
+      lines = [...lines, '# ...'];
+    }
+
+    return lines.join('\n');
+  }
+
+  render(): JSX.Element {
     return <div className="Docs-code">
       <SyntaxHighlighter
         style={darcula}
         language="py"
         showLineNumbers={this.state.isExpanded}
       >
-        {this.lines.slice(start, end).join('\n')}
+        {this.getDisplayedText()}
       </SyntaxHighlighter>
 
       <Button
@@ -129,7 +142,7 @@ ${output.type}: ${output.message}`,
         variant="contained"
         color="secondary"
         endIcon={<DoubleArrow/>}
-        onClick={this.onLoad.bind(this)}
+        onClick={this.onInsertIntoEditor.bind(this)}
       >
         Insert fragment into editor
       </Button>
