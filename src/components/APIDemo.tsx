@@ -21,10 +21,12 @@ type APIDemoState = {
   output: string,
   connection: MicrobitConnection | null,
   editor: monaco.editor.IStandaloneCodeEditor | null,
+  monaco: Monaco | null,
   needDuck: boolean,
   /** The most recent error message for the user, if one exists (otherwise, empty string) */
   errorString: string,
-  errorLine: number
+  errorLine: number,
+  errorMonacoIDs: string[] | null
 }
 
 const exampleCode = `from microbit import *
@@ -78,15 +80,18 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
       output: '',
       connection: null,
       editor: null,
+      monaco: null,
       needDuck: false,
       errorString: '',
-      errorLine: 0
+      errorLine: 0,
+      errorMonacoIDs: null
     };
     if (!checkCompatability()) alert('Browser not supported');
 
     loader.init().then(t => {
       console.log(t);
     });
+    this.removeErrorLineOfCode = this.removeErrorLineOfCode.bind(this);
   }
 
   componentWillUnmount(): void {
@@ -164,9 +169,10 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     return extraComponent;
   }
 
-  handleEditorDidMount(editor: monaco.editor.IStandaloneCodeEditor, _: Monaco): void {
+  handleEditorDidMount(editor: monaco.editor.IStandaloneCodeEditor, monaco: Monaco): void {
     this.setState({
       editor: editor,
+      monaco: monaco
     });
   }
 
@@ -269,6 +275,18 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     //this.connect(connectByPlugIn());
   }
 
+  removeErrorLineOfCode():void {
+    const editor = this.state.editor!;
+    const ids = this.state.errorMonacoIDs;
+    if(ids!=null){
+      this.exileDuck();
+      editor.deltaDecorations(ids,[]);
+      this.setState({
+        errorMonacoIDs: null
+      });
+    }
+  }
+
   async onExec(outputStream: Stream<MicrobitOutput>): Promise<void> {
     await outputStream.forEach(output => {
       switch (output.kind) {
@@ -284,11 +302,23 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
         case 'ErrorMessage':
           if (output.type !== 'KeyboardInterrupt') {
             console.log(output.message);
+            const editor = this.state.editor!;
+            const errorMonacoID = editor.deltaDecorations([],
+              [
+                {
+                  range: new monaco.Range(output.line, 1, output.line, 1),
+                  options: {
+                    isWholeLine: true, 
+                    className: 'Monaco-Error-Line-Of-Code'
+                  }
+                },
+              ]
+            );
             this.setState({
               errorString: 'Error on line ' + output.line + ':\n' + output.type + ': ' + output.message,
-              errorLine: output.line
+              errorLine: output.line,
+              errorMonacoIDs: errorMonacoID
             });
-            this.exileDuck(); // close Duck before reopening, to reset it.
             this.summonDuck();
           }
       }
@@ -297,6 +327,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
 
   async onFlash(code: string): Promise<void> {
     console.log('onFlash');
+    this.removeErrorLineOfCode();
     await this.onExec(await this.state.connection!.interact.flash(code));
     this.setState({}); // to update the buttons at the top
   }
