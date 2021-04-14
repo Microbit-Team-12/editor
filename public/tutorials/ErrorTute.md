@@ -18,7 +18,7 @@ If your program has a syntax error, the program will give you a `SyntaxError` wh
 
 ###### Example:
 Let's say you forget to put brakets after display.scroll:
-```
+```py
 display.scroll "hello"
 ```
 You'll get this error:
@@ -31,17 +31,21 @@ The final line of the error message tells you that this is a syntax error. The l
 
 Obviously the mistake here was forgetting the brackets, but Python couldn't figure out exactly what the error was and so simply wrote `invalid syntax` after `SyntaxError`. Don't worry if this happens - you can still figure out the mistake by looking at the line it occured!
 
-<!---
-###### Example:
-Let's say you try and run this code.
-```
 
-```
-You'll get this error:
-```
+[comment]: <> (###### Example:)
 
-```
---->
+[comment]: <> (Let's say you try and run this code.)
+
+[comment]: <> (```)
+
+[comment]: <> (```)
+
+[comment]: <> (You'll get this error:)
+
+[comment]: <> (```)
+
+[comment]: <> (```)
+
 
 ---
 
@@ -143,3 +147,14 @@ sleep(average)
 You expect the program to print `3.5` when run, but instead it prints `5`. What's going on?
 Well, this is the difficult part of debugging a logic error, but at least you've figured out exactly where the problem is - it's in the definition of average.
 After a bit of experimenting you realise you should have written `average = (x + y) / 2`, since division gets evaluated before addition.
+
+```py
+# $LINES 2-2 
+x = 3
+y = 4.
+average = x + y / 2
+print(average)
+sleep(average)
+```
+
+$$ \exists \latex ? $$

@@ -19,7 +19,7 @@
   justify-content: center;
 }
 
-.APIDemo-textareas {
+.APIDemo-body {
   width: 90vw;
   height: 90vh;
 
@@ -31,22 +31,25 @@
   margin: 10px;
 }
 
-.APIDemo-textareas textarea {
-  font-size: x-large;
-}
-
 /* Column layout using grid */
-
-.APIDemo-docs {
+/* ---Left column--- */
+.APIDemo-tutorial {
   grid-column: 1;
   grid-row: 1 / span 3;
 
+  background: white;
+  overflow-y: auto;
+
+  /* Place the scroll bar on the left */
+  direction: rtl;
 }
 
-.APIDemo-docs * {
-  text-align: left;
+.APIDemo-tutorial * {
+  /* Reset children's text direction back to left->right */
+  direction: ltr;
 }
 
+/* ---Right column--- */
 .APIDemo-code {
   grid-column: 2;
   grid-row: 1 / span 2;
