@@ -2,7 +2,7 @@
 
 Errors are the mistakes or faults performed by the user which results in abnormal working of the program. The process of removing errors from a program is called debugging.
 
-There are two basic types of error:
+There are three basic types of error:
 - **Syntax Error**
 A syntax error is the most common type of error and occurs when we do not use properly defined syntax for Python, and so the program is unable to run. For example: missing parentheses, typos, using the wrong symbols etc.
 - **Buit-in Exception**
@@ -18,30 +18,33 @@ If your program has a syntax error, the program will give you a `SyntaxError` wh
 
 ###### Example:
 Let's say you forget to put brakets after display.scroll:
-```
+```py
 display.scroll "hello"
 ```
 You'll get this error:
-```
+```py
 Traceback (most recent call last):
   File "<stdin>", line 1
 SyntaxError: invalid syntax
 ```
 The final line of the error message tells you that this is a syntax error. The line before that is telling you which line of the program the error occurs - in this case it's `line 1`.
 
-Obviously the mistake here was forgetting the brackets, but Python couldn't figure out exactly what the error was and so simply wrote `invalid syntax` after `SyntaxError`. Don't worry if this happens - you can still figure out the mistake by looking at the line it occured!
+##### Task
+The following code has one or more syntax errors. Try running the code to see where they and and figure out how to fix them:
 
-<!---
-###### Example:
-Let's say you try and run this code.
-```
+```py
+# LINES 4-11
+from microbit import *
 
+if button_a.is_pressed():
+    display-show(Image.ARROW_W)
+    sleep 3000
+    display.clear()
+elseif button_b.is_pressed():
+    display.show(Image.ARROW_E)
+    sleep 3000
+    display.clear()
 ```
-You'll get this error:
-```
-
-```
---->
 
 ---
 
@@ -49,75 +52,73 @@ You'll get this error:
 
 If you run the program and it passes a syntax check but still fails to run, then one of these errors will come up. You can find the name of the error in the final line of the error message. Here are some examples:
 
+###### NameError
+This error occurs when Python enounters something with a name it doesn't recognise. It often means you've made a typo, or used the wrong name for some object or method.
+
+Try running this code. Can you find and fix the errors?
+```py
+# LINES 4-13
+from microbit import *
+
+while Tre:
+    disply.show(Image.AROW_N)
+    if accelermeter.is_gesture("UP"):
+        display.sroll("UP")
+    if acclerometer.is_gesture("down"):
+        display.scroll("DOWN")
+    if acceleroeter.is_gesture("left"):
+        disply.scroll("LEFT")
+    if aceleometer.is_gesture("right"):
+        display.scrol("RIGHT")
+```
+
 ###### IndexError
 This error occurs when you try to access an index in a list that doesn't exist.
-Let's say you try and run this code.
-```
-x = [0, 1, 2]
-display.scroll(x[10])
-```
-You'll get this error:
-```
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-IndexError: list index out of range
+What's wrong with this code? Can you fix it so it runs?
+```py
+x = ["Hello", "World"]
+display.scroll(x[2])
 ```
 
 ###### ZeroDivisionError
-This error occurs when you try to divide by zero.
-Let's say you try and run this code.
-```
+This error occurs when you try to divide by zero. For example:
+```py
 x = 10 / 0
-```
-You'll get this error:
-```
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-ZeroDivisionError: divide by zero
 ```
 
 ###### TypeError
-This error occurs when you try to pass an object of the wrong type into a function.
-Let's say you try and run this code.
-```
-sleep("100 seconds")
-```
-You'll get this error:
-```
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-TypeError: can't convert str to float
-```
-The final line of the error message contains some additional detail: `can't convert str to float`. This is telling us the `sleep` function requires its input to be a `float` or at least a type that can be converted into a `float`, but `"100 seconds"` is a `str` (which cannot be automatically converted into a `float`).
+This error occurs when you try to pass an object of a wrong type into a method.
 
-However, running `sleep(100)` or `sleep(100.0)` will not throw TypeErrors, because `100` is an `int` which can be converted into a `float`, and `100.0` is already a `float`.
-
-You will also get a `TypeError` if you don't include enough arguments in a function.  For example:
-Let's say you try and run this code.
+Let's say you want the program to wait for 1 second, so you type this line:
+```py
+sleep("1 second")
 ```
+What error happens when you try running this? Why? Can you try and fix it? Note the additional information given to you in the final line of the error message - it may be useful.
+
+Note that a particular argument can have more than one possible type. For example, let's say you run this:
+```py
+sleep(100)
+sleep(100.0)
+```
+Does line 1 work? Does line 2?
+
+Trying to pass an argument of the wrong type isn't the only way to get a `TypeError`. Let's say you try and run this code.
+```py
 sleep()
 ```
-You'll get this error:
-```
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-TypeError: function takes 1 positional arguments but 0 were given
-```
-This time the error message is telling you that `sleep` requires 1 argument, but you only had 0.
+What happens? How do you fix it?
 
 ###### ValueError
-This error is similar to a `TypeError`, but occurs when you try to pass an object that's the correct type but the wrong value for a function.
+This error is similar to a `TypeError`, but occurs when you try to pass an object that's a correct type but still the wrong value for that argument.
 For example, let's say you try and use the `int` function, which converts things into integers.
-```
+```py
+int(5.0)
+int("132")
 int("xy")
 ```
-You'll get this error:
-```
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-ValueError: invalid syntax for integer with base 10
-```
-The error comes because you can't convert `"xy"` into an `int`, but why is it a `ValueError` rather than a `TypeError`? Well, `"xy"` is a string, and some strings can actually be passed into the `int()` function. For example, running `int("12")` would be fine and output `12`. This means `str` is a valid type for the `int()` function, and so  `"xy"` isn't the incorrect *type* to be passed into the function, but it is still an incorrect *value* to be passed into the function (since it cannot be converted into an integer).
+What line/lines go wrong? Why is this?
+
+<!--- The error comes because you can't convert `"xy"` into an `int`, but why is it a `ValueError` rather than a `TypeError`? Well, `"xy"` is a string, and some strings can actually be passed into the `int()` function. For example, running `int("12")` would be fine and output `12`. This means `str` is a valid type for the `int()` function, and so  `"xy"` isn't the incorrect *type* to be passed into the function, but it is still an incorrect *value* to be passed into the function (since it cannot be converted into an integer). --->
 
 ---
 ### Logical Errors
@@ -143,3 +144,48 @@ sleep(average)
 You expect the program to print `3.5` when run, but instead it prints `5`. What's going on?
 Well, this is the difficult part of debugging a logic error, but at least you've figured out exactly where the problem is - it's in the definition of average.
 After a bit of experimenting you realise you should have written `average = (x + y) / 2`, since division gets evaluated before addition.
+
+###### Task on Logical Errors
+
+For part of a program you need to add up all the numbers from 1 to 10. To do that you write the below code in order to have `nums` be that sum.
+```py
+nums = 0
+for num in range(10):
+    num += num
+```
+What do you expect `nums` to be at the end? What do you actually get if you run the code? What is the problem?
+
+---
+### Final Task
+
+The following code is an attempt to write a simple coin flipping program. If it works correctly, whenever you shake the microbit you should either get an empty or filled-in coin, with equal chance of both.
+
+Note: randint is a function that returns a random integer between two values, inclusive.
+
+```py
+# LINES 5-24
+from microbit import *
+from random import randint
+
+def on_gesture_shake():
+    side = randint(2, 3)
+    if side = 1:
+        basic.showleds("""
+        . # # # .
+        # . . . #
+        # . . . #
+        # . . . #
+        . # # # .
+        """)
+    else:
+        basic.show_leds """
+        . # # # .
+        # # # # #
+        # # # # #
+        # # # # #
+        . # # # .
+        "")
+
+input.on_gesure(Gesture.SHAK, on_gesture_shake
+```
+Remember to use the information in the error message to help you out. Also make sure to double check for logical errors - does the program do what you expect it to?
