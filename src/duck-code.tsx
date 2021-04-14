@@ -202,9 +202,9 @@ function MakeButtons(initialSlide: string, props: DuckProps) {
   // Here useState is a 'Hook' (from React) which means the slide variable is updated when the setSlide function is run
 
   return (
-    <Space.Fixed height={600} width={600}>
+    <Space.Fixed height={650} width={600}>
       <div>
-        <img src={duck} height={600} width={600} alt="cartoon duck" />
+        <img src={duck} height={650} width={600} alt="cartoon duck" />
       </div>
 
       <Space.Left size={60}></Space.Left>
