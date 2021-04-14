@@ -8,14 +8,14 @@ import { IconButton } from '@material-ui/core';
 import { MicrobitOutput } from '../api/microbit/interface/message';
 import { Stream } from 'ts-stream';
 
-type PythonCodeProps = {
+interface PythonCodeProps {
   code: string,
   onRun?(code: string): Promise<Stream<MicrobitOutput>>,
   hasFreeConnection(): boolean,
   onLoad(codeSnippet: string): void,
 }
 
-type PythonCodeState = {
+interface PythonCodeState {
   isExpanded: boolean,
   output: string,
 }
@@ -122,14 +122,14 @@ ${output.type}: ${output.message}`,
 }
 
 
-type DocsViewerProps = {
+interface DocsViewerProps {
   markdown: string,
   onRun?(code: string): Promise<Stream<MicrobitOutput>>,
   hasFreeConnection(): boolean,
   onLoad(codeSnippet: string): void,
 }
 
-type MarkdownCode = {
+interface MarkdownCode {
   /** The language of the code block, specified by e.g. ```py ...``` */
   language: string,
   /** The contents of the code block */
