@@ -29,6 +29,7 @@ SyntaxError: invalid syntax
 ```
 The final line of the error message tells you that this is a syntax error. The line before that is telling you which line of the program the error occurs - in this case it's `line 1`.
 
+<<<<<<< HEAD:src/components/ErrorTute.md
 ##### Task
 The following code has one or more syntax errors. Try running the code to see where they and and figure out how to fix them:
 
@@ -45,6 +46,25 @@ elseif button_b.is_pressed():
     sleep 3000
     display.clear()
 ```
+=======
+Obviously the mistake here was forgetting the brackets, but Python couldn't figure out exactly what the error was and so simply wrote `invalid syntax` after `SyntaxError`. Don't worry if this happens - you can still figure out the mistake by looking at the line it occured!
+
+
+[comment]: <> (###### Example:)
+
+[comment]: <> (Let's say you try and run this code.)
+
+[comment]: <> (```)
+
+[comment]: <> (```)
+
+[comment]: <> (You'll get this error:)
+
+[comment]: <> (```)
+
+[comment]: <> (```)
+
+>>>>>>> 9f483ff988d24f2e4be5136abc32ac0fcbea67b0:public/tutorials/ErrorTute.md
 
 ---
 
@@ -145,6 +165,7 @@ You expect the program to print `3.5` when run, but instead it prints `5`. What'
 Well, this is the difficult part of debugging a logic error, but at least you've figured out exactly where the problem is - it's in the definition of average.
 After a bit of experimenting you realise you should have written `average = (x + y) / 2`, since division gets evaluated before addition.
 
+<<<<<<< HEAD:src/components/ErrorTute.md
 ###### Task on Logical Errors
 
 For part of a program you need to add up all the numbers from 1 to 10. To do that you write the below code in order to have `nums` be that sum.
@@ -189,3 +210,15 @@ def on_gesture_shake():
 input.on_gesure(Gesture.SHAK, on_gesture_shake
 ```
 Remember to use the information in the error message to help you out. Also make sure to double check for logical errors - does the program do what you expect it to?
+=======
+```py
+# $LINES 2-2 
+x = 3
+y = 4.
+average = x + y / 2
+print(average)
+sleep(average)
+```
+
+$$ \exists \latex ? $$
+>>>>>>> 9f483ff988d24f2e4be5136abc32ac0fcbea67b0:public/tutorials/ErrorTute.md

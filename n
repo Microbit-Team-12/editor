@@ -1,0 +1,18 @@
+[1mdiff --git a/src/index.tsx b/src/index.tsx[m
+[1mindex 3307bd1..ad29ead 100644[m
+[1m--- a/src/index.tsx[m
+[1m+++ b/src/index.tsx[m
+[36m@@ -1,11 +1,12 @@[m
+ import React from 'react';[m
+ import ReactDOM from 'react-dom';[m
+ import APIDemo from './components/APIDemo';[m
+[32m+[m[32mimport App from './components/ErrorTutorialFetcher';[m
+ import './index.css';[m
+ [m
+ ReactDOM.render([m
+   <React.StrictMode>[m
+[31m-    <APIDemo/>[m
+[32m+[m[32m    <App/>[m
+   </React.StrictMode>,[m
+   document.getElementById('root')[m
+ );[m
