@@ -19,7 +19,7 @@
   justify-content: center;
 }
 
-.APIDemo-textareas {
+.APIDemo-body {
   width: 90vw;
   height: 90vh;
 
@@ -31,20 +31,12 @@
   margin: 10px;
 }
 
-.APIDemo-textareas textarea {
-  font-size: x-large;
-}
-
 /* Column layout using grid */
 
-.APIDemo-docs {
+.APIDemo-tutorial {
   grid-column: 1;
   grid-row: 1 / span 3;
 
-}
-
-.APIDemo-docs * {
-  text-align: left;
 }
 
 .APIDemo-code {

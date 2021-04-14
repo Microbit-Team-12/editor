@@ -1,0 +1,13 @@
+.Tutorial-output {
+  white-space: pre-wrap;
+  background: #f8f8f8;
+  padding: 5px;
+}
+
+.Tutorial-code-buttons:enabled, .Tutorial-code-buttons:disabled {
+  margin: 10px;
+}
+
+.Tutorial-markdown * {
+  text-align: left;
+}

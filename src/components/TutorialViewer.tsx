@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
-import './DocsViewer.css';
+import './TutorialViewer.css';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { darcula } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Button } from '@material-ui/core';
@@ -8,20 +8,6 @@ import { DoubleArrow, PlayArrow, Visibility, VisibilityOff } from '@material-ui/
 import { MicrobitOutput } from '../api/microbit/interface/message';
 import { Stream } from 'ts-stream';
 
-interface PythonCodeProps {
-  code: string,
-
-  onRun?(code: string): Promise<Stream<MicrobitOutput>>,
-
-  hasFreeConnection(): boolean,
-
-  onInsertIntoEditor(codeSnippet: string): void,
-}
-
-interface PythonCodeState {
-  isExpanded: boolean,
-  output: string,
-}
 
 class PythonCode extends React.Component<PythonCodeProps, PythonCodeState> {
   readonly isExpandable: boolean;
@@ -108,7 +94,7 @@ ${output.type}: ${output.message}`,
   }
 
   render(): JSX.Element {
-    return <div className="Docs-code">
+    return <div>
       <SyntaxHighlighter
         style={darcula}
         language="py"
@@ -118,7 +104,7 @@ ${output.type}: ${output.message}`,
       </SyntaxHighlighter>
 
       <Button
-        className="Docs-code-buttons"
+        className="Tutorial-code-buttons"
         variant="contained"
         endIcon={this.state.isExpanded ? <Visibility/> : <VisibilityOff/>}
         onClick={this.onToggleExpand.bind(this)}
@@ -127,7 +113,7 @@ ${output.type}: ${output.message}`,
       </Button>
 
       <Button
-        className="Docs-code-buttons"
+        className="Tutorial-code-buttons"
         variant="contained"
         color="primary"
         startIcon={<PlayArrow/>}
@@ -138,7 +124,7 @@ ${output.type}: ${output.message}`,
       </Button>
 
       <Button
-        className="Docs-code-buttons"
+        className="Tutorial-code-buttons"
         variant="contained"
         color="secondary"
         endIcon={<DoubleArrow/>}
@@ -148,7 +134,7 @@ ${output.type}: ${output.message}`,
       </Button>
 
       {this.state.output.length > 0 &&
-      <div className="Docs-output">
+      <div className="Tutorial-output">
         {this.state.output}
       </div>
       }
@@ -156,9 +142,8 @@ ${output.type}: ${output.message}`,
   }
 }
 
-
-interface DocsViewerProps {
-  markdown: string,
+interface PythonCodeProps {
+  code: string,
 
   onRun?(code: string): Promise<Stream<MicrobitOutput>>,
 
@@ -167,14 +152,14 @@ interface DocsViewerProps {
   onInsertIntoEditor(codeSnippet: string): void,
 }
 
-interface MarkdownCode {
-  /** The language of the code block, specified by e.g. ```py ...``` */
-  language: string,
-  /** The contents of the code block */
-  value: string,
+
+interface PythonCodeState {
+  isExpanded: boolean,
+  output: string,
 }
 
-export default class DocsViewer extends React.Component<DocsViewerProps, unknown> {
+
+export default class TutorialViewer extends React.Component<TutorialViewerProps, unknown> {
   renderCode(code: MarkdownCode): JSX.Element {
     if (code.language === 'py') {
       return <PythonCode
@@ -196,8 +181,26 @@ export default class DocsViewer extends React.Component<DocsViewerProps, unknown
   renderers = {code: this.renderCode.bind(this)};
 
   render(): JSX.Element {
-    return <ReactMarkdown className="APIDemo-docs" renderers={this.renderers}>
+    return <ReactMarkdown className="Tutorial-markdown" renderers={this.renderers}>
       {this.props.markdown}
     </ReactMarkdown>;
   }
 }
+
+interface TutorialViewerProps {
+  markdown: string,
+
+  onRun?(code: string): Promise<Stream<MicrobitOutput>>,
+
+  hasFreeConnection(): boolean,
+
+  onInsertIntoEditor(codeSnippet: string): void,
+}
+
+interface MarkdownCode {
+  /** The language of the code block, specified by e.g. ```py ...``` */
+  language: string,
+  /** The contents of the code block */
+  value: string,
+}
+

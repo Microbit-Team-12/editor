@@ -13,11 +13,11 @@ import {
 } from '../api/microbit/impl/connect';
 import DuckViewer from '../duck-code';
 import './APIDemo.css';
-import DocsViewer from './DocsViewer';
+import TutorialViewer from './TutorialViewer';
 
 type APIDemoState = {
   /** The markdown of the tutorial being displayed. */
-  docs: string,
+  tutorial: string,
   output: string,
   connection: MicrobitConnection | null,
   editor: monaco.editor.IStandaloneCodeEditor | null,
@@ -47,7 +47,7 @@ while True:
 `;
 
 
-const exampleDocs = `# Title
+const exampleTutorial = `# Title
 
 Did you know you can use tildes instead of backticks?
 
@@ -76,7 +76,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
   constructor(props: unknown) {
     super(props);
     this.state = {
-      docs: exampleDocs,
+      tutorial: exampleTutorial,
       output: '',
       connection: null,
       editor: null,
@@ -149,24 +149,23 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     return renderedDuck;
   }
 
-  renderTutorialOrDuck(): JSX.Element {
-    let extraComponent;
-    if (this.state.needDuck) {
-      extraComponent = <div>
-        <h1>
-          {this.state.errorString}
-        </h1>
-        {this.renderDuck()}
-      </div>;
-    } else {
-      extraComponent = <DocsViewer
-        markdown={this.state.docs}
-        onRun={this.onRunCell.bind(this)}
-        hasFreeConnection={this.hasFreeConnection.bind(this)}
-        onInsertIntoEditor={this.onLoad.bind(this)}
-      />;
-    }
-    return extraComponent;
+  renderTutorial(): JSX.Element {
+    return <div className="APIDemo-tutorial">
+      {this.state.needDuck
+        ? <div>
+          <h1>
+            {this.state.errorString}
+          </h1>
+          {this.renderDuck()}
+        </div>
+        : <TutorialViewer
+          markdown={this.state.tutorial}
+          onRun={this.onRunCell.bind(this)}
+          hasFreeConnection={this.hasFreeConnection.bind(this)}
+          onInsertIntoEditor={this.onInsertIntoEditor.bind(this)}
+        />
+      }
+    </div>;
   }
 
   handleEditorDidMount(editor: monaco.editor.IStandaloneCodeEditor, monaco: Monaco): void {
@@ -187,8 +186,8 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
           {this.renderButtonRequiringConnection('Reboot', this.onReboot.bind(this), this.hasFreeConnection())}
           {this.renderButtonRequiringConnection('Help', this.summonDuck.bind(this), false)}
         </header>
-        <div className="APIDemo-textareas">
-          {this.renderTutorialOrDuck()}
+        <div className="APIDemo-body">
+          {this.renderTutorial()}
           <Editor
             defaultLanguage="python"
             defaultValue={exampleCode}
@@ -229,7 +228,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     }
   }
 
-  onLoad(codeSnippet: string): void {
+  onInsertIntoEditor(codeSnippet: string): void {
     const editor = this.state.editor;
     if (editor == null) {
       alert('Editor is not loaded');
@@ -275,12 +274,12 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     //this.connect(connectByPlugIn());
   }
 
-  removeErrorLineOfCode():void {
+  removeErrorLineOfCode(): void {
     const editor = this.state.editor!;
     const ids = this.state.errorMonacoIDs;
-    if(ids!=null){
+    if (ids != null) {
       this.exileDuck();
-      editor.deltaDecorations(ids,[]);
+      editor.deltaDecorations(ids, []);
       this.setState({
         errorMonacoIDs: null
       });
@@ -308,7 +307,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
                 {
                   range: new monaco.Range(output.line, 1, output.line, 1),
                   options: {
-                    isWholeLine: true, 
+                    isWholeLine: true,
                     className: 'Monaco-Error-Line-Of-Code'
                   }
                 },
