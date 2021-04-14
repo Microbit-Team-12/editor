@@ -5,7 +5,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { darcula } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { DoubleArrow, Height, PlayArrow } from '@material-ui/icons';
 import { IconButton } from '@material-ui/core';
-import { MicrobitOutput } from '../api/microbit-api';
+import { MicrobitOutput } from '../api/microbit/interface/message';
 import { Stream } from 'ts-stream';
 
 type PythonCodeProps = {

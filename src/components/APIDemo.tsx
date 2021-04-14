@@ -4,13 +4,13 @@ import Editor, { loader, Monaco } from '@monaco-editor/react';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import React from 'react';
 import { Stream } from 'ts-stream';
-import { FailedConnection, MicrobitConnection, MicrobitOutput, MicrobitState } from '../api/microbit-api';
+import { FailedConnection, MicrobitConnection, MicrobitOutput, MicrobitState } from '../api/microbit/interface/message';
 import {
   checkCompatability,
   connectByPariedDevice,
   connectByPlugIn,
   connectBySelection
-} from '../api/microbit/connect';
+} from '../api/microbit/impl/connect';
 import DuckViewer from '../duck-code';
 import './APIDemo.css';
 import DocsViewer from './DocsViewer';
