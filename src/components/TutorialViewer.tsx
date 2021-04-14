@@ -12,7 +12,7 @@ import { Stream } from 'ts-stream';
 /**
  * Readonly Python code cell, with buttons to:
  * - toggle between viewing the full {@link PythonCodeProps.code} and only the
- *   highlighted fragment, as specified by `# $LINES {start}-{end}` (counting
+ *   highlighted fragment, as specified by `# LINES {start}-{end}` (counting
  *   from 1 like humans do, both ends inclusive) on the first line of the code;
  * - execute the full {@link PythonCodeProps.code} using
  *   {@link PythonCodeProps.onRun} and display the output and error message, if
@@ -66,10 +66,10 @@ class PythonCode extends React.Component<PythonCodeProps, PythonCodeState> {
    *   ==> 0 ≤ x < {@link lines}.length && 0 < y ≤ {@link lines}.length
    * -   x ≤ y
    *
-   * An alert is thrown if `# $LINES` is matched at the start of the first line
+   * An alert is thrown if `# LINES` is matched at the start of the first line
    * but `x` and `y` cannot be parsed or don't satisfy the conditions above
-   * (but not with e.g. `# $LINES 1-2-3`).
-   * In this case, like when `# $LINES` is not matched at the start of line 0,
+   * (but not with e.g. `# LINES 1-2-3`).
+   * In this case, like when `# LINES` is not matched at the start of line 0,
    * - {@link isExpandable} is set to false;
    * - {@link highlightStart} is set to 0;
    * - {@link highlightEnd} is set to {@link lines}.length.
@@ -84,9 +84,9 @@ class PythonCode extends React.Component<PythonCodeProps, PythonCodeState> {
     this.highlightEnd = this.lines.length;
 
     if (this.lines.length > 0) {
-      // Parse "$LINES x-y".
-      const fragments = this.lines[0].split('# $LINES ');
-      if (fragments.length === 2) { // '# $LINES x-y' -> ['', 'x-y']
+      // Parse "LINES x-y".
+      const fragments = this.lines[0].split('# LINES ');
+      if (fragments.length === 2) { // '# LINES x-y' -> ['', 'x-y']
         const lineNumbers = fragments[1].split('-');
         const start = parseInt(lineNumbers[0]);
         const end = parseInt(lineNumbers[1]);
@@ -279,6 +279,48 @@ interface PythonCodeState {
 }
 
 
+/**
+ * Renders the tutorial from the supplied {@link TutorialViewerProps.markdown}.
+ *
+ * The code blocks in markdown are rendered with syntax highlighting.
+ * In particular, code blocks whose language is 'py', such as
+ *
+ * ~~~py
+ * print('Hello, world')
+ * ~~~
+ *
+ * or
+ *
+ * ```py
+ * print('Hello world!')
+ * ```
+ *
+ * are rendered with
+ * - a run button which, when enabled if
+ *   {@link TutorialViewerProps.hasFreeConnection} returns true, runs the code
+ *   in this code block with {@link TutorialViewerProps.onRun};
+ * - an insert into editor button, which inserts (a subset of, see below) the
+ *   code in this code block into the editor with
+ *   {@link TutorialViewerProps.onInsertIntoEditor}.
+ *
+ * Furthermore, if the first line of code is a comment of the format
+ * `# LINES x-y` where `x`, `y` are integers satisfying 0 ≤ `x` ≤ `y` ≤ #lines,
+ * such as
+ *
+ * ~~~py
+ * # LINES 1-2
+ * print(1)
+ * print(2)
+ * print(3)
+ * ~~~
+ *
+ * then by default only the code fragment is shown, and now a button to toggle
+ * between showing the full code and only the highlighted fragment is
+ * available.
+ * Also, only the highlighted fragmented is inserted now; see
+ * {@link PythonCode} for the details.
+ *
+ */
 export default class TutorialViewer extends React.Component<TutorialViewerProps, unknown> {
   renderCode(code: MarkdownCode): JSX.Element {
     if (code.language === 'py') {
