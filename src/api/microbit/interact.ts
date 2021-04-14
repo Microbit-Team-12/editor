@@ -107,7 +107,8 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
       + 's=\'' + codeInPythonString + '\';'
       + 'file.write(s);'
       + 'file.close();'
-      + '\r'
+      + 'from microbit import *;'
+      + 'reset()\r'
     );
     if (await this.portParser.readUntilExecStart(outputStream)) {
       this.portParser.readUntilExecDone(outputStream)
