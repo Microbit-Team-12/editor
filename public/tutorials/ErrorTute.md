@@ -147,3 +147,14 @@ sleep(average)
 You expect the program to print `3.5` when run, but instead it prints `5`. What's going on?
 Well, this is the difficult part of debugging a logic error, but at least you've figured out exactly where the problem is - it's in the definition of average.
 After a bit of experimenting you realise you should have written `average = (x + y) / 2`, since division gets evaluated before addition.
+
+```py
+# $LINES 2-2 
+x = 3
+y = 4.
+average = x + y / 2
+print(average)
+sleep(average)
+```
+
+$$ \exists \latex ? $$
