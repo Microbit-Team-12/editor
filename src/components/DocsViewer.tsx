@@ -3,8 +3,8 @@ import ReactMarkdown from 'react-markdown';
 import './DocsViewer.css';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { darcula } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { DoubleArrow, Height, PlayArrow } from '@material-ui/icons';
-import { IconButton } from '@material-ui/core';
+import { Button } from '@material-ui/core';
+import { DoubleArrow, PlayArrow, Visibility, VisibilityOff } from '@material-ui/icons';
 import { MicrobitOutput } from '../api/microbit/interface/message';
 import { Stream } from 'ts-stream';
 
@@ -15,7 +15,7 @@ interface PythonCodeProps {
 
   hasFreeConnection(): boolean,
 
-  onLoad(codeSnippet: string): void,
+  onInsertIntoEditor(codeSnippet: string): void,
 }
 
 interface PythonCodeState {
@@ -58,7 +58,7 @@ class PythonCode extends React.Component<PythonCodeProps, PythonCodeState> {
     }
   }
 
-  onExpand(): void {
+  onToggleExpand(): void {
     this.setState({isExpanded: !this.state.isExpanded});
   }
 
@@ -86,7 +86,7 @@ ${output.type}: ${output.message}`,
   }
 
   onLoad(): void {
-    this.props.onLoad(this.lines.slice(this.highlightStart, this.highlightEnd).join('\n'));
+    this.props.onInsertIntoEditor(this.lines.slice(this.highlightStart, this.highlightEnd).join('\n'));
   }
 
   render(): JSX.Element {
@@ -104,17 +104,35 @@ ${output.type}: ${output.message}`,
         {this.lines.slice(start, end).join('\n')}
       </SyntaxHighlighter>
 
-      <IconButton onClick={this.onExpand.bind(this)} disabled={!this.isExpandable}>
-        <Height/>
-      </IconButton>
+      <Button
+        className="Docs-code-buttons"
+        variant="contained"
+        endIcon={this.state.isExpanded ? <Visibility/> : <VisibilityOff/>}
+        onClick={this.onToggleExpand.bind(this)}
+      >
+        Full example code:
+      </Button>
 
-      <IconButton onClick={this.onRun.bind(this)} disabled={!this.props.hasFreeConnection()}>
-        <PlayArrow/>
-      </IconButton>
+      <Button
+        className="Docs-code-buttons"
+        variant="contained"
+        color="primary"
+        startIcon={<PlayArrow/>}
+        disabled={!this.props.hasFreeConnection()}
+        onClick={this.onRun.bind(this)}
+      >
+        Run full example
+      </Button>
 
-      <IconButton onClick={this.onLoad.bind(this)}>
-        <DoubleArrow/>
-      </IconButton>
+      <Button
+        className="Docs-code-buttons"
+        variant="contained"
+        color="secondary"
+        endIcon={<DoubleArrow/>}
+        onClick={this.onLoad.bind(this)}
+      >
+        Insert fragment into editor
+      </Button>
 
       {this.state.output.length > 0 &&
       <div className="Docs-output">
@@ -133,7 +151,7 @@ interface DocsViewerProps {
 
   hasFreeConnection(): boolean,
 
-  onLoad(codeSnippet: string): void,
+  onInsertIntoEditor(codeSnippet: string): void,
 }
 
 interface MarkdownCode {
@@ -149,7 +167,7 @@ export default class DocsViewer extends React.Component<DocsViewerProps, unknown
       return <PythonCode
         code={code.value}
         onRun={this.props.onRun}
-        onLoad={this.props.onLoad}
+        onInsertIntoEditor={this.props.onInsertIntoEditor}
         hasFreeConnection={this.props.hasFreeConnection}
       />;
     } else {

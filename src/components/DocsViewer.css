@@ -3,3 +3,7 @@
   background: #f8f8f8;
   padding: 5px;
 }
+
+.Docs-code-buttons:enabled, .Docs-code-buttons:disabled {
+  margin: 10px;
+}

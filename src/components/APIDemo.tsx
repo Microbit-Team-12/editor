@@ -163,7 +163,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
         markdown={this.state.docs}
         onRun={this.onRunCell.bind(this)}
         hasFreeConnection={this.hasFreeConnection.bind(this)}
-        onLoad={this.onLoad.bind(this)}
+        onInsertIntoEditor={this.onLoad.bind(this)}
       />;
     }
     return extraComponent;
