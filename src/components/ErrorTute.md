@@ -118,8 +118,6 @@ int("xy")
 ```
 What line/lines go wrong? Why is this?
 
-<!--- The error comes because you can't convert `"xy"` into an `int`, but why is it a `ValueError` rather than a `TypeError`? Well, `"xy"` is a string, and some strings can actually be passed into the `int()` function. For example, running `int("12")` would be fine and output `12`. This means `str` is a valid type for the `int()` function, and so  `"xy"` isn't the incorrect *type* to be passed into the function, but it is still an incorrect *value* to be passed into the function (since it cannot be converted into an integer). --->
-
 ---
 ### Logical Errors
 These are some of the most difficult errors to debug, because you don't get an error message and so they can be hard to spot.
