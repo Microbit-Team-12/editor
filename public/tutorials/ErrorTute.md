@@ -18,7 +18,7 @@ If your program has a syntax error, the program will give you a `SyntaxError` wh
 
 ###### Example:
 Let's say you forget to put brakets after display.scroll:
-```
+```py
 display.scroll "hello"
 ```
 You'll get this error:

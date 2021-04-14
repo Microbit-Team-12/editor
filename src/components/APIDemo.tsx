@@ -15,7 +15,7 @@ import DuckViewer from '../duck-code';
 import './APIDemo.css';
 import TutorialViewer from './TutorialViewer';
 
-type APIDemoState = {
+interface APIDemoState {
   /** The markdown of the tutorial being displayed. */
   tutorial: string,
   output: string,
@@ -68,6 +68,9 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     this.removeErrorLineOfCode = this.removeErrorLineOfCode.bind(this);
   }
 
+  /**
+   * Fetch a markdown file from `public/tutorials/` once mounted.
+   */
   componentDidMount(): void {
     fetch('tutorials/ErrorTute.md')
       .then((r) => r.text())
@@ -78,24 +81,49 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
       );
   }
 
+  /**
+   * Called once the Monaco editor is mounted to set
+   * {@link APIDemoState.editor} and {@link APIDemoState.monaco}.
+   */
+  handleEditorDidMount(editor: monaco.editor.IStandaloneCodeEditor, monaco: Monaco): void {
+    this.setState({
+      editor: editor,
+      monaco: monaco
+    });
+  }
+
+  /**
+   * @summary Disconnect the micro:bit before unmounting.
+   *
+   * For dev purposes only: upon recompilation, this component loses access to
+   * the {@link APIDemoState.connection} object; if the web serial connection
+   * is not terminated here, the page must needs to be refreshed to reclaim the
+   * micro:bit interface.
+   *
+   * In production, {@link APIDemo} is intended to be the top-level component
+   * to be dismounted only when the page is closed, after which the web serial
+   * connection is terminated anyways, making it unnecessary to manually invoke
+   * the disconnection procedure.
+   */
   componentWillUnmount(): void {
     this.state.connection?.interact.disconnect();
   }
 
-  renderStartButton(): JSX.Element {
-    return <Box paddingLeft={2}>
-      <Button
-        className="APIDemo-button"
-        variant="contained"
-        disabled={this.state.connection !== null}
-        onClick={this.onStart.bind(this)}
-      >
-        Start
-      </Button>
-    </Box>;
-  }
-
-  renderButtonRequiringConnection(text: string, callback: () => void, isEnabled: boolean): JSX.Element {
+  /**
+   * @summary Renders a button in the header of the app.
+   *
+   * The 'Start' button is enabled only when {@link APIDemoState.connection} is null,
+   * as it is intended to be used when:
+   * - the user first opens the page, and connects the micro:bit
+   * - the micro:bit is disconnected, and the user wants to reconnect it (or to
+   *   connect another one)
+   *
+   * {@link MicrobitState.Busy} and {@link MicrobitState.Free} document when
+   * the other micro:bit related buttons are enabled.
+   *
+   * The duck 'Help' button is always enabled.
+   */
+  renderHeaderButton(text: string, callback: () => void, isEnabled: boolean): JSX.Element {
     return (
       <Box paddingLeft={2}>
         <Button
@@ -110,10 +138,18 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     );
   }
 
+  /**
+   * Return true if the state of {@link APIDemoState.connection} is
+   * {@link MicrobitState.Free}, and false otherwise.
+   */
   hasFreeConnection(): boolean {
     return this.state.connection?.interact.getState() === MicrobitState.Free;
   }
 
+  /**
+   * Return true if the state of {@link APIDemoState.connection} is
+   * {@link MicrobitState.Busy}, and false otherwise.
+   */
   hasBusyConnection(): boolean {
     return this.state.connection?.interact.getState() === MicrobitState.Busy;
   }
@@ -132,6 +168,12 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     return renderedDuck;
   }
 
+  /**
+   * Render {@link APIDemoState.tutorial} with {@link TutorialViewer} unless
+   * {@link APIDemoState.needDuck} is true, in which case
+   * {@link APIDemoState.errorString} and the duck (via {@link renderDuck}) are
+   * rendered instead.
+   */
   renderTutorial(): JSX.Element {
     return <div className="APIDemo-tutorial">
       {this.state.needDuck
@@ -151,42 +193,58 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     </div>;
   }
 
-  handleEditorDidMount(editor: monaco.editor.IStandaloneCodeEditor, monaco: Monaco): void {
-    this.setState({
-      editor: editor,
-      monaco: monaco
-    });
+  /**
+   * Render the python code editor.
+   *
+   * The default code is {@link exampleCode}.
+   * The current code can be accessed via {@link APIDemoState.editor}.
+   */
+  renderEditor(): JSX.Element {
+    return (
+      <Editor
+        defaultLanguage="python"
+        defaultValue={exampleCode}
+        onMount={this.handleEditorDidMount.bind(this)}
+        theme='light'
+        options={{
+          minimap: {
+            enabled: false,
+          },
+          fontSize: 18,
+        }}
+        wrapperClassName="APIDemo-code"
+      />
+    );
+  }
+
+  /**
+   * Render a text box displaying {@link APIDemoState.output}.
+   */
+  renderOutput(): JSX.Element {
+    return (
+      <textarea
+        className="APIDemo-output"
+        value={this.state.output}
+        readOnly
+      />
+    );
   }
 
   render(): JSX.Element {
     return (
       <div className="APIDemo">
         <header className="APIDemo-header">
-          {this.renderStartButton()}
-          {this.renderButtonRequiringConnection('Flash', () => this.onFlash(this.state.editor!.getValue()), this.hasFreeConnection())}
-          {this.renderButtonRequiringConnection('Run', () => this.onRun(this.state.editor!.getValue()), this.hasFreeConnection())}
-          {this.renderButtonRequiringConnection('Interrupt', this.onInterrupt.bind(this), this.hasBusyConnection())}
-          {this.renderButtonRequiringConnection('Reboot', this.onReboot.bind(this), this.hasFreeConnection())}
-          {this.renderButtonRequiringConnection('Help', this.summonDuck.bind(this), false)}
+          {this.renderHeaderButton('Start', this.onStart.bind(this), this.state.connection == null)}
+          {this.renderHeaderButton('Flash', () => this.onFlash(this.state.editor!.getValue()), this.hasFreeConnection())}
+          {this.renderHeaderButton('Run', () => this.onRun(this.state.editor!.getValue()), this.hasFreeConnection())}
+          {this.renderHeaderButton('Interrupt', this.onInterrupt.bind(this), this.hasBusyConnection())}
+          {this.renderHeaderButton('Reboot', this.onReboot.bind(this), this.hasFreeConnection())}
+          {this.renderHeaderButton('Help', this.summonDuck.bind(this), true)}
         </header>
         <div className="APIDemo-body">
           {this.renderTutorial()}
-          <Editor
-            defaultLanguage="python"
-            defaultValue={exampleCode}
-            onMount={this.handleEditorDidMount.bind(this)}
-            theme='light'
-            options={{
-              minimap: {
-                enabled: false,
-              },
-              fontSize: 18,
-            }}
-            wrapperClassName="APIDemo-code"
-          />
-
-          <textarea value={this.state.output} readOnly className="APIDemo-output"/>
-
+          {this.renderEditor()}
+          {this.renderOutput()}
         </div>
       </div>
     );
@@ -211,6 +269,15 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     }
   }
 
+  /**
+   * Insert the code snippet into {@link APIDemoState.editor} at the cursor.
+   * (If the user has never focused on the monaco editor before, the cursor is
+   * actually placed on the top left, so the snippet is inserted at the very
+   * start of the text.)
+   * Then, the cursor is placed after the inserted text which becomes selected.
+   * Also, the insertion operation is pushed onto the buffer and may be undone.
+   * Finally, the editor gets the focus.
+   */
   onInsertIntoEditor(codeSnippet: string): void {
     const editor = this.state.editor;
     if (editor == null) {
@@ -219,7 +286,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     }
 
     const selection = editor.getSelection();
-    if (selection == null) {
+    if (selection == null) { // Never happened
       alert('selection is null');
       return;
     }
@@ -321,6 +388,10 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     this.setState({});
   }
 
+  /**
+   * Execute the supplied code, and return a promise resolving to the output
+   * stream of the micro:bit running the code.
+   */
   async onRunCell(code: string): Promise<Stream<MicrobitOutput>> {
     console.log('onRunCell');
     this.setState({});
