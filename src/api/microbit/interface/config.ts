@@ -88,13 +88,13 @@ export const defaultConfig: ManagerOption = {
     ]
   },
   readOption: {
-    showLog: true,
+    showLog: false,
     updateMs: 50,
     cutLength: 1000
   },
   //maybe consider using regexp?
   signalOption: {
-    showLog: true,
+    showLog: false,
     replLineReady: '>>> ',
     executionDone: 'Execute Done: 0x3f3f3f3f',
     executionStart: 'Execution Start: 0x3f3f3f3f',

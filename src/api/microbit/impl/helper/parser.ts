@@ -37,13 +37,13 @@ import { SerialReader } from './reader';
  */
 export class SerialParser {
   portReader: SerialReader;
-  signal: SignalOption;
+  config: SignalOption;
   startSignals: string[];
   endSignals: string[];
 
   constructor(portReader: SerialReader, config: SignalOption) {
     this.portReader = portReader;
-    this.signal = config;
+    this.config = config;
     this.startSignals = [
       config.executionStart + '\r\n',
       config.mainPYException,
@@ -62,7 +62,7 @@ export class SerialParser {
    * Read until new repl line is ready
    */
   readUntilNewREPLLine(): Promise<void> {
-    return this.portReader.safeReadUntil(this.signal.replLineReady);
+    return this.portReader.safeReadUntil(this.config.replLineReady);
   }
 
   /**
@@ -71,7 +71,7 @@ export class SerialParser {
    * - If (indentation/bracket) error occurs, the stream will be closed and false is returned
    */
   async readUntilExecStart(outputStream: Stream<MicrobitOutput>): Promise<boolean>{
-    console.log('Waiting for Execution Start');
+    if (this.config.showLog) console.log('Waiting for Execution Start');
     const result = await this.portReader.safeReadUntilWithUpdate(
       this.startSignals,
       str => null
@@ -88,7 +88,7 @@ export class SerialParser {
    * Require executeStart printed earlier
    */
   async readUntilExecDone(outputStream: Stream<MicrobitOutput>): Promise<void> {
-    console.log('Execution Start');
+    if(this.config.showLog) console.log('Execution Start');
     //Now user code will run
     //read until executionEnd signal appear on signal
     let result = 1;
@@ -106,14 +106,14 @@ export class SerialParser {
     }
     if (result !== 0) this.readErrors(outputStream);
     else outputStream.end();
-    console.log('Execution done');
+    if (this.config.showLog) console.log('Execution done');
   }
 
   /**
    * Read and parse micropython error output
    */
   async readErrors(outputStream: Stream<MicrobitOutput>):Promise<void>{
-    console.log('Execution Error');
+    if (this.config.showLog) console.log('Execution Error');
     //line1 indicates in which line of user code exception occured
     //which is first line after mainPYException and execException
     const line1 = await this.portReader.unsafeReadline();
