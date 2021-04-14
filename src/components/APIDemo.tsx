@@ -4,13 +4,13 @@ import Editor, { loader, Monaco } from '@monaco-editor/react';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import React from 'react';
 import { Stream } from 'ts-stream';
-import { FailedConnection, MicrobitConnection, MicrobitOutput, MicrobitState } from '../api/microbit/interface/message';
 import {
   checkCompatability,
   connectByPariedDevice,
   connectByPlugIn,
   connectBySelection
 } from '../api/microbit/impl/connect';
+import { FailedConnection, MicrobitConnection, MicrobitOutput, MicrobitState } from '../api/microbit/interface/message';
 import DuckViewer from '../duck-code';
 import './APIDemo.css';
 import DocsViewer from './DocsViewer';
@@ -185,7 +185,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
           {this.renderButtonRequiringConnection('Run', () => this.onRun(this.state.editor!.getValue()), this.hasFreeConnection())}
           {this.renderButtonRequiringConnection('Interrupt', this.onInterrupt.bind(this), this.hasBusyConnection())}
           {this.renderButtonRequiringConnection('Reboot', this.onReboot.bind(this), this.hasFreeConnection())}
-          {this.renderButtonRequiringConnection('Help', this.summonDuck.bind(this), false)}
+          {this.renderButtonRequiringConnection('Help', this.summonDuck.bind(this), true)}
         </header>
         <div className="APIDemo-textareas">
           {this.renderTutorialOrDuck()}

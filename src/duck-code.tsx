@@ -99,10 +99,28 @@ function executeCorrespondingCommand(commandString: string, props: DuckProps) {
     return readableDiffMessage(props);
 
   }
+  else if (commandString === 'get_error_line_no_and_highlight') {
+    return readableErrorLineNumber(props);
+  }
   else {
     return commandString;
   }
 } 
+
+function readableErrorLineNumber(props: DuckProps) {
+  if (props.lineNumber) {
+    return (<div>
+      Your error message tells you that the error is on line 
+      {props.lineNumber}, 
+      so I’ve highlighted that line for you in the editor. 
+      What type of error is displayed?
+    </div>);
+  }
+  else {
+    return ('I cannot see your error message. Perhaps press \'RUN CODE\' again, and double check that an error message is visible?');
+  }
+
+}
 
 function readableDiffMessage(props: DuckProps) {
   if (props.lineNumber && props.lineText) {

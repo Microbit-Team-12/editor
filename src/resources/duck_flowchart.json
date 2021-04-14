@@ -15,7 +15,7 @@
     ]
   },
   "Select error message": {
-    "speech": "What type of error is displayed?",
+    "speech": "{get_error_line_no_and_highlight}",
     "buttons": [
       {
         "text": "AttributeError",
@@ -69,7 +69,7 @@
       },
       {
         "text": "I still need help",
-        "link": "Highlight error",
+        "link": "Ask if following tutorial",
         "params": []
       },
       {
@@ -181,7 +181,7 @@
       },
       {
         "text": "Something else",
-        "link": "Highlight error",
+        "link": "Ask if following tutorial",
         "params": []
       }
     ]
@@ -196,13 +196,13 @@
       },
       {
         "text": "No, I still need help",
-        "link": "Highlight error",
+        "link": "Ask if following tutorial",
         "params": []
       }
     ]
   },
   "Highlight error": {
-    "speech": "Your error message tells you that the {error_message.error_type} is on line {error_message.get_line_no_and_highlight()}, so I’ve highlighted that line for you in the editor. Do you spot the mistake now?",
+    "speech": " Do you spot the mistake now?",
     "buttons": [
       {
         "text": "Thanks, thank you!",
@@ -226,7 +226,7 @@
       },
       {
         "text": "I still need help",
-        "link": "Highlight error",
+        "link": "Ask if following tutorial",
         "params": []
       }
     ]
@@ -251,7 +251,7 @@
       },
       {
         "text": "I still need help",
-        "link": "Highlight error",
+        "link": "Ask if following tutorial",
         "params": []
       },
       {
@@ -271,7 +271,7 @@
       },
       {
         "text": "I still need help",
-        "link": "Highlight error",
+        "link": "Ask if following tutorial",
         "params": []
       }
     ]
@@ -286,7 +286,7 @@
       },
       {
         "text": "I still need help",
-        "link": "Highlight error",
+        "link": "Ask if following tutorial",
         "params": []
       }
     ]
@@ -531,7 +531,7 @@
       },
       {
         "text": "None of them / I don't know",
-        "link": "Highlight error"
+        "link": "Ask if following tutorial"
       }
     ]
   },
@@ -545,7 +545,7 @@
       },
       {
         "text": "I still need help",
-        "link": "Highlight error",
+        "link": "Ask if following tutorial",
         "params": []
       }
     ]
@@ -560,7 +560,7 @@
       },
       {
         "text": "I still need help",
-        "link": "Highlight error",
+        "link": "Ask if following tutorial",
         "params": []
       }
     ]
@@ -575,7 +575,7 @@
       },
       {
         "text": "I still need help",
-        "link": "Highlight error",
+        "link": "Ask if following tutorial",
         "params": []
       }
     ]
@@ -590,7 +590,7 @@
       },
       {
         "text": "I still need help",
-        "link": "Highlight error",
+        "link": "Ask if following tutorial",
         "params": []
       }
     ]
@@ -605,7 +605,7 @@
       },
       {
         "text": "I still need help",
-        "link": "Highlight error",
+        "link": "Ask if following tutorial",
         "params": []
       }
     ]
