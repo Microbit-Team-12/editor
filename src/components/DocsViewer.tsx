@@ -10,8 +10,11 @@ import { Stream } from 'ts-stream';
 
 interface PythonCodeProps {
   code: string,
+
   onRun?(code: string): Promise<Stream<MicrobitOutput>>,
+
   hasFreeConnection(): boolean,
+
   onLoad(codeSnippet: string): void,
 }
 
@@ -40,7 +43,7 @@ class PythonCode extends React.Component<PythonCodeProps, PythonCodeState> {
     this.highlightEnd = this.lines.length;
 
     if (this.lines.length > 0) {
-      // Parse "LINES x-y". TODO consider using a parser later.
+      // Parse "LINES x-y".
       const fragments = this.lines[0].split('# LINES ');
       if (fragments.length === 2) {
         const lineNumbers = fragments[1].split('-');
@@ -97,7 +100,6 @@ ${output.type}: ${output.message}`,
         style={darcula}
         language="py"
         showLineNumbers={this.state.isExpanded}
-        // Btw lineNumberContainerStyle can be used to remove the padding
       >
         {this.lines.slice(start, end).join('\n')}
       </SyntaxHighlighter>
@@ -114,9 +116,11 @@ ${output.type}: ${output.message}`,
         <DoubleArrow/>
       </IconButton>
 
+      {this.state.output.length > 0 &&
       <div className="Docs-output">
         {this.state.output}
       </div>
+      }
     </div>;
   }
 }
@@ -124,8 +128,11 @@ ${output.type}: ${output.message}`,
 
 interface DocsViewerProps {
   markdown: string,
+
   onRun?(code: string): Promise<Stream<MicrobitOutput>>,
+
   hasFreeConnection(): boolean,
+
   onLoad(codeSnippet: string): void,
 }
 
