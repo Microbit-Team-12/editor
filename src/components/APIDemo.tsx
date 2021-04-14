@@ -334,6 +334,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
 
   async onRun(code: string): Promise<void> {
     console.log('onRun');
+    this.removeErrorLineOfCode();
     await this.onExec(await this.state.connection!.interact.execute(code));
     this.setState({});
   }
@@ -346,6 +347,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
 
   async onReboot(): Promise<void> {
     console.log('onReboot');
+    this.removeErrorLineOfCode();
     await this.onExec(await this.state.connection!.interact.reboot());
     this.setState({});
   }
