@@ -1,11 +1,11 @@
 import Stream from 'ts-stream';
-import { InteractWithConnectedMicrobit, MicrobitOutput, MicrobitState } from '../microbit-api';
-import { ManagerOption, SignalOption } from '../microbit-api-config';
-import { SerialParser } from './helper/serial/parser';
-import { SerialReader } from './helper/serial/reader';
+import { SerialParser } from './helper/parser';
+import { SerialReader } from './helper/reader';
+import { MicrobitOutput, MicrobitState } from '../interface/message';
+import { ManagerOption, SignalOption } from '../interface/config';
 const ctrlC = '\x03';
 
-export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit {
+export class ConnectedMicrobitInteract {
   port: SerialPort;
   portWriter!: WritableStreamDefaultWriter<string>;
   portReader!: ReadableStreamDefaultReader<string>;
@@ -61,8 +61,8 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
       'print(\'' + this.signal.executionStart + '\')'
       + '\r\n' + code + '\r\n'
       + 'print(\'' + this.signal.executionDone + '\')'
-    ) .replace(/\\/g,'\\\\')
-      .replace(/'/g,'\\\'')
+    ).replace(/\\/g, '\\\\')
+      .replace(/'/g, '\\\'')
       .replace(/\r?\n/g, '\\r\\n');
   }
 
@@ -78,6 +78,12 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
     await this.portParser.readUntilNewREPLLine();
   }
 
+  /**
+    * Flash ROM of the connected micro:bit.
+    *
+    * The flashing consists of two stages of flashing the code followed by a reboot.
+    * The promise completes when reboot is done, resulting in a stream of outputs from microbit.
+    */
   async flash(code: string): Promise<Stream<MicrobitOutput>> {
     /*Whole procedure with workaround note
       - Get a clean REPL line, see getREPLLine()
@@ -118,6 +124,10 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
     return outputStream;
   }
 
+  /**
+    * Run code in REPL.
+    * Microbit is not rebooted. So all previous variables are kept.
+    */
   async execute(code: string): Promise<Stream<MicrobitOutput>> {
     if (this.state === MicrobitState.Busy) throw Error('Execute Failed: Device not free');
     this.state = MicrobitState.Busy;
@@ -130,7 +140,7 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
       's=\'' + codeInPythonString + '\';'
       + 'exec(s)\r'
     );
-    if(await this.portParser.readUntilExecStart(outputStream)){
+    if (await this.portParser.readUntilExecStart(outputStream)) {
       this.portParser.readUntilExecDone(outputStream)
         .then(() => { this.state = MicrobitState.Free; })
         .catch(() => { outputStream.end(); });
@@ -138,6 +148,10 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
     return outputStream;
   }
 
+  /**
+    * Reboots the connected micro:bit.
+    * The promise completes with a stream of outputs from microbit.
+    */
   async reboot(): Promise<Stream<MicrobitOutput>> {
     if (this.state === MicrobitState.Busy) throw Error('Reboot Failed: Device not free');
     this.state = MicrobitState.Busy;
@@ -167,6 +181,13 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
     });
   }
 
+  /**
+    * Send an interrupt signal the connected micro:bit.
+    * This will try to stop any python code running on the micro:bit.
+    *
+    * The promise completes when the interruption is successful.
+    * If code is being executed, then there should be a ErrorMessage in the outputStream.
+    */
   async interrupt(): Promise<void> {
     if (this.state === MicrobitState.Free) throw Error('Interupt Failed: Device not running code');
     await this.portWriter.write(ctrlC);
@@ -175,6 +196,9 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
     //because portParser might already be reading.
   }
 
+  /**
+    * Disconnect the paired micro:bit.
+    */
   async disconnect(): Promise<void> {
     console.log('Disconnection initiated:');
 

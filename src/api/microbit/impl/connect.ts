@@ -1,7 +1,7 @@
 import { serial } from 'web-serial-polyfill';
-import { FailedConnection, MicrobitConnection } from '../microbit-api';
-import { defaultConfig, ManagerOption } from '../microbit-api-config';
+import { defaultConfig, ManagerOption } from '../interface/config';
 import { ConnectedMicrobitInteract } from './interact';
+import { FailedConnection, MicrobitConnection } from '../interface/message';
 
 /**
  * Check if browser support WebSerial

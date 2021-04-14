@@ -1,6 +1,6 @@
 import Stream from 'ts-stream';
-import { MicrobitOutput, MicroPythonExceptionType } from '../../../microbit-api';
-import { SignalOption } from '../../../microbit-api-config';
+import { MicrobitOutput, MicroPythonExceptionType } from '../../interface/message';
+import { SignalOption } from '../../interface/config';
 import { SerialReader } from './reader';
 
 /**

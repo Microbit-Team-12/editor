@@ -1,4 +1,4 @@
-import { readOption } from '../../../microbit-api-config';
+import { readOption } from '../../interface/config';
 /**
  * This class provide convenient function for reading serial output.
  */
