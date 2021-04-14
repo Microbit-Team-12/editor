@@ -31,17 +31,21 @@ The final line of the error message tells you that this is a syntax error. The l
 
 Obviously the mistake here was forgetting the brackets, but Python couldn't figure out exactly what the error was and so simply wrote `invalid syntax` after `SyntaxError`. Don't worry if this happens - you can still figure out the mistake by looking at the line it occured!
 
-<!---
-###### Example:
-Let's say you try and run this code.
-```
 
-```
-You'll get this error:
-```
+[comment]: <> (###### Example:)
 
-```
---->
+[comment]: <> (Let's say you try and run this code.)
+
+[comment]: <> (```)
+
+[comment]: <> (```)
+
+[comment]: <> (You'll get this error:)
+
+[comment]: <> (```)
+
+[comment]: <> (```)
+
 
 ---
 

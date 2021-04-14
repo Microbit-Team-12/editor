@@ -46,37 +46,11 @@ while True:
         music.play(music.JUMP_DOWN)
 `;
 
-
-const exampleTutorial = `# Title
-
-Did you know you can use tildes instead of backticks?
-
-~~~py
-# LINES 6-9
-from microbit import *
-import music
-
-while True:
-    if button_a.is_pressed():
-        print('A')
-        display.show(Image.MUSIC_QUAVER)
-        music.play(music.NYAN)
-    if button_b.is_pressed():
-        print('B')
-        display.show(Image.MEH)
-        music.play(music.POWER_DOWN)
-    
-    display.show(Image.COW)
-~~~
-
-More text
-`;
-
 class APIDemo extends React.Component<unknown, APIDemoState> {
   constructor(props: unknown) {
     super(props);
     this.state = {
-      tutorial: exampleTutorial,
+      tutorial: '# Fetching tutorial...',
       output: '',
       connection: null,
       editor: null,
@@ -92,6 +66,16 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
       console.log(t);
     });
     this.removeErrorLineOfCode = this.removeErrorLineOfCode.bind(this);
+  }
+
+  componentDidMount(): void {
+    fetch('tutorials/ErrorTute.md')
+      .then((r) => r.text())
+      .then((text) =>
+        this.setState({
+          tutorial: text,
+        }),
+      );
   }
 
   componentWillUnmount(): void {
@@ -133,7 +117,6 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
   hasBusyConnection(): boolean {
     return this.state.connection?.interact.getState() === MicrobitState.Busy;
   }
-
 
   renderDuck(): JSX.Element {
     let renderedDuck;
