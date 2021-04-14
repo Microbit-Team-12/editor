@@ -1,18 +1,23 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
+import './DocsViewer.css';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { darcula } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { DoubleArrow, FlashOn, Height } from '@material-ui/icons';
+import { DoubleArrow, Height, PlayArrow } from '@material-ui/icons';
 import { IconButton } from '@material-ui/core';
+import { MicrobitOutput } from '../api/microbit-api';
+import { Stream } from 'ts-stream';
 
 type PythonCodeProps = {
   code: string,
-  onFlash?(code: string): Promise<void>,
+  onRun?(code: string): Promise<Stream<MicrobitOutput>>,
+  hasFreeConnection(): boolean,
   onLoad(codeSnippet: string): void,
 }
 
 type PythonCodeState = {
   isExpanded: boolean,
+  output: string,
 }
 
 class PythonCode extends React.Component<PythonCodeProps, PythonCodeState> {
@@ -26,6 +31,7 @@ class PythonCode extends React.Component<PythonCodeProps, PythonCodeState> {
 
     this.state = {
       isExpanded: false,
+      output: '',
     };
 
     this.isExpandable = false;
@@ -53,9 +59,27 @@ class PythonCode extends React.Component<PythonCodeProps, PythonCodeState> {
     this.setState({isExpanded: !this.state.isExpanded});
   }
 
-  async onFlash(): Promise<void> {
-    if (this.props.onFlash !== undefined)
-      await this.props.onFlash(this.props.code);
+  async onRun(): Promise<void> {
+    if (this.props.onRun !== undefined) {
+      const outputStream = await this.props.onRun(this.props.code);
+      await outputStream.forEach((output) => {
+        switch (output.kind) {
+          case 'NormalOutput':
+            this.setState({
+              output: output.outputChunk,
+            });
+            break;
+          case 'ErrorMessage':
+            if (output.type === 'KeyboardInterrupt') break;
+            const oldOutput = this.state.output;
+            this.setState({
+              output: `${oldOutput}
+Error on line ${output.line}:
+${output.type}: ${output.message}`,
+            });
+        }
+      });
+    }
   }
 
   onLoad(): void {
@@ -77,9 +101,22 @@ class PythonCode extends React.Component<PythonCodeProps, PythonCodeState> {
       >
         {this.lines.slice(start, end).join('\n')}
       </SyntaxHighlighter>
-      <IconButton onClick={this.onExpand.bind(this)} disabled={!this.isExpandable}><Height/></IconButton>
-      <IconButton onClick={this.onFlash.bind(this)} disabled={this.props.onFlash === undefined}><FlashOn/></IconButton>
-      <IconButton onClick={this.onLoad.bind(this)}><DoubleArrow/></IconButton>
+
+      <IconButton onClick={this.onExpand.bind(this)} disabled={!this.isExpandable}>
+        <Height/>
+      </IconButton>
+
+      <IconButton onClick={this.onRun.bind(this)} disabled={!this.props.hasFreeConnection()}>
+        <PlayArrow/>
+      </IconButton>
+
+      <IconButton onClick={this.onLoad.bind(this)}>
+        <DoubleArrow/>
+      </IconButton>
+
+      <div className="Docs-output">
+        {this.state.output}
+      </div>
     </div>;
   }
 }
@@ -87,7 +124,8 @@ class PythonCode extends React.Component<PythonCodeProps, PythonCodeState> {
 
 type DocsViewerProps = {
   markdown: string,
-  onFlash?(code: string): Promise<void>,
+  onRun?(code: string): Promise<Stream<MicrobitOutput>>,
+  hasFreeConnection(): boolean,
   onLoad(codeSnippet: string): void,
 }
 
@@ -103,8 +141,9 @@ export default class DocsViewer extends React.Component<DocsViewerProps, unknown
     if (code.language === 'py') {
       return <PythonCode
         code={code.value}
-        onFlash={this.props.onFlash}
+        onRun={this.props.onRun}
         onLoad={this.props.onLoad}
+        hasFreeConnection={this.props.hasFreeConnection}
       />;
     } else {
       return <SyntaxHighlighter

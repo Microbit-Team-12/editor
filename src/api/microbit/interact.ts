@@ -92,12 +92,8 @@ export class ConnectedMicrobitInteract implements InteractWithConnectedMicrobit 
             When all code is on one line, microbit does not do any hard work until \r entered
             Less likely for the buffer to be full and lose character
       - Print(replDone)
-          On receving replDone, manager knows microbit finished writing to main.py
+          On receiving replDone, manager knows microbit finished writing to main.py
           It is rebooting and all later output are program output
-      - Sleep for 0ms
-          In case there are characters in output buffer
-      - reboot
-          To run `main.py` in a fresh state
     */
     if (this.state === MicrobitState.Busy) throw Error('Flash Failed: Device not free');
     this.state = MicrobitState.Busy;
