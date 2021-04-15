@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { Box, Button } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import Editor, { loader, Monaco } from '@monaco-editor/react';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import React from 'react';
@@ -123,19 +123,26 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
    *
    * The duck 'Help' button is always enabled.
    */
-  // TODO change isEnabled's signature to () => boolean and wrap the callback to verify and correct the state
-  renderHeaderButton(text: string, callback: () => void, isEnabled: boolean): JSX.Element {
+  renderHeaderButton(text: string, callback: () => void, isEnabled: () => boolean): JSX.Element {
+    const safeOnClickCallback = () => {
+      if (isEnabled()) {
+        callback();
+      } else {
+        alert(`UI lied: button ${text} should NOT be enabled`);
+        this.setState({});
+      }
+    };
+
     return (
-      <Box paddingLeft={2}>
-        <Button
-          className="APIDemo-button"
-          variant="contained"
-          disabled={!isEnabled}
-          onClick={() => callback()}
-        >
-          {text}
-        </Button>
-      </Box>
+      <Button
+        className="APIDemo-button"
+        variant="contained"
+        size="large"
+        disabled={!isEnabled()}
+        onClick={safeOnClickCallback}
+      >
+        {text}
+      </Button>
     );
   }
 
@@ -236,12 +243,36 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     return (
       <div className="APIDemo">
         <header className="APIDemo-header">
-          {this.renderHeaderButton('Start', this.onStart.bind(this), this.state.connection == null)}
-          {this.renderHeaderButton('Flash', () => this.onFlash(this.state.editor!.getValue()), this.hasFreeConnection())}
-          {this.renderHeaderButton('Run', () => this.onRun(this.state.editor!.getValue()), this.hasFreeConnection())}
-          {this.renderHeaderButton('Interrupt', this.onInterrupt.bind(this), this.hasBusyConnection())}
-          {this.renderHeaderButton('Reboot', this.onReboot.bind(this), this.hasFreeConnection())}
-          {this.renderHeaderButton('Help', this.summonDuck.bind(this), true)}
+          {this.renderHeaderButton(
+            'Start',
+            this.onStart.bind(this),
+            () => this.state.connection == null,
+          )}
+          {this.renderHeaderButton(
+            'Flash',
+            () => this.onFlash(this.state.editor!.getValue()),
+            () => this.hasFreeConnection(),
+          )}
+          {this.renderHeaderButton(
+            'Run',
+            () => this.onRun(this.state.editor!.getValue()),
+            () => this.hasFreeConnection(),
+          )}
+          {this.renderHeaderButton(
+            'Interrupt',
+            this.onInterrupt.bind(this),
+            () => this.hasBusyConnection(),
+          )}
+          {this.renderHeaderButton(
+            'Reboot',
+            this.onReboot.bind(this),
+            () => this.hasFreeConnection(),
+          )}
+          {this.renderHeaderButton(
+            'Help',
+            this.summonDuck.bind(this),
+            () => true,
+          )}
         </header>
         <div className="APIDemo-body">
           {this.renderTutorial()}

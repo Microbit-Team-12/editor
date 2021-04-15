@@ -149,24 +149,27 @@ class PythonCode extends React.Component<PythonCodeProps, PythonCodeState> {
     this.setState({
       output: '',
     });
+    if (!this.props.hasFreeConnection()) {
+      alert('UI lied: Device is NOT free');
+      this.props.onRunFinished();
+      return;
+    }
 
     const outputStream = await this.props.onRun(this.props.code);
+    let currentOutput = '';
     await outputStream.forEach((output) => {
       switch (output.kind) {
         case 'NormalOutput':
-          this.setState({
-            output: output.outputChunk,
-          });
+          currentOutput = output.outputChunk;
           break;
         case 'ErrorMessage':
           if (output.type === 'KeyboardInterrupt') break;
-          const oldOutput = this.state.output;
-          this.setState({
-            output: `${oldOutput}
-Error on line ${output.line}:
-${output.type}: ${output.message}`,
-          });
+          currentOutput = `${currentOutput}Error on line ${output.line}:
+${output.type}: ${output.message}`;
       }
+      this.setState({
+        output: currentOutput,
+      });
     });
     this.props.onRunFinished();
   }
@@ -228,38 +231,40 @@ ${output.type}: ${output.message}`,
         {this.getDisplayedText()}
       </SyntaxHighlighter>
 
-      {
-        this.isExpandable &&
+      <div className="Tutorial-code-buttonbar">
         <Button
           className="Tutorial-code-buttons"
           variant="contained"
-          endIcon={this.state.isExpanded ? <Visibility/> : <VisibilityOff/>}
-          onClick={this.onToggleExpand.bind(this)}
+          color="primary"
+          startIcon={<PlayArrow/>}
+          disabled={!this.props.hasFreeConnection()}
+          onClick={this.onRun.bind(this)}
         >
-          Full example code:
+          Run Example
         </Button>
-      }
 
-      <Button
-        className="Tutorial-code-buttons"
-        variant="contained"
-        color="primary"
-        startIcon={<PlayArrow/>}
-        disabled={!this.props.hasFreeConnection()}
-        onClick={this.onRun.bind(this)}
-      >
-        Run full example
-      </Button>
+        {
+          this.isExpandable &&
+          <Button
+            className="Tutorial-code-buttons"
+            variant="contained"
+            endIcon={this.state.isExpanded ? <Visibility/> : <VisibilityOff/>}
+            onClick={this.onToggleExpand.bind(this)}
+          >
+            Full Code:
+          </Button>
+        }
 
-      <Button
-        className="Tutorial-code-buttons"
-        variant="contained"
-        color="secondary"
-        endIcon={<DoubleArrow/>}
-        onClick={this.onInsertIntoEditor.bind(this)}
-      >
-        Insert fragment into editor
-      </Button>
+        <Button
+          className="Tutorial-code-buttons"
+          variant="contained"
+          color="secondary"
+          endIcon={<DoubleArrow/>}
+          onClick={this.onInsertIntoEditor.bind(this)}
+        >
+          Insert Fragment
+        </Button>
+      </div>
 
       {this.state.output.length > 0 &&
       <div className="Tutorial-output">
