@@ -110,7 +110,7 @@ class PythonCode extends React.Component<PythonCodeProps, PythonCodeState> {
 
         if (isLineNumberValid(start, 'Starting line', this.lines.length)
           && isLineNumberValid(end, 'Ending line', this.lines.length)) {
-          if (start >= end) {
+          if (start <= end) {
             this.highlightStart = start - 1; // indexing from 0
             this.highlightEnd = end - 1 + 1; // end included
             this.isExpandable = true;
