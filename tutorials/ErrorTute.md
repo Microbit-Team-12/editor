@@ -12,11 +12,11 @@ There are three basic types of error:
 
 ---
 
-### Syntax Errors
+## Syntax Errors
 
 If your program has a syntax error, the program will give you a `SyntaxError` when you try to run it. This will be displayed in the error message.
 
-###### Example:
+#### Example:
 Let's say you forget to put brakets after display.scroll:
 ```py
 display.scroll "hello"
@@ -29,7 +29,7 @@ SyntaxError: invalid syntax
 ```
 The final line of the error message tells you that this is a syntax error. The line before that is telling you which line of the program the error occurs - in this case it's `line 1`.
 
-##### Task
+### Task
 The following code has one or more syntax errors. Try running the code to see where they and and figure out how to fix them:
 
 ```py
@@ -48,11 +48,11 @@ elseif button_b.is_pressed():
 
 ---
 
-### Built-in Exceptions
+## Built-in Exceptions
 
 If you run the program and it passes a syntax check but still fails to run, then one of these errors will come up. You can find the name of the error in the final line of the error message. Here are some examples:
 
-###### NameError
+#### NameError
 This error occurs when Python enounters something with a name it doesn't recognise. It often means you've made a typo, or used the wrong name for some object or method.
 
 Try running this code. Can you find and fix the errors?
@@ -72,7 +72,7 @@ while Tre:
         display.scrol("RIGHT")
 ```
 
-###### IndexError
+#### IndexError
 This error occurs when you try to access an index in a list that doesn't exist.
 What's wrong with this code? Can you fix it so it runs?
 ```py
@@ -80,13 +80,13 @@ x = ["Hello", "World"]
 display.scroll(x[2])
 ```
 
-###### ZeroDivisionError
+#### ZeroDivisionError
 This error occurs when you try to divide by zero. For example:
 ```py
 x = 10 / 0
 ```
 
-###### TypeError
+#### TypeError
 This error occurs when you try to pass an object of a wrong type into a method.
 
 Let's say you want the program to wait for 1 second, so you type this line:
@@ -108,7 +108,7 @@ sleep()
 ```
 What happens? How do you fix it?
 
-###### ValueError
+#### ValueError
 This error is similar to a `TypeError`, but occurs when you try to pass an object that's a correct type but still the wrong value for that argument.
 For example, let's say you try and use the `int` function, which converts things into integers.
 ```py
@@ -119,10 +119,10 @@ int("xy")
 What line/lines go wrong? Why is this?
 
 ---
-### Logical Errors
+## Logical Errors
 These are some of the most difficult errors to debug, because you don't get an error message and so they can be hard to spot.
 
-###### Example
+#### Example
 Let's say you have two floats `x` and `y`, and you want the microbit to sleep for a time that's mean of the two. You write this code:
 ```
 average = x + y / 2
@@ -143,7 +143,7 @@ You expect the program to print `3.5` when run, but instead it prints `5`. What'
 Well, this is the difficult part of debugging a logic error, but at least you've figured out exactly where the problem is - it's in the definition of average.
 After a bit of experimenting you realise you should have written `average = (x + y) / 2`, since division gets evaluated before addition.
 
-###### Task on Logical Errors
+#### Task on Logical Errors
 
 For part of a program you need to add up all the numbers from 1 to 10. To do that you write the below code in order to have `nums` be that sum.
 ```py
@@ -154,7 +154,7 @@ for num in range(10):
 What do you expect `nums` to be at the end? What do you actually get if you run the code? What is the problem?
 
 ---
-### Final Task
+## Final Task
 
 The following code is an attempt to write a simple coin flipping program. If it works correctly, whenever you shake the microbit you should either get an empty or filled-in coin, with equal chance of both.
 
