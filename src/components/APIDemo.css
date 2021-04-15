@@ -19,6 +19,10 @@
   justify-content: center;
 }
 
+.APIDemo-button:enabled, .APIDemo-button:disabled {
+  margin: 5px;
+}
+
 .APIDemo-body {
   width: 90vw;
   height: 90vh;

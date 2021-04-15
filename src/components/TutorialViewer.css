@@ -1,11 +1,14 @@
 .Tutorial-output {
   white-space: pre-wrap;
   background: #f8f8f8;
-  padding: 5px;
+  padding: 10px;
+
+  font-family: "Fira Code", monospace;
 }
 
-.Tutorial-code-buttons:enabled, .Tutorial-code-buttons:disabled {
-  margin: 10px;
+.Tutorial-code-buttonbar {
+  display: flex;
+  justify-content: space-between;
 }
 
 .Tutorial-markdown {

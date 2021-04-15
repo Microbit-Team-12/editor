@@ -161,7 +161,6 @@ The following code is an attempt to write a simple coin flipping program. If it 
 Note: randint is a function that returns a random integer between two values, inclusive.
 
 ```py
-# LINES 5-24
 from microbit import *
 from random import randint
 
