@@ -80,7 +80,7 @@ export class ConnectedMicrobitInteract {
    */
   private async getREPLLine(): Promise<void> {
     await this.portWriter.write(ctrlC);
-    await this.portParser.readUntilNewREPLLine();
+    await this.portParser.readUntilNewReplLine();
   }
 
   /**
@@ -159,6 +159,39 @@ export class ConnectedMicrobitInteract {
         });
     } else this.state = MicrobitState.Free;
     return outputStream;
+  }
+
+  async getCompletions(prefix: string): Promise<string[]> {
+    if (this.state === MicrobitState.Busy) throw Error('Autocomplete Failed: Device not free');
+    this.state = MicrobitState.Busy;
+
+    const endMarker = 'END MARKER';
+    let output = '';
+
+    await this.getREPLLine();
+    await this.portWriter.write(`${prefix}\t`);
+    await this.portWriter.write(endMarker);
+    await this.portParser.portReader.safeReadUntilWithUpdate(
+      [endMarker],
+      (text) => output = text,
+    );
+    await this.getREPLLine();
+
+    this.state = MicrobitState.Free;
+    const lines = output.split(/\n/g);
+    if (lines.length === 1) {
+      const text = lines[0];
+      if (text === `${prefix}\t`) return [];
+      else return [text];
+    }
+    const completions: string[] = [];
+    for (const line of lines.slice(1, -1)) {
+      for (const completion of line.trim().split(/\s+/g)) {
+        if (completion.length > 0)
+          completions.push(completion.trim()); // I miss concatMap
+      }
+    }
+    return completions;
   }
 
   /**

@@ -61,7 +61,7 @@ export class SerialParser {
   /**
    * Read until new repl line is ready
    */
-  readUntilNewREPLLine(): Promise<void> {
+  readUntilNewReplLine(): Promise<void> {
     return this.portReader.safeReadUntil(this.config.replLineReady);
   }
 

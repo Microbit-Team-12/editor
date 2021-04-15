@@ -88,7 +88,7 @@ export const defaultConfig: ManagerOption = {
     ]
   },
   readOption: {
-    showLog: true,
+    showLog: false,
     updateMs: 50,
     cutLength: 1000
   },
