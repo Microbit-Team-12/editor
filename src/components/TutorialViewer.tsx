@@ -138,11 +138,18 @@ class PythonCode extends React.Component<PythonCodeProps, PythonCodeState> {
   }
 
   /**
-   * Run the whole {@link PythonCodeProps.code}, and store the normal output
-   * and error messages other than `KeyboardInterrupt` in
+   * Run the whole {@link PythonCodeProps.code}, clear the old output and store
+   * the normal output / error messages other than `KeyboardInterrupt` in
    * {@link PythonCodeState.output} to be displayed.
+   * Upon termination, {@link PythonCodeProps.onRunFinished} is invoked to
+   * update the state of the app, so that the buttons are greyed out or re-
+   * enabled as appropriate.
    */
   async onRun(): Promise<void> {
+    this.setState({
+      output: '',
+    });
+
     const outputStream = await this.props.onRun(this.props.code);
     await outputStream.forEach((output) => {
       switch (output.kind) {
@@ -161,6 +168,7 @@ ${output.type}: ${output.message}`,
           });
       }
     });
+    this.props.onRunFinished();
   }
 
   /**
@@ -267,6 +275,8 @@ interface PythonCodeProps {
 
   onRun(code: string): Promise<Stream<MicrobitOutput>>,
 
+  onRunFinished(): void,
+
   hasFreeConnection(): boolean,
 
   onInsertIntoEditor(codeSnippet: string): void,
@@ -327,6 +337,7 @@ export default class TutorialViewer extends React.Component<TutorialViewerProps,
       return <PythonCode
         code={code.value}
         onRun={this.props.onRun}
+        onRunFinished={this.props.onRunFinished}
         onInsertIntoEditor={this.props.onInsertIntoEditor}
         hasFreeConnection={this.props.hasFreeConnection}
       />;
@@ -353,6 +364,8 @@ interface TutorialViewerProps {
   markdown: string,
 
   onRun(code: string): Promise<Stream<MicrobitOutput>>,
+
+  onRunFinished(): void,
 
   hasFreeConnection(): boolean,
 
