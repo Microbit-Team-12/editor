@@ -90,6 +90,45 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
       editor: editor,
       monaco: monaco
     });
+
+    const fetchCompletions = async (prefix: string) => {
+      if (this.hasFreeConnection()) {
+        console.log(`wat: ${prefix}`);
+        return this.state.connection!.interact.getCompletions(prefix);
+      } else return [];
+    };
+
+    monaco.languages.registerCompletionItemProvider(
+      'python',
+      {
+        triggerCharacters: ['_', '.'],
+        async provideCompletionItems(model, position, _, __) {
+          const line = model.getLineContent(position.lineNumber);
+          let j = position.column - 1;
+          while (j >= 0 && line[j] !== ' ') j -= 1;
+          const startColumn = j + 1;
+          const word = line.slice(startColumn, position.column - 1);
+
+          const completions = await fetchCompletions(word);
+          console.log(completions);
+          return {
+            suggestions: completions.map((suggestion) => {
+              return {
+                kind: monaco.languages.CompletionItemKind.Constant,
+                label: suggestion,
+                insertText: suggestion,
+                range: {
+                  startLineNumber: position.lineNumber,
+                  endLineNumber: position.lineNumber,
+                  startColumn: startColumn + 1,
+                  endColumn: position.column,
+                },
+              };
+            }),
+          };
+        }
+      },
+    );
   }
 
   /**
