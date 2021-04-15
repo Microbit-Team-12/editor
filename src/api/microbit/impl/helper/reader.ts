@@ -44,7 +44,7 @@ export class SerialReader {
   }
 
   /**
-   * Split *buffer* on first occurence of token.
+   * Split *buffer* on first occurrence of token.
    * 
    * PRE: buffer = before + token + after
    * buffer = after
@@ -61,7 +61,7 @@ export class SerialReader {
    * This function read a line from serial, 
    * and returns that line. 
    * 
-   * You should only use this function when you are certain about what's comming from serial.
+   * You should only use this function when you are certain about what's coming from serial.
    */
   async unsafeReadline(): Promise<string> {
     const token = '\r\n';
@@ -86,7 +86,7 @@ export class SerialReader {
   /**
    * This function reads until one of the token from the token array appears in serial output,
    * and returns the token that appear in serial.
-   * Its content is also periodcally updates to upstream and when the token appears. 
+   * Its content is also periodically updates to upstream and when the token appears.
    * 
    * This is useful when reading potential long output,
    * and recent content of some length matters. 
