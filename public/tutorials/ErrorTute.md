@@ -4,11 +4,11 @@ Errors are the mistakes or faults performed by the user which results in abnorma
 
 There are three basic types of error:
 - **Syntax Error**
-A syntax error is the most common type of error and occurs when we do not use properly defined syntax for Python, and so the program is unable to run. For example: missing parentheses, typos, using the wrong symbols etc.
+  A syntax error is the most common type of error and occurs when we do not use properly defined syntax for Python, and so the program is unable to run. For example: missing parentheses, typos, using the wrong symbols etc.
 - **Buit-in Exception**
-An exception occurs when the program fails to run for some reason other than a syntax error. Python has many different types of these exceptions, such as ```IndexError```, ```TypeError```, etc.
+  An exception occurs when the program fails to run for some reason other than a syntax error. Python has many different types of these exceptions, such as ```IndexError```, ```TypeError```, etc.
 - **Logical Error**
-This type of error occurs when your program has nothing technically wrong with it, but still doesn't perform as expected. This means Python will not throw an error when the program is run, but there's a logical error in the program causing things not to happen as expected.
+  This type of error occurs when your program has nothing technically wrong with it, but still doesn't perform as expected. This means Python will not throw an error when the program is run, but there's a logical error in the program causing things not to happen as expected.
 
 ---
 
@@ -29,7 +29,6 @@ SyntaxError: invalid syntax
 ```
 The final line of the error message tells you that this is a syntax error. The line before that is telling you which line of the program the error occurs - in this case it's `line 1`.
 
-<<<<<<< HEAD:src/components/ErrorTute.md
 ##### Task
 The following code has one or more syntax errors. Try running the code to see where they and and figure out how to fix them:
 
@@ -46,25 +45,6 @@ elseif button_b.is_pressed():
     sleep 3000
     display.clear()
 ```
-=======
-Obviously the mistake here was forgetting the brackets, but Python couldn't figure out exactly what the error was and so simply wrote `invalid syntax` after `SyntaxError`. Don't worry if this happens - you can still figure out the mistake by looking at the line it occured!
-
-
-[comment]: <> (###### Example:)
-
-[comment]: <> (Let's say you try and run this code.)
-
-[comment]: <> (```)
-
-[comment]: <> (```)
-
-[comment]: <> (You'll get this error:)
-
-[comment]: <> (```)
-
-[comment]: <> (```)
-
->>>>>>> 9f483ff988d24f2e4be5136abc32ac0fcbea67b0:public/tutorials/ErrorTute.md
 
 ---
 
@@ -138,8 +118,6 @@ int("xy")
 ```
 What line/lines go wrong? Why is this?
 
-<!--- The error comes because you can't convert `"xy"` into an `int`, but why is it a `ValueError` rather than a `TypeError`? Well, `"xy"` is a string, and some strings can actually be passed into the `int()` function. For example, running `int("12")` would be fine and output `12`. This means `str` is a valid type for the `int()` function, and so  `"xy"` isn't the incorrect *type* to be passed into the function, but it is still an incorrect *value* to be passed into the function (since it cannot be converted into an integer). --->
-
 ---
 ### Logical Errors
 These are some of the most difficult errors to debug, because you don't get an error message and so they can be hard to spot.
@@ -165,7 +143,6 @@ You expect the program to print `3.5` when run, but instead it prints `5`. What'
 Well, this is the difficult part of debugging a logic error, but at least you've figured out exactly where the problem is - it's in the definition of average.
 After a bit of experimenting you realise you should have written `average = (x + y) / 2`, since division gets evaluated before addition.
 
-<<<<<<< HEAD:src/components/ErrorTute.md
 ###### Task on Logical Errors
 
 For part of a program you need to add up all the numbers from 1 to 10. To do that you write the below code in order to have `nums` be that sum.
@@ -210,15 +187,3 @@ def on_gesture_shake():
 input.on_gesure(Gesture.SHAK, on_gesture_shake
 ```
 Remember to use the information in the error message to help you out. Also make sure to double check for logical errors - does the program do what you expect it to?
-=======
-```py
-# $LINES 2-2 
-x = 3
-y = 4.
-average = x + y / 2
-print(average)
-sleep(average)
-```
-
-$$ \exists \latex ? $$
->>>>>>> 9f483ff988d24f2e4be5136abc32ac0fcbea67b0:public/tutorials/ErrorTute.md
