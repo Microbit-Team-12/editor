@@ -123,6 +123,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
    *
    * The duck 'Help' button is always enabled.
    */
+  // TODO change isEnabled's signature to () => boolean and wrap the callback to verify and correct the state
   renderHeaderButton(text: string, callback: () => void, isEnabled: boolean): JSX.Element {
     return (
       <Box paddingLeft={2}>
@@ -186,6 +187,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
         : <TutorialViewer
           markdown={this.state.tutorial}
           onRun={this.onRunCell.bind(this)}
+          onRunFinished={() => this.setState({})}
           hasFreeConnection={this.hasFreeConnection.bind(this)}
           onInsertIntoEditor={this.onInsertIntoEditor.bind(this)}
         />
@@ -337,6 +339,9 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
   }
 
   async onExec(outputStream: Stream<MicrobitOutput>): Promise<void> {
+    // Notify the device that the connected micro:bit is now busy
+    this.setState({});
+
     await outputStream.forEach(output => {
       switch (output.kind) {
         case 'NormalOutput':
@@ -372,20 +377,21 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
           }
       }
     });
+
+    // Notify the app that the connection has freed up
+    this.setState({});
   }
 
   async onFlash(code: string): Promise<void> {
     console.log('onFlash');
     this.removeErrorLineOfCode();
     await this.onExec(await this.state.connection!.interact.flash(code));
-    this.setState({}); // to update the buttons at the top
   }
 
   async onRun(code: string): Promise<void> {
     console.log('onRun');
     this.removeErrorLineOfCode();
     await this.onExec(await this.state.connection!.interact.execute(code));
-    this.setState({});
   }
 
   /**
@@ -394,7 +400,6 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
    */
   async onRunCell(code: string): Promise<Stream<MicrobitOutput>> {
     console.log('onRunCell');
-    this.setState({});
     return await this.state.connection!.interact.execute(code);
   }
 
@@ -402,11 +407,12 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     console.log('onReboot');
     this.removeErrorLineOfCode();
     await this.onExec(await this.state.connection!.interact.reboot());
-    this.setState({});
   }
 
   async onInterrupt(): Promise<void> {
     await this.state.connection!.interact.interrupt();
+
+    // Notify the app that the connection has freed up
     this.setState({});
   }
 }
