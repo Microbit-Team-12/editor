@@ -1,4 +1,5 @@
 import { readOption } from '../../interface/config';
+
 /**
  * This class provide convenient function for reading serial output.
  */
@@ -14,13 +15,13 @@ export class SerialReader {
 
   /**
    * Read from serial until termination is true.
-   * 
+   *
    * Buffer will not be cut in this function.
    */
   private async readLoop(termination: (text: string) => boolean): Promise<void> {
-    if(this.config.showLog) console.log(this.serialBuffer);
+    if (this.config.showLog) console.log(this.serialBuffer);
     while (!termination(this.serialBuffer)) {
-      const { value } = await this.portReader.read();
+      const {value} = await this.portReader.read();
       this.serialBuffer += value;
       if (this.config.showLog) console.log(this.serialBuffer);
     }
@@ -28,7 +29,7 @@ export class SerialReader {
 
   /**
    * Read from serial until termination is true.
-   * 
+   *
    * Assuming only last *bufferLimit* characters decides termination,
    * this readLoop cuts unnecessary part of the buffer
    */
@@ -37,15 +38,15 @@ export class SerialReader {
     while (!termination(this.serialBuffer)) {
       const len = this.serialBuffer.length;
       if (len >= bufferLimit) this.serialBuffer = this.serialBuffer.substring(len - bufferLimit);
-      const { value } = await this.portReader.read();
+      const {value} = await this.portReader.read();
       this.serialBuffer += value;
       if (this.config.showLog) console.log(this.serialBuffer);
     }
   }
 
   /**
-   * Split *buffer* on first occurence of token.
-   * 
+   * Split *buffer* on first occurrence of token.
+   *
    * PRE: buffer = before + token + after
    * buffer = after
    * return before
@@ -58,10 +59,10 @@ export class SerialReader {
   }
 
   /**
-   * This function read a line from serial, 
-   * and returns that line. 
-   * 
-   * You should only use this function when you are certain about what's comming from serial.
+   * This function read a line from serial,
+   * and returns that line.
+   *
+   * You should only use this function when you are certain about what's coming from serial.
    */
   async unsafeReadline(): Promise<string> {
     const token = '\r\n';
@@ -71,10 +72,10 @@ export class SerialReader {
 
   /**
    * This function reads until token appears in serial output, and returns nothing.
-   * 
+   *
    * Reading is optimized by cutting unnecessary string,
    * so length of buffer < length of token.
-   * 
+   *
    * This is useful when reading potential long output,
    * and the content before token does not matter
    */
@@ -86,17 +87,17 @@ export class SerialReader {
   /**
    * This function reads until one of the token from the token array appears in serial output,
    * and returns the token that appear in serial.
-   * Its content is also periodcally updates to upstream and when the token appears. 
-   * 
+   * Its content is also periodically updates to upstream and when the token appears.
+   *
    * This is useful when reading potential long output,
-   * and recent content of some length matters. 
-   * 
+   * and recent content of some length matters.
+   *
    * Consider the following cases, which make the implementation necessary.
-   * 
-   * `while True: print(1)` 
+   *
+   * `while True: print(1)`
    * A lot of output
-   * 
-   * `a=input("You name:")` 
+   *
+   * `a=input("You name:")`
    * New content only come out after every thing gets outputted
    * (So user can input)
    */
@@ -105,7 +106,9 @@ export class SerialReader {
     let matchedTokenID = -1;
     const termination = (str: string) => {
       bufferUpdated = true;
-      tokens.forEach((token,index) => { if (str.includes(token)) matchedTokenID = index; });
+      tokens.forEach((token, index) => {
+        if (str.includes(token)) matchedTokenID = index;
+      });
       return matchedTokenID !== -1;
     };
     const updateTimer = setInterval(() => {

@@ -6,8 +6,8 @@ import { SerialReader } from './reader';
 /**
  * This class provides functions to read serial output of a specific procedure,
  * by using the reader helper class.
- * 
- * Below is its mechaism. Based on following input of code
+ *
+ * Below is its mechanism. Based on following input of code
  * ```
  * 1|Get REPL Line|>>>
  * 2|Setup Code   |>>> file=open('main.py','w');s='print(executionStart)\\r\\nprint(1)\\r\\nprint(executionStart)';file.write(s);file.close();from microbit import *;sleep(0);reset();
@@ -19,7 +19,7 @@ import { SerialReader } from './reader';
  * 7|Type "help()" for more information.
  * 8|>>>
  * ```
- * 
+ *
  * Error Sample (Flashing)
  * ```
  * Traceback (most recent call last):
@@ -61,38 +61,38 @@ export class SerialParser {
   /**
    * Read until new repl line is ready
    */
-  readUntilNewREPLLine(): Promise<void> {
+  readUntilNewReplLine(): Promise<void> {
     return this.portReader.safeReadUntil(this.config.replLineReady);
   }
 
   /**
    * Read until executionStart appears on serial
-   * - If there is no error, this Returns true 
+   * - If there is no error, this Returns true
    * - If (indentation/bracket) error occurs, the stream will be closed and false is returned
    */
-  async readUntilExecStart(outputStream: Stream<MicrobitOutput>): Promise<boolean>{
+  async readUntilExecStart(outputStream: Stream<MicrobitOutput>): Promise<boolean> {
     if (this.config.showLog) console.log('Waiting for Execution Start');
     const result = await this.portReader.safeReadUntilWithUpdate(
       this.startSignals,
-      str => null
+      _ => null
     );
     if (result !== 0) {
       this.readErrors(outputStream);
       return false;
-    }else return true;
+    } else return true;
   }
 
   /**
-   * Read output of user code, periodcally update output to stream
-   * 
+   * Read output of user code, periodically update output to stream
+   *
    * Require executeStart printed earlier
    */
   async readUntilExecDone(outputStream: Stream<MicrobitOutput>): Promise<void> {
-    if(this.config.showLog) console.log('Execution Start');
-    //Now user code will run
-    //read until executionEnd signal appear on signal
+    if (this.config.showLog) console.log('Execution Start');
+    // Now user code will run
+    // read until executionEnd signal appear on signal
     let result = 1;
-    while (result===1){
+    while (result === 1) {
       result = await this.portReader.safeReadUntilWithUpdate(
         this.endSignals,
         str => outputStream.write({
@@ -100,26 +100,26 @@ export class SerialParser {
           outputChunk: str
         })
       );
-      if(result === 1) outputStream.write({
+      if (result === 1) outputStream.write({
         kind: 'ResetPressed'
       });
     }
     if (result !== 0) this.readErrors(outputStream);
-    else outputStream.end();
+    else await outputStream.end();
     if (this.config.showLog) console.log('Execution done');
   }
 
   /**
    * Read and parse micropython error output
    */
-  async readErrors(outputStream: Stream<MicrobitOutput>):Promise<void>{
+  async readErrors(outputStream: Stream<MicrobitOutput>): Promise<void> {
     if (this.config.showLog) console.log('Execution Error');
-    //line1 indicates in which line of user code exception occured
-    //which is first line after mainPYException and execException
+    // line1 indicates in which line of user code exception occurred
+    // which is first line after mainPYException and execException
     const line1 = await this.portReader.unsafeReadline();
     const lineNumberString = line1.split(',', 2)[0];
-    //messageLine is in the form of 'ErrorType:ErrorMessage'
-    //exec is used in user code, the line following line1 may not be mssageLine
+    // messageLine is in the form of 'ErrorType:ErrorMessage'
+    // exec is used in user code, the line following line1 may not be messageLine
     let lineCount = 0;
     let messageLine = '';
     while (lineCount === 0 || messageLine.startsWith('  ')) {

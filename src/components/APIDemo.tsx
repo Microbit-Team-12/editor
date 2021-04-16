@@ -88,8 +88,80 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
   handleEditorDidMount(editor: monaco.editor.IStandaloneCodeEditor, monaco: Monaco): void {
     this.setState({
       editor: editor,
-      monaco: monaco
+      monaco: monaco,
     });
+
+    const fetchCompletions = async (prefix: string) => {
+      if (this.hasFreeConnection()) {
+        console.log(`wat: ${prefix}`);
+        return this.state.connection!.interact.getCompletions(prefix);
+      } else return [];
+    };
+
+    monaco.languages.registerCompletionItemProvider(
+      'python',
+      {
+        triggerCharacters: ['_', '.', '(', '['],
+        async provideCompletionItems(model, position, _, __) {
+          const line = model.getLineContent(position.lineNumber);
+          let j = position.column - 1;
+          while (j >= 0 && line[j] !== ' ') j -= 1;
+          const startColumn = j + 1;
+          const word = line.slice(startColumn, position.column - 1);
+
+          const completions = await fetchCompletions(word);
+          // Two issues here:
+          // 1. 'help(d' -> 'help(display' --- need to replace the entire word
+          // 2. 'b' -> 'button_', to be completed again
+          if (completions.length === 1) {
+            const completion = completions[0];
+            const wordRange = {
+              startColumn: startColumn + 1,
+              endColumn: position.column,
+              startLineNumber: position.lineNumber,
+              endLineNumber: position.lineNumber,
+            };
+
+            // Deals with case 1
+            if (!completion.endsWith('_')) {
+              return {
+                suggestions: [{
+                  kind: monaco.languages.CompletionItemKind.Constant,
+                  label: completion,
+                  insertText: completion,
+                  range: wordRange,
+                }],
+              };
+            }
+
+            // Deals with case 2 (and 1)
+            return {
+              suggestions: [{
+                kind: monaco.languages.CompletionItemKind.Constant,
+                label: completion,
+                range: wordRange,
+                // hack to insert '_' to trigger another completion
+                insertText: completion.slice(0, -1),
+                // additionalTextEdits: [{
+                //   range: {},
+                //   text: '_',
+                // }],
+              }]
+            };
+          }
+          return {
+            suggestions: completions.map((suggestion) => {
+              return {
+                kind: monaco.languages.CompletionItemKind.Constant,
+                label: suggestion,
+                insertText: suggestion,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              } as any;
+            }),
+          };
+        }
+      },
+    );
   }
 
   /**
