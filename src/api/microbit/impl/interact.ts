@@ -181,7 +181,9 @@ export class ConnectedMicrobitInteract {
     const lines = output.split(/\n/g);
     if (lines.length === 1) {
       const text = lines[0];
-      if (text === `${prefix}\t`) return [];
+      // No completions found
+      if (text === prefix) return [];
+      // Identified exactly one completion
       else return [text];
     }
     const completions: string[] = [];
