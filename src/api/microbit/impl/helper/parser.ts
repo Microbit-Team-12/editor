@@ -77,7 +77,7 @@ export class SerialParser {
       _ => null
     );
     if (result !== 0) {
-      await this.readErrors(outputStream);
+      this.readErrors(outputStream);
       return false;
     } else return true;
   }
@@ -100,11 +100,11 @@ export class SerialParser {
           outputChunk: str
         })
       );
-      if (result === 1) await outputStream.write({
+      if (result === 1) outputStream.write({
         kind: 'ResetPressed'
       });
     }
-    if (result !== 0) await this.readErrors(outputStream);
+    if (result !== 0) this.readErrors(outputStream);
     else await outputStream.end();
     if (this.config.showLog) console.log('Execution done');
   }
@@ -127,12 +127,12 @@ export class SerialParser {
       lineCount += 1;
     }
     const line2split = messageLine.split(': ');
-    await outputStream.write({
+    outputStream.write({
       kind: 'ErrorMessage',
       line: parseInt(lineNumberString) - 1,
       type: line2split[0] as MicroPythonExceptionType,
       message: (line2split.length === 1) ? '' : line2split[1]
     });
-    await outputStream.end();
+    outputStream.end();
   }
 }
