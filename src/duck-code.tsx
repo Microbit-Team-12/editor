@@ -148,6 +148,7 @@ function readableDiffMessage(props: DuckProps) {
 
 // This returns two arrays representing what indexes to highlight in writtenLine and perfectLine respectively
 function highlightDiffLine(writtenLine: string, perfectLine: string): [number[], number[]] {
+  let bugCatcher = false;  // For catching a small bug
   const lengthWritten = writtenLine.length; const lengthPerfect = perfectLine.length;
   const highlightsWritten = []; let iWritten = 0;
   const highlightsPerfect = []; let iPerfect = 0;
@@ -160,10 +161,18 @@ function highlightDiffLine(writtenLine: string, perfectLine: string): [number[],
       if (iWritten + 1 === lengthWritten || iPerfect + 1 === lengthPerfect) {
         highlightsWritten.push(iWritten); iWritten++;
         highlightsPerfect.push(iPerfect); iPerfect++;
+
+        // Small exception when final character of writtenLine is the same as final character of perfectLine
+        // but we've only reached the end of writtenLine
+        if (!(iPerfect + 1 === lengthPerfect)) {
+          bugCatcher = true;
+        }
       }
       else {
-        const locationPerfect: number | undefined = lookFor(writtenLine.slice(iWritten, iWritten + 2), perfectLine, iPerfect, 10); // Checks the next 10 characters of perfectLine for any matches with the slice of writtenLine
-        const locationWritten: number | undefined = lookFor(perfectLine.slice(iPerfect, iPerfect + 2), writtenLine, iWritten, 10); // Checks the next 10 characters of writtenLine for any matches with the slice of perfectLine
+        // Checks the next 10 characters of perfectLine for any matches with the slice of writtenLine
+        const locationPerfect: number | undefined = lookFor(writtenLine.slice(iWritten, iWritten + 2), perfectLine, iPerfect, 10);
+        // Checks the next 10 characters of writtenLine for any matches with the slice of perfectLine
+        const locationWritten: number | undefined = lookFor(perfectLine.slice(iPerfect, iPerfect + 2), writtenLine, iWritten, 10);
         if (locationWritten) {
           while (iWritten < locationWritten) { highlightsWritten.push(iWritten); iWritten++; }
           iWritten += 2;
@@ -187,6 +196,12 @@ function highlightDiffLine(writtenLine: string, perfectLine: string): [number[],
   while (iPerfect < lengthPerfect) {
     highlightsPerfect.push(iPerfect);
     iPerfect++;
+  }
+
+  // Small bugfix, solution is to check the final characters to see if they're the same
+  if (bugCatcher && writtenLine[iWritten - 1] === perfectLine[iPerfect - 1]) {
+    highlightsWritten.pop();
+    highlightsPerfect.pop();
   }
 
   function lookFor(couple: string, long: string, iStart: number, lookAhead: number) {  // couple should be 2 characters long
