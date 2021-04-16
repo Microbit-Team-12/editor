@@ -127,17 +127,16 @@ function readableDiffMessage(props: DuckProps) {
     const strippedCodeLine = props.lineText.trim();
     const tutorial = tutorials[prevSlideParams[0] as keyof typeof tutorials];
     const strippedTutorialLines = tutorial.split('\n').map(x => x.trim());
-    const fuse = new Fuse(strippedTutorialLines, {includeMatches: true, isCaseSensitive: true});
+    const fuse = new Fuse(strippedTutorialLines, { includeMatches: true, isCaseSensitive: true });
     const result = fuse.search(strippedCodeLine);
     if (result.length > 0) {
       const closestLine = result[0];
-      //const backwardsFuse = new Fuse([strippedCodeLine], { includeMatches: true, isCaseSensitive: true });
-      return (<div> 
-        The closest matching line in the tutorial is line 
-        {closestLine.refIndex} which reads: 
-        <Typography color='secondary' variant="h6">{closestLine.item}</Typography>
-        whereas your line reads: 
-        <Typography color='secondary' variant="h6">{strippedCodeLine}</Typography>
+      const highlights = highlightDiffLine(strippedCodeLine, closestLine.item);
+      return (<div>
+        The closest matching line in the tutorial is line {closestLine.refIndex} which reads: <br />
+        {convert(closestLine.item, highlights[1])} <br />
+        whereas your line reads: <br />
+        {convert(strippedCodeLine, highlights[0])}
       </div>);
     }
     else {
@@ -147,37 +146,81 @@ function readableDiffMessage(props: DuckProps) {
   else return ('I cannot see your error message. Perhaps press \'RUN CODE\' again, and double check that an error message is visible?');
 }
 
-/** Not currently used - however, it highlights the difference between the tutorial line and the user's erroneous code line. */
-
-/*
-function highlightDiffLine(givenLine: Fuse.FuseResult<string>) {
-  if (givenLine.matches) {
-    console.log(givenLine.matches);
-    const lineText = givenLine.item;
-    const matchIndices = givenLine.matches[0].indices;
-    let prevMatchEnd = -1;
-    const highlightedDiffs: JSX.Element[] = [];
-
-    for (let currentMatch = 0; currentMatch < matchIndices.length; currentMatch++) {
-      const nextMatchStart = matchIndices[currentMatch][0];
-      const nextUnmatchingPortion = 
-        <Typography color='secondary' display="inline">
-          {lineText.substring(prevMatchEnd + 1, nextMatchStart)}
-        </Typography>;
-      prevMatchEnd = matchIndices[currentMatch][1];
-      const nextMatchingPortion = 
-        <Typography display="inline">
-          {lineText.substring(nextMatchStart, prevMatchEnd + 1)}
-        </Typography>;
-      highlightedDiffs.push(<span>{nextUnmatchingPortion}{nextMatchingPortion}</span>);
+// This returns two arrays representing what indexes to highlight in writtenLine and perfectLine respectively
+function highlightDiffLine(writtenLine: string, perfectLine: string): [number[], number[]] {
+  const lengthWritten = writtenLine.length; const lengthPerfect = perfectLine.length;
+  const highlightsWritten = []; let iWritten = 0;
+  const highlightsPerfect = []; let iPerfect = 0;
+  while (iWritten < lengthWritten && iPerfect < lengthPerfect) {
+    if (writtenLine[iWritten] === perfectLine[iPerfect]) {
+      iWritten++;
+      iPerfect++;
     }
-    
-    return highlightedDiffs;
+    else {
+      if (iWritten + 1 === lengthWritten || iPerfect + 1 === lengthPerfect) {
+        highlightsWritten.push(iWritten); iWritten++;
+        highlightsPerfect.push(iPerfect); iPerfect++;
+      }
+      else {
+        const locationPerfect: number | undefined = lookFor(writtenLine.slice(iWritten, iWritten + 2), perfectLine, iPerfect); // Checks the next few characters of perfectLine for any matches with the next two characters of writtenLine
+        const locationWritten: number | undefined = lookFor(perfectLine.slice(iPerfect, iPerfect + 2), writtenLine, iWritten); // Checks the next few characters of writtenLine for any matches with the next two characters of perfectLine
+        if (locationWritten) {
+          while (iWritten < locationWritten) { highlightsWritten.push(iWritten); iWritten++; }
+          iWritten += 2;
+          iPerfect += 2;
+        } else if (locationPerfect) {
+          while (iPerfect < locationPerfect) { highlightsPerfect.push(iPerfect); iPerfect++; }
+          iWritten += 2;
+          iPerfect += 2;
+        } else {
+          highlightsWritten.push(iWritten); iWritten++;
+          highlightsPerfect.push(iPerfect); iPerfect++;
+        }
+      }
+    }
   }
-  else{
-    return givenLine.item;
-  } 
-}*/
+
+  while (iWritten < lengthWritten) {
+    highlightsWritten.push(iWritten);
+    iWritten++;
+  }
+  while (iPerfect < lengthPerfect) {
+    highlightsPerfect.push(iPerfect);
+    iPerfect++;
+  }
+
+  function lookFor(couple: string, long: string, iStart: number) {  // couple should be 2 characters long
+    for (let i = iStart; i !== iStart + 2 && i + 1 < long.length; i++) {
+      if (long[i] === couple[0] && long[i + 1] === couple[1]) { return i; }
+    }
+    return undefined;
+  }
+
+  return [highlightsWritten, highlightsPerfect];
+}
+
+// Returns line as a JSX.Element with the highlights indexes all highlighted
+function convert(line: string, highlights: number[]) {
+  const convertedLine = [];
+
+  for (let i = 0; i < line.length; i++) {
+    if (i === highlights[0]) {
+      highlights.shift();
+      convertedLine.push(<span>{
+        <Typography color='secondary' display="inline">
+          {line[i]}
+        </Typography>
+      }</span>);
+    } else {
+      convertedLine.push(<span>{
+        <Typography display="inline">
+          {line[i]}
+        </Typography>
+      }</span>);
+    }
+  }
+  return convertedLine;
+}
 
 function parseTextCommand(commandString: string, props: DuckProps) {
   let parsedCommand: string|JSX.Element = commandString;
