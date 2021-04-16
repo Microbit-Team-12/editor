@@ -133,7 +133,7 @@ function readableDiffMessage(props: DuckProps) {
       const closestLine = result[0];
       const highlights = highlightDiffLine(strippedCodeLine, closestLine.item);
       return (<div>
-        The closest matching line in the tutorial is line {closestLine.refIndex} which reads: <br />
+        The closest matching line in the tutorial is line {closestLine.refIndex + 1} which reads: <br />
         {convert(closestLine.item, highlights[1])} <br />
         whereas your line reads: <br />
         {convert(strippedCodeLine, highlights[0])}
