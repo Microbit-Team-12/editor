@@ -22,7 +22,7 @@ Let's say you forget to put brakets after display.scroll:
 display.scroll "hello"
 ```
 You'll get this error:
-```py
+```
 Traceback (most recent call last):
   File "<stdin>", line 1
 SyntaxError: invalid syntax
@@ -124,7 +124,7 @@ These are some of the most difficult errors to debug, because you don't get an e
 
 #### Example
 Let's say you have two floats `x` and `y`, and you want the microbit to sleep for a time that's mean of the two. You write this code:
-```
+```py
 average = x + y / 2
 sleep(average)
 ```
@@ -132,7 +132,7 @@ When you run the code however, it doesn't seem to be sleeping for the correct am
 
 To figure out the problem, it would be useful to know what the value of `average` should be and what it actuallt is just before the sleep, in order to compare the two.
 To do this, you change it to:
-```
+```py
 x = 3
 y = 4
 average = x + y / 2
