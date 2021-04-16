@@ -162,8 +162,8 @@ function highlightDiffLine(writtenLine: string, perfectLine: string): [number[],
         highlightsPerfect.push(iPerfect); iPerfect++;
       }
       else {
-        const locationPerfect: number | undefined = lookFor(writtenLine.slice(iWritten, iWritten + 2), perfectLine, iPerfect); // Checks the next few characters of perfectLine for any matches with the next two characters of writtenLine
-        const locationWritten: number | undefined = lookFor(perfectLine.slice(iPerfect, iPerfect + 2), writtenLine, iWritten); // Checks the next few characters of writtenLine for any matches with the next two characters of perfectLine
+        const locationPerfect: number | undefined = lookFor(writtenLine.slice(iWritten, iWritten + 2), perfectLine, iPerfect, 10); // Checks the next few characters of perfectLine for any matches with the next two characters of writtenLine
+        const locationWritten: number | undefined = lookFor(perfectLine.slice(iPerfect, iPerfect + 2), writtenLine, iWritten, 10); // Checks the next few characters of writtenLine for any matches with the next two characters of perfectLine
         if (locationWritten) {
           while (iWritten < locationWritten) { highlightsWritten.push(iWritten); iWritten++; }
           iWritten += 2;
@@ -189,11 +189,11 @@ function highlightDiffLine(writtenLine: string, perfectLine: string): [number[],
     iPerfect++;
   }
 
-  function lookFor(couple: string, long: string, iStart: number) {  // couple should be 2 characters long
-    for (let i = iStart; i !== iStart + 2 && i + 1 < long.length; i++) {
-      if (long[i] === couple[0] && long[i + 1] === couple[1]) { return i; }
+  function lookFor(couple: string, long: string, iStart: number, lookAhead: number) {  // couple should be 2 characters long
+    for (let i = iStart; i !== iStart + lookAhead && i + 1 < long.length; i++) {
+      if (long[i] === couple[0] && long[i + 1] === couple[1]) { return i }
     }
-    return undefined;
+    return undefined
   }
 
   return [highlightsWritten, highlightsPerfect];
