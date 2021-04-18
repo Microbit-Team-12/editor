@@ -117,7 +117,7 @@ function readableErrorLineNumber(props: DuckProps) {
     </div>);
   }
   else {
-    return ('I cannot see your error message. Perhaps press \'RUN CODE\' again, and double check that an error message is visible?');
+    return ('I cannot see your error message. Perhaps press \'RUN\' again, and double check that an error message is visible?');
   }
 
 }
