@@ -12,6 +12,9 @@ There are three basic types of error:
 
 ---
 
+## Debugging Duck
+If you ever need help when you find an error on your code in the editor (on the right), press the "help" button at the top, and a useful duck will appear! Hopefully the duck's questions will guide you in the right direction.
+
 ## Syntax Errors
 
 If your program has a syntax error, the program will give you a `SyntaxError` when you try to run it. This will be displayed in the error message.
