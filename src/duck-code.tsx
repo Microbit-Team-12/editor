@@ -110,9 +110,9 @@ function executeCorrespondingCommand(commandString: string, props: DuckProps) {
 function readableErrorLineNumber(props: DuckProps) {
   if (props.lineNumber) {
     return (<div>
-      Your error message tells you that the error is on line 
-      {props.lineNumber}, 
-      so I’ve highlighted that line for you in the editor. 
+      Your error is on line 
+      {' ' + props.lineNumber}, 
+      so I’ve highlighted that line in the editor. 
       What type of error is displayed?
     </div>);
   }
@@ -307,17 +307,20 @@ function MakeButtons(initialSlide: string, props: DuckProps) {
         <Space.Bottom size={200}></Space.Bottom>
       </Space.Fill>
       <Space.Right size={250}>
-        <Space.Right size={65}>
-          <Button
-            className={classes.xButton}
-            variant="contained"
-            onClick={() => {
-              props.closeDuck();
-            }
-            }
-          >
-            {'X'}
-          </Button>
+        <Space.Right size={430}>
+          <Space.Bottom size={600}>
+            <Button
+              className={classes.xButton}
+              variant="contained"
+              size="small"
+              onClick={() => {
+                props.closeDuck();
+              }
+              }
+            >
+              {'X'}
+            </Button>
+          </Space.Bottom>
         </Space.Right>
       </Space.Right>
     </Space.Fixed>

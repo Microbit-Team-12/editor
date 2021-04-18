@@ -181,7 +181,7 @@
       },
       {
         "text": "Something else",
-        "link": "Ask if following tutorial",
+        "link": "Invalid Syntax something else",
         "params": []
       }
     ]
@@ -332,7 +332,7 @@
     ]
   },
   "Select the problem with your program": {
-    "speech": "Select the problem with your program",
+    "speech": "Select the problem:",
     "buttons": [
       {
         "text": "My program does nothing at all",
