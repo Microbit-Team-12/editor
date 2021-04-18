@@ -32,7 +32,7 @@ SyntaxError: cannot mix bytes and nonbytes literals
 The final line of the error message tells you that this is a syntax error. The line before that is telling you which line of the program the error occurs - in this case it's `line 1`.
 
 ### Task
-The following code has one or more syntax errors. Try running the code to see where they and and figure out how to fix them:
+The following code has one or more syntax errors. Try running the code to see where they and and figure out how to fix them - remember to use the duck if you get stuck!
 
 ```py
 # LINES 4-11
