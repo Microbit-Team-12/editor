@@ -186,6 +186,36 @@
       }
     ]
   },
+  "Invalid Syntax something else": {
+    "speech": "Does this match your error message: \"SyntaxError: cannot mix bytes and nonbytes literals\"?",
+    "buttons": [
+      {
+        "text": "Yes",
+        "link": "Cannot mix bytes",
+        "params": []
+      },
+      {
+        "text": "No",
+        "link": "Ask if following tutorial",
+        "params": []
+      }
+    ]
+  },
+    "Cannot mix bytes": {
+      "speech": "Python gives you this error if you forget the brackets in a function call. For instance, if you write \"print hello\" instead of \"print(hello)\" Python will give you this error message.",
+      "buttons": [
+        {
+          "text": "Ah, that's it!",
+          "link": "Goodbye",
+          "params": []
+        },
+        {
+          "text": "I still need help",
+          "link": "Ask if following tutorial",
+          "params": []
+        }
+      ]
+    },
   "Invalid Syntax nfm explanation": {
     "speech": "You might get this error if you write an “empty” for loop or while loop (one with nothing in it because you didn’t indent), or if you forgot to close the square brackets at the end of a list.",
     "buttons": [
