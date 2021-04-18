@@ -4,13 +4,16 @@ Errors are the mistakes or faults performed by the user which results in abnorma
 
 There are three basic types of error:
 - **Syntax Error**
-  A syntax error is the most common type of error and occurs when we do not use properly defined syntax for Python, and so the program is unable to run. For example: missing parentheses, typos, using the wrong symbols etc.
+  A syntax error is the most common type of error and occurs when we do not use properly defined syntax for Python, and so the program is unable to run. For example: missing parentheses (brackets), typos, using the wrong symbols etc.
 - **Buit-in Exception**
   An exception occurs when the program fails to run for some reason other than a syntax error. Python has many different types of these exceptions, such as ```IndexError```, ```TypeError```, etc.
 - **Logical Error**
-  This type of error occurs when your program has nothing technically wrong with it, but still doesn't perform as expected. This means Python will not throw an error when the program is run, but there's a logical error in the program causing things not to happen as expected.
+  This type of error occurs when your program doesn't complain about an error, but still doesn't do quite what you wanted. This means that Python will not throw an error when the program is run, but the code doesn't work in the way you expected.
 
 ---
+
+## Debugging Duck
+If you ever need help when you find an error on your code in the editor (on the right), press the "help" button at the top, and a useful duck will appear! Hopefully the duck's questions will guide you in the right direction.
 
 ## Syntax Errors
 
@@ -23,9 +26,8 @@ display.scroll "hello"
 ```
 You'll get this error:
 ```
-Traceback (most recent call last):
-  File "<stdin>", line 1
-SyntaxError: invalid syntax
+Error on line 1:
+SyntaxError: cannot mix bytes and nonbytes literals
 ```
 The final line of the error message tells you that this is a syntax error. The line before that is telling you which line of the program the error occurs - in this case it's `line 1`.
 
@@ -73,7 +75,7 @@ while Tre:
 ```
 
 #### IndexError
-This error occurs when you try to access an index in a list that doesn't exist.
+This error occurs when you try to access an index in a list that doesn't exist. For example, if you try to access the 10th item in a list that is only 9 items long, Python won't know what to do! Python always starts counting from 0 instead of 1.
 What's wrong with this code? Can you fix it so it runs?
 ```py
 x = ["Hello", "World"]
@@ -81,7 +83,7 @@ display.scroll(x[2])
 ```
 
 #### ZeroDivisionError
-This error occurs when you try to divide by zero. For example:
+This error occurs when you try to divide by zero, because that's mathematically impossible. For example:
 ```py
 x = 10 / 0
 ```
@@ -116,14 +118,14 @@ int(5.0)
 int("132")
 int("xy")
 ```
-What line/lines go wrong? Why is this?
+Whcih line/lines go wrong? Why is this?
 
 ---
 ## Logical Errors
 These are some of the most difficult errors to debug, because you don't get an error message and so they can be hard to spot.
 
 #### Example
-Let's say you have two floats `x` and `y`, and you want the microbit to sleep for a time that's mean of the two. You write this code:
+Let's say you have two floats `x` and `y`, and you want the microbit to sleep for a time that's mean (average) of the two. You write this code:
 ```py
 average = x + y / 2
 sleep(average)
