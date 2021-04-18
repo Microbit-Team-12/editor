@@ -26,9 +26,8 @@ display.scroll "hello"
 ```
 You'll get this error:
 ```
-Traceback (most recent call last):
-  File "<stdin>", line 1
-SyntaxError: invalid syntax
+Error on line 1:
+SyntaxError: cannot mix bytes and nonbytes literals
 ```
 The final line of the error message tells you that this is a syntax error. The line before that is telling you which line of the program the error occurs - in this case it's `line 1`.
 
