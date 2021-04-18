@@ -95,7 +95,7 @@ Let's say you want the program to wait for 1 second, so you type this line:
 ```py
 sleep("1 second")
 ```
-What error happens when you try running this? Why? Can you try and fix it? Note the additional information given to you in the final line of the error message - it may be useful.
+Which error happens when you try running this? Why? Can you try and fix it? Note the additional information given to you in the final line of the error message - it may be useful.
 
 Note that a particular argument can have more than one possible type. For example, let's say you run this:
 ```py
