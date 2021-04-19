@@ -126,7 +126,7 @@ export class ConnectedMicrobitInteract {
         .then(() => {
           this.state = MicrobitState.Free;
         })
-        .catch(() => {
+        .finally(() => {
           outputStream.end();
         });
     } else this.state = MicrobitState.Free;
@@ -154,7 +154,7 @@ export class ConnectedMicrobitInteract {
         .then(() => {
           this.state = MicrobitState.Free;
         })
-        .catch(() => {
+        .finally(() => {
           outputStream.end();
         });
     } else this.state = MicrobitState.Free;
@@ -215,7 +215,7 @@ export class ConnectedMicrobitInteract {
         .then(() => {
           this.state = MicrobitState.Free;
         })
-        .catch(() => {
+        .finally(() => {
           outputStream.end();
         });
     } else this.state = MicrobitState.Free;

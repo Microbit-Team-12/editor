@@ -104,8 +104,7 @@ export class SerialParser {
         kind: 'ResetPressed'
       });
     }
-    if (result !== 0) this.readErrors(outputStream);
-    else await outputStream.end();
+    if (result !== 0) await this.readErrors(outputStream);
     if (this.config.showLog) console.log('Execution done');
   }
 
@@ -133,6 +132,5 @@ export class SerialParser {
       type: line2split[0] as MicroPythonExceptionType,
       message: (line2split.length === 1) ? '' : line2split[1]
     });
-    outputStream.end();
   }
 }
