@@ -93,7 +93,6 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
 
     const fetchCompletions = async (prefix: string) => {
       if (this.hasFreeConnection()) {
-        console.log(`wat: ${prefix}`);
         return this.state.connection!.interact.getCompletions(prefix);
       } else return [];
     };
