@@ -66,6 +66,15 @@ export class SerialParser {
   }
 
   /**
+   * Read until validation answer appears on serial
+   * This is used with a timer, disconnect the serial when expected 
+   * validation answer not appearing on serial for a while
+   */
+  async readUntilMicroPython(): Promise<void> {
+    await this.portReader.safeReadUntil(this.config.validateAnswer);
+  }
+
+  /**
    * Read until executionStart appears on serial
    * - If there is no error, this Returns true
    * - If (indentation/bracket) error occurs, the stream will be closed and false is returned

@@ -22,6 +22,7 @@ export const testConfig: ManagerOption = {
   //maybe consider using regexp?
   signalOption: {
     showLog: false,
+    validateAnswer: 'microbit',
     replLineReady: '>>> ',
     executionDone: 'Execute Done: 0x3f3f3f3f',
     executionStart: 'Execution Start: 0x3f3f3f3f',

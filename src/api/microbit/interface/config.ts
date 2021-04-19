@@ -42,6 +42,10 @@ export interface SignalOption {
    */
   showLog: boolean,
   /**
+   * Answer to confirm this is a micropython device
+   */
+  validateAnswer: string,
+  /**
    * A string printed by microbit serial repl
    * Indicating waiting for user input code
    */
@@ -88,13 +92,14 @@ export const defaultConfig: ManagerOption = {
     ]
   },
   readOption: {
-    showLog: true,
+    showLog: false,
     updateMs: 50,
     cutLength: 1000
   },
   //maybe consider using regexp?
   signalOption: {
     showLog: true,
+    validateAnswer: 'microbit',
     replLineReady: '>>> ',
     executionDone: 'Execute Done: 0x3f3f3f3f',
     executionStart: 'Execution Start: 0x3f3f3f3f',

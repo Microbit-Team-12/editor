@@ -1,8 +1,8 @@
 import Stream from 'ts-stream';
+import { ManagerOption, SignalOption } from '../interface/config';
+import { MicrobitOutput, MicrobitState } from '../interface/message';
 import { SerialParser } from './helper/parser';
 import { SerialReader } from './helper/reader';
-import { MicrobitOutput, MicrobitState } from '../interface/message';
-import { ManagerOption, SignalOption } from '../interface/config';
 
 const ctrlC = '\x03';
 
@@ -81,6 +81,18 @@ export class ConnectedMicrobitInteract {
   private async getREPLLine(): Promise<void> {
     await this.portWriter.write(ctrlC);
     await this.portParser.readUntilNewReplLine();
+  }
+
+  validateMicroPython(timeoutms:number): Promise<boolean> {
+    return new Promise(async (resolve,reject)=>{
+      setTimeout(()=>{
+        resolve(false);
+      },timeoutms);
+      await this.getREPLLine();
+      await this.portWriter.write('import sys;sys.platform\r');
+      await this.portParser.readUntilMicroPython();
+      resolve(true);
+    });
   }
 
   /**

@@ -1,7 +1,7 @@
 import { serial } from 'web-serial-polyfill';
 import { defaultConfig, ManagerOption } from '../interface/config';
-import { ConnectedMicrobitInteract } from './interact';
 import { FailedConnection, MicrobitConnection } from '../interface/message';
+import { ConnectedMicrobitInteract } from './interact';
 
 /**
  * Check if browser support WebSerial
@@ -36,6 +36,15 @@ async function createConnection(port: SerialPort, config: ManagerOption): Promis
     };
   }
   const portInteract = new ConnectedMicrobitInteract(port, config);
+  if(!(await portInteract.validateMicroPython(3000))) {
+    await portInteract.disconnect();
+    return {
+      kind: 'ConnectionFailure',
+      type: 'Port No Response',
+      reason: 'Possibly not a microbit with MicroPython'
+    };
+  }
+  
   return {
     kind: 'MicrobitConnection',
     interact: portInteract,
