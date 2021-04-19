@@ -16,9 +16,10 @@ import { Stream } from 'ts-stream';
  *   from 1 like humans do, both ends inclusive) on the first line of the code;
  * - execute the full {@link PythonCodeProps.code} using
  *   {@link PythonCodeProps.onRun} and display the output and error message, if
- *   {@link PythonCodeProps.hasFreeConnection} is true;
+ *   {@link PythonCodeProps.canRun} returns true;
  * - insert the highlighted fragment into the editor using
- *   {@link PythonCodeProps.onInsertIntoEditor}.
+ *   {@link PythonCodeProps.onInsertIntoEditor}, if
+ *   {@link PythonCodeProps.canInsertIntoEditor} returns true.
  *
  * If this meta-comment is missing or not in the correct format, the toggle
  * views button will be hidden, and the highlighted fragment is the whole
@@ -149,7 +150,7 @@ class PythonCode extends React.Component<PythonCodeProps, PythonCodeState> {
     this.setState({
       output: '',
     });
-    if (!this.props.hasFreeConnection()) {
+    if (!this.props.canRun()) {
       alert('UI lied: Device is NOT free');
       this.props.onRunFinished();
       return;
@@ -237,7 +238,7 @@ ${output.type}: ${output.message}`;
           variant="contained"
           color="primary"
           startIcon={<PlayArrow/>}
-          disabled={!this.props.hasFreeConnection()}
+          disabled={!this.props.canRun()}
           onClick={this.onRun.bind(this)}
         >
           Run Example
@@ -260,6 +261,7 @@ ${output.type}: ${output.message}`;
           variant="contained"
           color="secondary"
           endIcon={<DoubleArrow/>}
+          disabled={!this.props.canInsertIntoEditor()}
           onClick={this.onInsertIntoEditor.bind(this)}
         >
           Insert Fragment
@@ -282,9 +284,11 @@ interface PythonCodeProps {
 
   onRunFinished(): void,
 
-  hasFreeConnection(): boolean,
+  canRun(): boolean,
 
   onInsertIntoEditor(codeSnippet: string): void,
+
+  canInsertIntoEditor(): boolean,
 }
 
 
@@ -311,11 +315,12 @@ interface PythonCodeState {
  * ```
  *
  * are rendered with
- * - a run button which, when enabled if
- *   {@link TutorialViewerProps.hasFreeConnection} returns true, runs the code
- *   in this code block with {@link TutorialViewerProps.onRun};
- * - an insert into editor button, which inserts (a subset of, see below) the
- *   code in this code block into the editor with
+ * - a run button which, enabled if {@link TutorialViewerProps.canRun} returns
+ *   true, runs the code in this code block with
+ *   {@link TutorialViewerProps.onRun};
+ * - an insert into editor button which, enabled if
+ *   {@link TutorialViewerProps.canInsertIntoEditor} returns true, inserts (a
+ *   subset of, see below) the code in this code block into the editor with
  *   {@link TutorialViewerProps.onInsertIntoEditor}.
  *
  * Furthermore, if the first line of code is a comment of the format
@@ -344,7 +349,8 @@ export default class TutorialViewer extends React.Component<TutorialViewerProps,
         onRun={this.props.onRun}
         onRunFinished={this.props.onRunFinished}
         onInsertIntoEditor={this.props.onInsertIntoEditor}
-        hasFreeConnection={this.props.hasFreeConnection}
+        canRun={this.props.canRun}
+        canInsertIntoEditor={this.props.canInsertInsertIntoEditor}
       />;
     } else {
       return <SyntaxHighlighter
@@ -372,9 +378,11 @@ interface TutorialViewerProps {
 
   onRunFinished(): void,
 
-  hasFreeConnection(): boolean,
+  canRun(): boolean,
 
   onInsertIntoEditor(codeSnippet: string): void,
+
+  canInsertInsertIntoEditor(): boolean,
 }
 
 interface MarkdownCode {

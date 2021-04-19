@@ -192,6 +192,9 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
    *
    * {@link MicrobitState.Busy} and {@link MicrobitState.Free} document when
    * the other micro:bit related buttons are enabled.
+   * In addition, since the 'Flash' and 'Run' buttons in the header requires
+   * access to the code in the editor, they are enabled only when
+   * {@link isEditorMounted} returns true.
    *
    * The duck 'Help' button is always enabled.
    */
@@ -234,6 +237,13 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     return this.state.connection?.interact.getState() === MicrobitState.Busy;
   }
 
+  /**
+   * Return true if {@link APIDemoState.editor} has been assigned.
+   */
+  isEditorMounted(): boolean {
+    return this.state.editor != null;
+  }
+
   renderDuck(): JSX.Element {
     let renderedDuck;
     if (this.state.errorString !== '') {
@@ -267,8 +277,9 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
           markdown={this.state.tutorial}
           onRun={this.onRunCell.bind(this)}
           onRunFinished={() => this.setState({})}
-          hasFreeConnection={this.hasFreeConnection.bind(this)}
+          canRun={this.hasFreeConnection.bind(this)}
           onInsertIntoEditor={this.onInsertIntoEditor.bind(this)}
+          canInsertInsertIntoEditor={this.isEditorMounted.bind(this)}
         />
       }
     </div>;
@@ -323,12 +334,12 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
           {this.renderHeaderButton(
             'Flash',
             () => this.onFlash(this.state.editor!.getValue()),
-            () => this.hasFreeConnection(),
+            () => this.isEditorMounted() && this.hasFreeConnection(),
           )}
           {this.renderHeaderButton(
             'Run',
             () => this.onRun(this.state.editor!.getValue()),
-            () => this.hasFreeConnection(),
+            () => this.isEditorMounted() && this.hasFreeConnection(),
           )}
           {this.renderHeaderButton(
             'Interrupt',
