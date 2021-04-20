@@ -5,7 +5,7 @@ Errors are the mistakes or faults performed by the user which results in abnorma
 There are three basic types of error:
 - **Syntax Error**
   A syntax error is the most common type of error and occurs when we do not use properly defined syntax for Python, and so the program is unable to run. For example: missing parentheses (brackets), typos, using the wrong symbols etc.
-- **Buit-in Exception**
+- **Built-in Exception**
   An exception occurs when the program fails to run for some reason other than a syntax error. Python has many different types of these exceptions, such as ```IndexError```, ```TypeError```, etc.
 - **Logical Error**
   This type of error occurs when your program doesn't complain about an error, but still doesn't do quite what you wanted. This means that Python will not throw an error when the program is run, but the code doesn't work in the way you expected.
@@ -20,7 +20,7 @@ If you ever need help when you find an error on your code in the editor (on the 
 If your program has a syntax error, the program will give you a `SyntaxError` when you try to run it. This will be displayed in the error message.
 
 #### Example:
-Let's say you forget to put brakets after display.scroll:
+Let's say you forget to put brackets after display.scroll:
 ```py
 display.scroll "hello"
 ```
@@ -132,7 +132,7 @@ sleep(average)
 ```
 When you run the code however, it doesn't seem to be sleeping for the correct amount of time. This is a logical error, because although the code is running, it isn't doing what you want it to.
 
-To figure out the problem, it would be useful to know what the value of `average` should be and what it actuallt is just before the sleep, in order to compare the two.
+To figure out the problem, it would be useful to know what the value of `average` should be and what it actually is just before the sleep, in order to compare the two.
 To do this, you change it to:
 ```py
 x = 3
