@@ -5,7 +5,7 @@ import { ConnectedMicrobitInteract } from '../impl/interact';
 */
 export interface FailedConnection {
   readonly kind: 'ConnectionFailure',
-  readonly type: 'Failed to Obtain Port' | 'Failed to Open Port' | 'Port No Response'
+  readonly type: 'Failed to Obtain Port' | 'Failed to Open Port' | 'No Response on Validation'
   readonly reason: string
 }
 

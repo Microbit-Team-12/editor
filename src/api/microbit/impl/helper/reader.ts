@@ -21,7 +21,8 @@ export class SerialReader {
   private async readLoop(termination: (text: string) => boolean): Promise<void> {
     if (this.config.showLog) console.log(this.serialBuffer);
     while (!termination(this.serialBuffer)) {
-      const {value} = await this.portReader.read();
+      const {value, done} = await this.portReader.read();
+      if (done) break;
       this.serialBuffer += value;
       if (this.config.showLog) console.log(this.serialBuffer);
     }
@@ -38,7 +39,8 @@ export class SerialReader {
     while (!termination(this.serialBuffer)) {
       const len = this.serialBuffer.length;
       if (len >= bufferLimit) this.serialBuffer = this.serialBuffer.substring(len - bufferLimit);
-      const {value} = await this.portReader.read();
+      const {value, done} = await this.portReader.read();
+      if (done) break;
       this.serialBuffer += value;
       if (this.config.showLog) console.log(this.serialBuffer);
     }

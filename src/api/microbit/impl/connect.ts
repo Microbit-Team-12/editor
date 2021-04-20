@@ -36,11 +36,17 @@ async function createConnection(port: SerialPort, config: ManagerOption): Promis
     };
   }
   const portInteract = new ConnectedMicrobitInteract(port, config);
+  /*
+    For dev, be aware that the first few seconds you launch a chrome,
+    webserial will not respond promptly, this can lead to a false negative
+
+    For production build, this timeout can be lower. 
+  */
   if(!(await portInteract.validateMicroPython(3000))) {
     await portInteract.disconnect();
     return {
       kind: 'ConnectionFailure',
-      type: 'Port No Response',
+      type: 'No Response on Validation',
       reason: 'Possibly not a microbit with MicroPython'
     };
   }
