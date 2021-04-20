@@ -65,7 +65,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     loader.init().then(t => {
       console.log(t);
     });
-    this.removeErrorLineOfCode = this.removeErrorLineOfCode.bind(this);
+    this.beforeExecution = this.beforeExecution.bind(this);
   }
 
   /**
@@ -439,9 +439,12 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     //this.connect(connectByPlugIn());
   }
 
-  removeErrorLineOfCode(): void {
+  beforeExecution(): void {
     const editor = this.state.editor!;
     const ids = this.state.errorMonacoIDs;
+    editor.updateOptions({
+      readOnly: true
+    });
     if (ids != null) {
       this.exileDuck();
       editor.deltaDecorations(ids, []);
@@ -493,17 +496,21 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
 
     // Notify the app that the connection has freed up
     this.setState({});
+
+    this.state.editor?.updateOptions({
+      readOnly: false
+    });
   }
 
   async onFlash(code: string): Promise<void> {
     console.log('onFlash');
-    this.removeErrorLineOfCode();
+    this.beforeExecution();
     await this.onExec(await this.state.connection!.interact.flash(code));
   }
 
   async onRun(code: string): Promise<void> {
     console.log('onRun');
-    this.removeErrorLineOfCode();
+    this.beforeExecution();
     await this.onExec(await this.state.connection!.interact.execute(code));
   }
 
@@ -518,7 +525,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
 
   async onReboot(): Promise<void> {
     console.log('onReboot');
-    this.removeErrorLineOfCode();
+    this.beforeExecution();
     await this.onExec(await this.state.connection!.interact.reboot());
   }
 
