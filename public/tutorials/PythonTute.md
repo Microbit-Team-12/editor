@@ -29,9 +29,9 @@ We can assign a new value, say the integer 10, to the variable. Then, that same 
 variable = "value"
 print("The first value we assigned is " + variable)
 variable = 10
-print("The second value we assigned is " + variable)
+print("The second value we assigned is " + str(variable))
 ```
-As output in the box to the right, you should have "The first value we assigned is value" and "The second value we assigned is 10".
+As output in the box to the right, you should have "The first value we assigned is value" and "The second value we assigned is 10". (the str() function turns an integer into a string so that it can be printed!)
 
 Try changing the values in the code and notice how the output changes!
 
@@ -41,33 +41,16 @@ Try changing the values in the code and notice how the output changes!
 
 Loops are used to repeat a certain piece of code for a specific number of times or until a certain condition is true or false. Here is the distinction between for loops and while loops:
 
-#### For Loops
-For loops are used when you want the code to repeat a certain number of times. 
-
-#### Example
-```py
-# LINES 5-9
-from microbit import *
-import music
-
-for x in range(1, 4):
-    display.show(Image.HAPPY)
-    sleep(1000)
-    display.clear
-    sleep(500)
-```
-Run the code above. The code inside the loop will run 4 times! You should see 4 happy faces appear in sequence.
-
-
 #### While Loops
 While loops are used when you want to run the code until a specific condition is either true or false. 
 
 #### Examples
 For instance, this next piece of code will never stop running (unless you turn off your micro:bit, or delete the file). Try running it - you should see a beating heart!
 ```py
+# LINES 4-8
 from microbit import *
 
-while true:
+while True:
     display.show(Image.HEART)
     sleep(500)
     display.show(Image.HEART_SMALL)
@@ -82,6 +65,23 @@ while x < 10:
 print(x)
 ```
 
+#### For Loops
+For loops are used when you want the code to repeat a certain number of times. 
+
+#### Example
+```py
+# LINES 4-6
+from microbit import *
+
+for x in range(1, 4):
+    display.show(x)
+    sleep(1000)
+```
+Run the code above. The code inside the loop will run 3 times, once for x = 1, once for x = 2, once for x = 3! You should see your microbit count to 3 in sequence.
+
+The MicroPython ```range(start, stop)``` function generates a sequence of numbers starting with the ```start``` value up to but not including the ```stop``` value.
+So, our ```range(1,4)``` in the code above generates the sequence ```[1, 2, 3]```. This means the for loop runs once when x = 1, once when x = 2, and once when x = 3. 3 times in total!
+
 ---
 
 ## If Statements
@@ -91,7 +91,7 @@ You can use an if statement to make sure a piece of code is only run under certa
 #### Example:
 You might want to write some code that only runs if you press a button...
 ```py
-#LINES 4-8
+# LINES 4-8
 from microbit import *
 
 while True:
@@ -102,6 +102,20 @@ while True:
 ```
 Try running the code above. If you press button A, a happy face should show on the display for 1 second (1000 milliseconds). Notice that this code is within a while loop with a True condition. This means you can keep pressing button A and the happy face should keep showing. 
 
+Let's say you want your program to do something if a certain condition is met, but you want it to do something else in every other case. Then, the ```else``` statement might be what you need!
+```py
+# LINES 4-10
+from microbit import *
+
+while True:
+    if button_a.is_pressed():
+        display.show(Image.HAPPY)
+        sleep(1000)
+        display.clear()
+    else:
+        display.show(Image.SAD)
+```
+Run the code above. Your micro:bit will only be happy if you press button A!
 
 
 (some examples and ideas influenced by https://docs.pycom.io/docnotes/examples/, https://microbit.org, https://towardsdatascience.com/python-variable-assignment-9f43aed91bff)
