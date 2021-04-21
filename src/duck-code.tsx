@@ -299,7 +299,12 @@ function convert(line: string, highlights: number[]) {
   return convertedLine;
 }
 
-/** Recieves a */
+/** 
+ * If the argument string is surrounded in curly braces, remove the braces and execute the corresponding command. 
+ * Otherwise, return the argument string unchanged.
+ * @param commandString is a SUBSTRING of the Duck's speech, either fully enclosed in curly braces or containing 
+ *                      no curly braces (but no strict substring of commandString should be enclosed in curly braces.)
+*/
 function parseTextCommand(commandString: string, props: DuckProps) {
   let parsedCommand: string|JSX.Element = commandString;
   if (commandString.startsWith('{')) { 
@@ -310,6 +315,11 @@ function parseTextCommand(commandString: string, props: DuckProps) {
   return parsedCommand;
 }
 
+/**
+ * Takes as input the Duck's speech for a given slide, and returns 
+ * the same speech but with any embedded commands in braces replaced with
+ * the result of applying those commands.
+ */
 function parseSpeech(speech: string, props: DuckProps) {
   const re = /(\{[\S\s]+?\})/g;
   const splitSpeech = speech.split(re).filter(Boolean);
@@ -317,6 +327,9 @@ function parseSpeech(speech: string, props: DuckProps) {
   return parsedSpeech;
 }
 
+/**
+ * Renders the Duck, starting from the specified slide.
+ */
 function MakeButtons(initialSlide: string, props: DuckProps) {
   const classes = useStyles();
   const [slide, setSlide] = useState(initialSlide);  
