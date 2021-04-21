@@ -24,9 +24,14 @@ type SlideButton = {
   params: string[]
 }
 
+
+/**
+ * Specifies the colour used for the buttons in the Duck
+ */
 const theme = createMuiTheme({
   palette: {
     primary: {
+      // Yellow
       main: '#ffcc00', // feel free to change this colour
     }
   },
@@ -45,7 +50,7 @@ const useStyles = makeStyles( (theme) => ({
     textAlign: 'center',
     textTransform: 'none'
   },
-  xButton: {
+  xButton: { // The red X that closes the Duck
     color: 'white',
     backgroundColor: '#ff0000',
     height: 20,
@@ -67,6 +72,9 @@ let prevSlideParams: string[] = [];
 const jsonData = require('./resources/duck_flowchart.json');
 const slideNames = Object.keys(jsonData);
 
+/** 
+ * Concatenated code snippets from example tutorials
+ */
 const tutorials = {
   'HelloWorld': 
 `from microbit import *
@@ -120,6 +128,12 @@ while True:
     
 };
 
+/**
+ * Generates part of the Duck's text, by running a command specified as a string.
+ * @param commandString contains the command to run
+ * @param props 
+ * @returns the text to be embedded in the Duck's explanation, after executing the command
+ */
 function executeCorrespondingCommand(commandString: string, props: DuckProps) {
   if (commandString === 'link_to_tutorial_about_errors') {
     return (
@@ -133,14 +147,17 @@ function executeCorrespondingCommand(commandString: string, props: DuckProps) {
 
   }
   else if (commandString === 'get_error_line_no_and_highlight') {
-    return readableErrorLineNumber(props);
+    return claimHaveHighlightedLine(props);
   }
   else {
     return commandString;
   }
 } 
 
-function readableErrorLineNumber(props: DuckProps) {
+/**
+ * Returns either a claim that the correct line has been highlighted, or a statement that no error message is visible.
+ */
+function claimHaveHighlightedLine(props: DuckProps) {
   if (props.lineNumber) {
     return (<div>
       Your error is on line 
@@ -155,6 +172,11 @@ function readableErrorLineNumber(props: DuckProps) {
 
 }
 
+/**
+ * Finds the closest matching line in the corresponding tutorial.
+ * @returns a visual difference between the student's and tutorial's code, 
+ * using highlighting, or a statment that no similar line has been found in the tutorial.
+ */
 function readableDiffMessage(props: DuckProps) {
   if (props.lineNumber && props.lineText) {
     const strippedCodeLine = props.lineText.trim();
@@ -179,7 +201,12 @@ function readableDiffMessage(props: DuckProps) {
   else return ('I cannot see your error message. Perhaps press \'RUN CODE\' again, and double check that an error message is visible?');
 }
 
-// This returns two arrays representing what indexes to highlight in writtenLine and perfectLine respectively
+/** 
+ * Returns two arrays, representing which indices to highlight in the student's erroneous code line 
+ * and corresponding tutorial line. 
+ * @param writtenLine : The student's erroneous line of code
+ * @param perfectLine : The corresponding line in the tutorial
+ */
 function highlightDiffLine(writtenLine: string, perfectLine: string): [number[], number[]] {
   let bugCatcher = false;  // For catching a small bug
   const lengthWritten = writtenLine.length; const lengthPerfect = perfectLine.length;
@@ -247,7 +274,9 @@ function highlightDiffLine(writtenLine: string, perfectLine: string): [number[],
   return [highlightsWritten, highlightsPerfect];
 }
 
-// Returns line as a JSX.Element with the highlights indexes all highlighted
+/**
+ * Returns line as a JSX.Element with the highlights indexes all highlighted
+ */
 function convert(line: string, highlights: number[]) {
   const convertedLine = [];
 
@@ -270,6 +299,7 @@ function convert(line: string, highlights: number[]) {
   return convertedLine;
 }
 
+/** Recieves a */
 function parseTextCommand(commandString: string, props: DuckProps) {
   let parsedCommand: string|JSX.Element = commandString;
   if (commandString.startsWith('{')) { 
@@ -365,11 +395,4 @@ MakeButtons.propTypes = {
 
 export default function StartSlides(props: DuckProps): JSX.Element {
   return MakeButtons(slideNames[0], props);
-}
-
-function getCodeFromTute(filename: string): string {
-  const fileContents = require(filename);
-  const fileString = Object.keys(fileContents);
-  console.log(fileString);
-  return fileString[0];
 }
