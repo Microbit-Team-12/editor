@@ -123,6 +123,13 @@
         "params": [
           "SimpleButtons"
         ]
+      },
+      {
+        "text": "Python Language Features",
+        "link": "Compare with tutorial",
+        "params": [
+          "PythonTute"
+        ]
       }
     ]
   },
@@ -581,7 +588,7 @@
     ]
   },
   "ImportError explanation": {
-    "speech": "An ImportError normally means that you have misspelled a module that you're trying to import. For instance, check that you have spelt 'Microbit' correctly (and with a capital M!) in your 'import' statment.",
+    "speech": "An ImportError normally means that you have misspelled a module that you're trying to import. For instance, check that you have spelt 'microbit' correctly (and with a lower-case m!) in your 'import' statment.",
     "buttons": [
       {
         "text": "Ah, that's it!",

@@ -84,7 +84,40 @@ while True:
         display.show(Image.MEH)
         music.play(music.POWER_DOWN)
 
-    display.show(Image.COW)`
+    display.show(Image.COW)`,
+
+  'PythonTute': 
+`variable = "value"
+print(variable)
+print("The first value we assigned is " + variable)
+variable = 10
+print("The second value we assigned is " + variable)
+from microbit import *
+import music
+for x in range(1, 4):
+    display.show(Image.HAPPY)
+    sleep(1000)
+    display.clear
+    sleep(500)
+    from microbit import *
+
+while true:
+    display.show(Image.HEART)
+    sleep(500)
+    display.show(Image.HEART_SMALL)
+    sleep(500)
+x = 1
+while x < 10:
+    x = x + 1
+print(x)
+from microbit import *
+
+while True:
+    if button_a.is_pressed():
+        display.show(Image.HAPPY)
+        sleep(1000)
+        display.clear()`
+    
 };
 
 function executeCorrespondingCommand(commandString: string, props: DuckProps) {
@@ -133,7 +166,7 @@ function readableDiffMessage(props: DuckProps) {
       const closestLine = result[0];
       const highlights = highlightDiffLine(strippedCodeLine, closestLine.item);
       return (<div>
-        The closest matching line in the tutorial is line {closestLine.refIndex + 1} which reads: <br />
+        The closest matching line in the tutorial is: <br />
         {convert(closestLine.item, highlights[1])} <br />
         whereas your line reads: <br />
         {convert(strippedCodeLine, highlights[0])}
@@ -332,4 +365,11 @@ MakeButtons.propTypes = {
 
 export default function StartSlides(props: DuckProps): JSX.Element {
   return MakeButtons(slideNames[0], props);
+}
+
+function getCodeFromTute(filename: string): string {
+  const fileContents = require(filename);
+  const fileString = Object.keys(fileContents);
+  console.log(fileString);
+  return fileString[0];
 }
