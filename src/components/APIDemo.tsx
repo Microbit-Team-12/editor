@@ -243,6 +243,10 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     return this.state.editor != null;
   }
 
+  /**
+   * Renders the duck, passing in the line number and line text 
+   * of the Python error message, if one exists.
+   */
   renderDuck(): JSX.Element {
     let renderedDuck;
     if (this.state.errorString !== '') {
@@ -425,10 +429,16 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     editor.focus();
   }
 
+  /**
+   * Make the Duck appear, in place of the tutorial
+  */
   summonDuck(): void {
     this.setState({needDuck: true});
   }
 
+  /**
+   * Make the Duck disappear, the tutorial takes its place.
+  */
   exileDuck(): void {
     this.setState({needDuck: false});
   }
