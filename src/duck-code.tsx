@@ -283,8 +283,8 @@ function convert(line: string, highlights: number[]) {
   for (let i = 0; i < line.length; i++) {
     if (i === highlights[0]) {
       highlights.shift();
-      convertedLine.push(<span>{
-        <Typography color='secondary' display="inline">
+      convertedLine.push(<span style={{ backgroundColor: 'yellow' }}>{
+        <Typography display="inline">
           {line[i]}
         </Typography>
       }</span>);
