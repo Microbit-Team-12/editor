@@ -244,6 +244,35 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
   }
 
   /**
+  * Returns a string of all the parts of {@link md} that are code, where it
+  * views {@link md} as the text from a tutorial (markdown file)
+  */
+  getTuteCode(md: string) {
+    const lines = md.split('\n');
+    const code = [];
+    let i = 0;
+
+    while (i < lines.length) {
+      if (lines[i].slice(0, 5) === '```py') {
+        i++;
+        while (lines[i].slice(0, 3) !== '```') {
+          code.push(lines[i]);
+          i++;
+        }
+      } else if (lines[i].slice(0, 5) === '~~~py') {
+        i++;
+        while (lines[i].slice(0, 3) !== '~~~') {
+          code.push(lines[i]);
+          i++;
+        }
+      }
+      i++;
+    }
+
+    return code.join('\n');
+  }
+
+  /**
    * Renders the duck, passing in the line number and line text 
    * of the Python error message, if one exists.
    */
@@ -254,6 +283,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
         closeDuck={this.exileDuck.bind(this)}
         lineNumber={this.state.errorLine}
         lineText={this.state.editor!.getValue().split('\n')[this.state.errorLine - 1]}
+        tutorialCode={this.getTuteCode(this.state.editor!.getValue())}
       />;
     } else {
       renderedDuck = <DuckViewer closeDuck={this.exileDuck.bind(this)}/>;

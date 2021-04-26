@@ -15,7 +15,8 @@ import './styles.css';
 type DuckProps = {
   closeDuck(): void,
   lineNumber?: number,
-  lineText?: string
+  lineText?: string,
+  tutorialCode?: string
 }
 
 type SlideButton = {
@@ -178,10 +179,9 @@ function claimHaveHighlightedLine(props: DuckProps) {
  * using highlighting, or a statment that no similar line has been found in the tutorial.
  */
 function readableDiffMessage(props: DuckProps) {
-  if (props.lineNumber && props.lineText) {
+  if (props.lineNumber && props.lineText && props.tutorialCode) {
     const strippedCodeLine = props.lineText.trim();
-    const tutorial = tutorials[prevSlideParams[0] as keyof typeof tutorials];
-    const strippedTutorialLines = tutorial.split('\n').map(x => x.trim());
+    const strippedTutorialLines = props.tutorialCode.split('\n').map(x => x.trim());
     const fuse = new Fuse(strippedTutorialLines, { includeMatches: true, isCaseSensitive: true });
     const result = fuse.search(strippedCodeLine);
     if (result.length > 0) {
