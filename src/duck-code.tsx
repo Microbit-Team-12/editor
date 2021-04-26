@@ -73,62 +73,6 @@ let prevSlideParams: string[] = [];
 const jsonData = require('./resources/duck_flowchart.json');
 const slideNames = Object.keys(jsonData);
 
-/** 
- * Concatenated code snippets from example tutorials
- */
-const tutorials = {
-  'HelloWorld': 
-`from microbit import *
-display.scroll("Hello, World!")`,
-  
-  'SimpleButtons': 
-`from microbit import *
-import music
-
-while True:
-    if button_a.is_pressed():
-        display.show(Image.MUSIC_QUAVER)
-        music.play(music.NYAN)
-    if button_b.is_pressed():
-        display.show(Image.MEH)
-        music.play(music.POWER_DOWN)
-
-    display.show(Image.COW)`,
-
-  'PythonTute': 
-`variable = "value"
-print(variable)
-print("The first value we assigned is " + variable)
-variable = 10
-print("The second value we assigned is " + variable)
-from microbit import *
-import music
-for x in range(1, 4):
-    display.show(Image.HAPPY)
-    sleep(1000)
-    display.clear
-    sleep(500)
-    from microbit import *
-
-while true:
-    display.show(Image.HEART)
-    sleep(500)
-    display.show(Image.HEART_SMALL)
-    sleep(500)
-x = 1
-while x < 10:
-    x = x + 1
-print(x)
-from microbit import *
-
-while True:
-    if button_a.is_pressed():
-        display.show(Image.HAPPY)
-        sleep(1000)
-        display.clear()`
-    
-};
-
 /**
  * Generates part of the Duck's text, by running a command specified as a string.
  * @param commandString contains the command to run
