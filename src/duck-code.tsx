@@ -69,7 +69,7 @@ const useStyles = makeStyles( (theme) => ({
   }
 }));
 
-let prevSlideParams: string[] = [];
+// let prevSlideParams: string[] = [];
 const jsonData = require('./resources/duck_flowchart.json');
 const slideNames = Object.keys(jsonData);
 
@@ -307,7 +307,7 @@ function MakeButtons(initialSlide: string, props: DuckProps) {
                           onClick={() => {
                             if (button.link) {
                               // this checks button.link isnt null
-                              prevSlideParams = button.params;
+                              // prevSlideParams = button.params;
                               setSlide(button.link);
                             } else {
                               props.closeDuck();

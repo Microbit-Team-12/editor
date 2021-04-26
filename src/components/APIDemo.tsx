@@ -247,7 +247,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
    * @param md the text from the markdown file of the tutorial
    * @returns the code of md
    */
-  getTuteCode(md: string) {
+  getTuteCode(md: string): string {
     const lines = md.split('\n');
     const code = [];
     let i = 0;
