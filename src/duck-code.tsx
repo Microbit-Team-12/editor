@@ -142,7 +142,7 @@ function readableDiffMessage(props: DuckProps) {
       return ('Unfortunately, your line does not look like any of the lines in the tutorial.');
     }
   }
-  else return ('I cannot see your error message. Perhaps press \'RUN CODE\' again, and double check that an error message is visible?');
+  else return ('I cannot see your error message. Perhaps press \'RUN\' again, and double check that an error message is visible?');
 }
 
 /** 
@@ -271,6 +271,10 @@ function parseSpeech(speech: string, props: DuckProps) {
   return parsedSpeech;
 }
 
+function inTutorial(props: DuckProps): boolean {
+  return props.tutorialCode !== undefined && props.tutorialCode !== '# Fetching tutorial...';
+}
+
 /**
  * Renders the Duck, starting from the specified slide.
  */
@@ -305,11 +309,13 @@ function MakeButtons(initialSlide: string, props: DuckProps) {
                           variant="contained"
                           color="primary"
                           onClick={() => {
-                            if (button.link) {
-                              // this checks button.link isnt null
+                            if (button.link === '{inTutorial ? Ask if want to compare : Duck gives up}') {
+                              const link = inTutorial(props) ? 'Ask if want to compare' : 'Duck gives up';
+                              setSlide(link);
+                            } else if (button.link) {
                               // prevSlideParams = button.params;
                               setSlide(button.link);
-                            } else {
+                            } else {  // this runs if button.link is null
                               props.closeDuck();
                             }
                           }}

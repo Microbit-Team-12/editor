@@ -69,7 +69,7 @@
       },
       {
         "text": "I still need help",
-        "link": "Ask if following tutorial",
+        "link": "{inTutorial ? Ask if want to compare : Duck gives up}",
         "params": []
       },
       {
@@ -89,47 +89,18 @@
       }
     ]
   },
-  "Ask if following tutorial": {
-    "speech": "That's alright. Are you following one of the MicroPython tutorials?",
+  "Ask if want to compare": {
+    "speech": "I see you're doing one of our tutorials. Do you want to compare the error in your code to our example solution?",
     "buttons": [
       {
-        "text": "Yes I am",
-        "link": "Tutorial selection",
+        "text": "Yes",
+        "link": "Compare with tutorial",
         "params": []
       },
       {
-        "text": "No I am not",
+        "text": "No",
         "link": "Duck gives up",
         "params": []
-      }
-    ]
-  },
-  "Tutorial selection": {
-    "speech": "Which tutorial are you following?",
-    "buttons": [
-      {
-        "text": "None of them",
-        "link": "Duck gives up",
-        "params": []
-      },
-      {
-        "text": "Hello, World!",
-        "link": "Compare with tutorial",
-        "params": ["HelloWorld"]
-      },
-      {
-        "text": "Simple Buttons",
-        "link": "Compare with tutorial",
-        "params": [
-          "SimpleButtons"
-        ]
-      },
-      {
-        "text": "Python Language Features",
-        "link": "Compare with tutorial",
-        "params": [
-          "PythonTute"
-        ]
       }
     ]
   },
@@ -203,7 +174,7 @@
       },
       {
         "text": "No",
-        "link": "Ask if following tutorial",
+        "link": "{inTutorial ? Ask if want to compare : Duck gives up}",
         "params": []
       }
     ]
@@ -218,7 +189,7 @@
         },
         {
           "text": "I still need help",
-          "link": "Ask if following tutorial",
+          "link": "{inTutorial ? Ask if want to compare : Duck gives up}",
           "params": []
         }
       ]
@@ -233,7 +204,7 @@
       },
       {
         "text": "No, I still need help",
-        "link": "Ask if following tutorial",
+        "link": "{inTutorial ? Ask if want to compare : Duck gives up}",
         "params": []
       }
     ]
@@ -248,7 +219,7 @@
       },
       {
         "text": "No, I still need help",
-        "link": "Ask if following tutorial",
+        "link": "{inTutorial ? Ask if want to compare : Duck gives up}",
         "params": []
       }
     ]
@@ -263,7 +234,7 @@
       },
       {
         "text": "I still need help",
-        "link": "Ask if following tutorial",
+        "link": "{inTutorial ? Ask if want to compare : Duck gives up}",
         "params": []
       }
     ]
@@ -288,7 +259,7 @@
       },
       {
         "text": "I still need help",
-        "link": "Ask if following tutorial",
+        "link": "{inTutorial ? Ask if want to compare : Duck gives up}",
         "params": []
       },
       {
@@ -308,7 +279,7 @@
       },
       {
         "text": "I still need help",
-        "link": "Ask if following tutorial",
+        "link": "{inTutorial ? Ask if want to compare : Duck gives up}",
         "params": []
       }
     ]
@@ -323,7 +294,7 @@
       },
       {
         "text": "I still need help",
-        "link": "Ask if following tutorial",
+        "link": "{inTutorial ? Ask if want to compare : Duck gives up}",
         "params": []
       }
     ]
@@ -568,7 +539,7 @@
       },
       {
         "text": "None of them / I don't know",
-        "link": "Ask if following tutorial"
+        "link": "{inTutorial ? Ask if want to compare : Duck gives up}"
       }
     ]
   },
@@ -582,7 +553,7 @@
       },
       {
         "text": "I still need help",
-        "link": "Ask if following tutorial",
+        "link": "{inTutorial ? Ask if want to compare : Duck gives up}",
         "params": []
       }
     ]
@@ -597,7 +568,7 @@
       },
       {
         "text": "I still need help",
-        "link": "Ask if following tutorial",
+        "link": "{inTutorial ? Ask if want to compare : Duck gives up}",
         "params": []
       }
     ]
@@ -612,7 +583,7 @@
       },
       {
         "text": "I still need help",
-        "link": "Ask if following tutorial",
+        "link": "{inTutorial ? Ask if want to compare : Duck gives up}",
         "params": []
       }
     ]
@@ -627,7 +598,7 @@
       },
       {
         "text": "I still need help",
-        "link": "Ask if following tutorial",
+        "link": "{inTutorial ? Ask if want to compare : Duck gives up}",
         "params": []
       }
     ]
@@ -642,7 +613,7 @@
       },
       {
         "text": "I still need help",
-        "link": "Ask if following tutorial",
+        "link": "{inTutorial ? Ask if want to compare : Duck gives up}",
         "params": []
       }
     ]

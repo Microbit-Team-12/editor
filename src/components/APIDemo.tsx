@@ -286,7 +286,10 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
         tutorialCode={this.getTuteCode(this.state.tutorial)}
       />;
     } else {
-      renderedDuck = <DuckViewer closeDuck={this.exileDuck.bind(this)}/>;
+      renderedDuck = <DuckViewer 
+        closeDuck={this.exileDuck.bind(this)}
+        tutorialCode={this.getTuteCode(this.state.tutorial)}
+      />;
     }
     return renderedDuck;
   }
