@@ -283,7 +283,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
         closeDuck={this.exileDuck.bind(this)}
         lineNumber={this.state.errorLine}
         lineText={this.state.editor!.getValue().split('\n')[this.state.errorLine - 1]}
-        tutorialCode={this.getTuteCode(this.state.editor!.getValue())}
+        tutorialCode={this.getTuteCode(this.state.tutorial)}
       />;
     } else {
       renderedDuck = <DuckViewer closeDuck={this.exileDuck.bind(this)}/>;
