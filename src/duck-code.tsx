@@ -21,8 +21,7 @@ type DuckProps = {
 
 type SlideButton = {
   link: string,
-  text: string,
-  params: string[]
+  text: string
 }
 
 
@@ -69,7 +68,6 @@ const useStyles = makeStyles( (theme) => ({
   }
 }));
 
-// let prevSlideParams: string[] = [];
 const jsonData = require('./resources/duck_flowchart.json');
 const slideNames = Object.keys(jsonData);
 
@@ -313,7 +311,6 @@ function MakeButtons(initialSlide: string, props: DuckProps) {
                               const link = inTutorial(props) ? 'Ask if want to compare' : 'Duck gives up';
                               setSlide(link);
                             } else if (button.link) {
-                              // prevSlideParams = button.params;
                               setSlide(button.link);
                             } else {  // this runs if button.link is null
                               props.closeDuck();
