@@ -532,14 +532,15 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
               errorLine: output.line,
               errorMonacoIDs: errorMonacoID
             });
+            editor.updateOptions({
+              readOnly: false
+            });
             this.summonDuck();
           }
       }
     });
-
     // Notify the app that the connection has freed up
     this.setState({});
-
     this.state.editor?.updateOptions({
       readOnly: false
     });
