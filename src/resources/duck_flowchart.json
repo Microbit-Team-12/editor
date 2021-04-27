@@ -4,13 +4,11 @@
     "buttons": [
       {
         "text": "An error message is displayed",
-        "link": "Select error message",
-        "params": []
+        "link": "Select error message"
       },
       {
         "text": "My code doesn't do what I want it to do",
-        "link": "Select the problem with your program",
-        "params": []
+        "link": "Select the problem with your program"
       }
     ]
   },
@@ -19,33 +17,27 @@
     "buttons": [
       {
         "text": "AttributeError",
-        "link": "AttributeError explanation",
-        "params": []
+        "link": "AttributeError explanation"
       },
       {
         "text": "SyntaxError",
-        "link": "SyntaxError explanation",
-        "params": []
+        "link": "SyntaxError explanation"
       },
       {
         "text": "TypeError",
-        "link": "TypeError explanation",
-        "params": []
+        "link": "TypeError explanation"
       },
       {
         "text": "NameError",
-        "link": "NameError explanation",
-        "params": []
+        "link": "NameError explanation"
       },
       {
         "text": "IndentationError / TabError",
-        "link": "IndentationError explanation",
-        "params": []
+        "link": "IndentationError explanation"
       },
       {
         "text": "Something else / I don't know",
-        "link": "Less common errors",
-        "params": []
+        "link": "Less common errors"
       }
     ]
   },
@@ -54,8 +46,7 @@
     "buttons": [
       {
         "text": "Tell me more",
-        "link": "More about AttributeError",
-        "params": []
+        "link": "More about AttributeError"
       }
     ]
   },
@@ -64,18 +55,15 @@
     "buttons": [
       {
         "text": "Ah, that's it!",
-        "link": "Goodbye",
-        "params": []
+        "link": "Goodbye"
       },
       {
         "text": "I still need help",
-        "link": "{inTutorial ? Ask if want to compare : Duck gives up}",
-        "params": []
+        "link": "{inTutorial ? Ask if want to compare : Duck gives up}"
       },
       {
         "text": "back",
-        "link": "AttributeError explanation",
-        "params": []
+        "link": "AttributeError explanation"
       }
     ]
   },
@@ -84,8 +72,7 @@
     "buttons": [
       {
         "text": "Thanks Duck, bye for now!",
-        "link": null,
-        "params": []
+        "link": null
       }
     ]
   },
@@ -94,13 +81,11 @@
     "buttons": [
       {
         "text": "Yes",
-        "link": "Compare with tutorial",
-        "params": []
+        "link": "Compare with tutorial"
       },
       {
         "text": "No",
-        "link": "Duck gives up",
-        "params": []
+        "link": "Duck gives up"
       }
     ]
   },
@@ -109,13 +94,11 @@
     "buttons": [
       {
         "text": "Thanks, I can fix that now.",
-        "link": "Goodbye",
-        "params": []
+        "link": "Goodbye"
       },
       {
         "text": "That wasn't what I was trying to write",
-        "link": "Duck gives up",
-        "params": []
+        "link": "Duck gives up"
       }
     ]
   },
@@ -129,13 +112,11 @@
     "buttons": [
       {
         "text": "Ah, that's it!",
-        "link": "Goodbye",
-        "params": []
+        "link": "Goodbye"
       },
       {
         "text": "No, I still need help",
-        "link": "More about SyntaxError",
-        "params": []
+        "link": "More about SyntaxError"
       }
     ]
   },
@@ -144,23 +125,19 @@
     "buttons": [
       {
         "text": "Invalid Syntax (no further message)",
-        "link": "Invalid Syntax nfm explanation",
-        "params": []
+        "link": "Invalid Syntax nfm explanation"
       },
       {
         "text": "Invalid Syntax for (number/integer with base 10)",
-        "link": "Invalid Syntax number explanation",
-        "params": []
+        "link": "Invalid Syntax number explanation"
       },
       {
         "text": "Can't assign to [something]",
-        "link": "Invalid Syntax can't assign explanation",
-        "params": []
+        "link": "Invalid Syntax can't assign explanation"
       },
       {
         "text": "Something else",
-        "link": "Invalid Syntax something else",
-        "params": []
+        "link": "Invalid Syntax something else"
       }
     ]
   },
@@ -169,43 +146,37 @@
     "buttons": [
       {
         "text": "Yes",
-        "link": "Cannot mix bytes",
-        "params": []
+        "link": "Cannot mix bytes"
       },
       {
         "text": "No",
-        "link": "{inTutorial ? Ask if want to compare : Duck gives up}",
-        "params": []
+        "link": "{inTutorial ? Ask if want to compare : Duck gives up}"
       }
     ]
   },
-    "Cannot mix bytes": {
-      "speech": "Python gives you this error if you forget the brackets in a function call. For instance, if you write \"print hello\" instead of \"print(hello)\" Python will give you this error message.",
-      "buttons": [
-        {
-          "text": "Ah, that's it!",
-          "link": "Goodbye",
-          "params": []
-        },
-        {
-          "text": "I still need help",
-          "link": "{inTutorial ? Ask if want to compare : Duck gives up}",
-          "params": []
-        }
-      ]
-    },
+  "Cannot mix bytes": {
+    "speech": "Python gives you this error if you forget the brackets in a function call. For instance, if you write \"print hello\" instead of \"print(hello)\" Python will give you this error message.",
+    "buttons": [
+      {
+        "text": "Ah, that's it!",
+        "link": "Goodbye"
+      },
+      {
+        "text": "I still need help",
+        "link": "{inTutorial ? Ask if want to compare : Duck gives up}"
+      }
+    ]
+  },
   "Invalid Syntax nfm explanation": {
     "speech": "You might get this error if you write an “empty” for loop or while loop (one with nothing in it because you didn’t indent), or if you forgot to close the square brackets at the end of a list.",
     "buttons": [
       {
         "text": "Ah, that's it!",
-        "link": "Goodbye",
-        "params": []
+        "link": "Goodbye"
       },
       {
         "text": "No, I still need help",
-        "link": "{inTutorial ? Ask if want to compare : Duck gives up}",
-        "params": []
+        "link": "{inTutorial ? Ask if want to compare : Duck gives up}"
       }
     ]
   },
@@ -214,13 +185,11 @@
     "buttons": [
       {
         "text": "Thanks, thank you!",
-        "link": "Goodbye",
-        "params": []
+        "link": "Goodbye"
       },
       {
         "text": "No, I still need help",
-        "link": "{inTutorial ? Ask if want to compare : Duck gives up}",
-        "params": []
+        "link": "{inTutorial ? Ask if want to compare : Duck gives up}"
       }
     ]
   },
@@ -229,13 +198,11 @@
     "buttons": [
       {
         "text": "Ah, that's it!",
-        "link": "Goodbye",
-        "params": []
+        "link": "Goodbye"
       },
       {
         "text": "I still need help",
-        "link": "{inTutorial ? Ask if want to compare : Duck gives up}",
-        "params": []
+        "link": "{inTutorial ? Ask if want to compare : Duck gives up}"
       }
     ]
   },
@@ -244,8 +211,7 @@
     "buttons": [
       {
         "text": "Tell me more...",
-        "link": "More about assignment error",
-        "params": []
+        "link": "More about assignment error"
       }
     ]
   },
@@ -254,18 +220,15 @@
     "buttons": [
       {
         "text": "Ah, that's it!",
-        "link": "Goodbye",
-        "params": []
+        "link": "Goodbye"
       },
       {
         "text": "I still need help",
-        "link": "{inTutorial ? Ask if want to compare : Duck gives up}",
-        "params": []
+        "link": "{inTutorial ? Ask if want to compare : Duck gives up}"
       },
       {
         "text": "back",
-        "link": "Invalid Syntax can't assign explanation",
-        "params": []
+        "link": "Invalid Syntax can't assign explanation"
       }
     ]
   },
@@ -274,13 +237,11 @@
     "buttons": [
       {
         "text": "Ah, that's it!",
-        "link": "Goodbye",
-        "params": []
+        "link": "Goodbye"
       },
       {
         "text": "I still need help",
-        "link": "{inTutorial ? Ask if want to compare : Duck gives up}",
-        "params": []
+        "link": "{inTutorial ? Ask if want to compare : Duck gives up}"
       }
     ]
   },
@@ -289,13 +250,11 @@
     "buttons": [
       {
         "text": "Ah, that's it!",
-        "link": "Goodbye",
-        "params": []
+        "link": "Goodbye"
       },
       {
         "text": "I still need help",
-        "link": "{inTutorial ? Ask if want to compare : Duck gives up}",
-        "params": []
+        "link": "{inTutorial ? Ask if want to compare : Duck gives up}"
       }
     ]
   },
@@ -304,8 +263,7 @@
     "buttons": [
       {
         "text": "Ah, that's it!",
-        "link": "Goodbye",
-        "params": []
+        "link": "Goodbye"
       }
     ]
   },
@@ -314,28 +272,23 @@
     "buttons": [
       {
         "text": "My program does nothing at all",
-        "link": "Program does nothing",
-        "params": []
+        "link": "Program does nothing"
       },
       {
         "text": "A condition isn't working (eg: in if statement or while loop)",
-        "link": "Condition isn't working",
-        "params": []
+        "link": "Condition isn't working"
       },
       {
         "text": "Certain parts of my program are skipped",
-        "link": "Certain parts skipped",
-        "params": []
+        "link": "Certain parts skipped"
       },
       {
         "text": "A list has changed even though I didn't change it",
-        "link": "List has changed",
-        "params": []
+        "link": "List has changed"
       },
       {
         "text": "Something else",
-        "link": "Duck gives up",
-        "params": []
+        "link": "Duck gives up"
       }
     ]
   },
@@ -344,13 +297,11 @@
     "buttons": [
       {
         "text": "Ah, that's it!",
-        "link": "Goodbye",
-        "params": []
+        "link": "Goodbye"
       },
       {
         "text": "No, that's not what I've dome",
-        "link": "More about program does nothing",
-        "params": []
+        "link": "More about program does nothing"
       }
     ]
   },
@@ -359,13 +310,11 @@
     "buttons": [
       {
         "text": "Ah, that's it!",
-        "link": "Goodbye",
-        "params": []
+        "link": "Goodbye"
       },
       {
         "text": "I still need help",
-        "link": "Duck gives up",
-        "params": []
+        "link": "Duck gives up"
       }
     ]
   },
@@ -374,13 +323,11 @@
     "buttons": [
       {
         "text": "Simple",
-        "link": "Simple condition",
-        "params": []
+        "link": "Simple condition"
       },
       {
         "text": "Complex",
-        "link": "Complex condition",
-        "params": []
+        "link": "Complex condition"
       }
     ]
   },
@@ -389,13 +336,11 @@
     "buttons": [
       {
         "text": "Ah, that's it!",
-        "link": "Goodbye",
-        "params": []
+        "link": "Goodbye"
       },
       {
         "text": "I still need help",
-        "link": "Duck gives up",
-        "params": []
+        "link": "Duck gives up"
       }
     ]
   },
@@ -404,13 +349,11 @@
     "buttons": [
       {
         "text": "Ah, that's it!",
-        "link": "Goodbye",
-        "params": []
+        "link": "Goodbye"
       },
       {
         "text": "I still need help",
-        "link": "Simple condition",
-        "params": []
+        "link": "Simple condition"
       }
     ]
   },
@@ -419,18 +362,15 @@
     "buttons": [
       {
         "text": "My list should be modified by every iteration of the loop but it’s only modified by the last iteration",
-        "link": "List outside loop",
-        "params": []
+        "link": "List outside loop"
       },
       {
         "text": "The last iteration of my loop is getting skipped",
-        "link": "Last iter skipped",
-        "params": []
+        "link": "Last iter skipped"
       },
       {
         "text": "Something else",
-        "link": "Narrow down decision",
-        "params": []
+        "link": "Narrow down decision"
       }
     ]
   },
@@ -439,13 +379,11 @@
     "buttons": [
       {
         "text": "Ah, that's it!",
-        "link": "Goodbye",
-        "params": []
+        "link": "Goodbye"
       },
       {
         "text": "I still need help",
-        "link": "Duck gives up",
-        "params": []
+        "link": "Duck gives up"
       }
     ]
   },
@@ -454,13 +392,11 @@
     "buttons": [
       {
         "text": "Ah, that's it!",
-        "link": "Goodbye",
-        "params": []
+        "link": "Goodbye"
       },
       {
         "text": "I still need help",
-        "link": "Duck gives up",
-        "params": []
+        "link": "Duck gives up"
       }
     ]
   },  
@@ -469,13 +405,11 @@
     "buttons": [
       {
         "text": "Ah, that's it!",
-        "link": "Goodbye",
-        "params": []
+        "link": "Goodbye"
       },
       {
         "text": "I still need help",
-        "link": "Duck gives up",
-        "params": []
+        "link": "Duck gives up"
       }
     ]
   },
@@ -484,13 +418,11 @@
     "buttons": [
       {
         "text": "Ah, that's it!",
-        "link": "Goodbye",
-        "params": []
+        "link": "Goodbye"
       },
       {
         "text": "I still need help",
-        "link": "Duck gives up",
-        "params": []
+        "link": "Duck gives up"
       }
     ]
   },
@@ -499,13 +431,11 @@
     "buttons": [
       {
         "text": "Ah, that's it!",
-        "link": "Goodbye",
-        "params": []
+        "link": "Goodbye"
       },
       {
         "text": "I still need help",
-        "link": "Duck gives up",
-        "params": []
+        "link": "Duck gives up"
       }
     ]
   },
@@ -514,28 +444,23 @@
     "buttons": [
       {
         "text": "IndexError",
-        "link": "IndexError explanation",
-        "params": []
+        "link": "IndexError explanation"
       },
       {
         "text": "ImportError",
-        "link": "ImportError explanation",
-        "params": []
+        "link": "ImportError explanation"
       },
       {
         "text": "KeyError",
-        "link": "KeyError explanation",
-        "params": []
+        "link": "KeyError explanation"
       },
       {
         "text": "ValueError",
-        "link": "ValueError explanation",
-        "params": []
+        "link": "ValueError explanation"
       },
       {
         "text": "ZeroDivisionError",
-        "link": "ZeroDivisionError explanation",
-        "params": []
+        "link": "ZeroDivisionError explanation"
       },
       {
         "text": "None of them / I don't know",
@@ -548,13 +473,11 @@
     "buttons": [
       {
         "text": "Ah, that's it!",
-        "link": "Goodbye",
-        "params": []
+        "link": "Goodbye"
       },
       {
         "text": "I still need help",
-        "link": "{inTutorial ? Ask if want to compare : Duck gives up}",
-        "params": []
+        "link": "{inTutorial ? Ask if want to compare : Duck gives up}"
       }
     ]
   },
@@ -563,13 +486,11 @@
     "buttons": [
       {
         "text": "Ah, that's it!",
-        "link": "Goodbye",
-        "params": []
+        "link": "Goodbye"
       },
       {
         "text": "I still need help",
-        "link": "{inTutorial ? Ask if want to compare : Duck gives up}",
-        "params": []
+        "link": "{inTutorial ? Ask if want to compare : Duck gives up}"
       }
     ]
   },
@@ -578,13 +499,11 @@
     "buttons": [
       {
         "text": "Ah, that's it!",
-        "link": "Goodbye",
-        "params": []
+        "link": "Goodbye"
       },
       {
         "text": "I still need help",
-        "link": "{inTutorial ? Ask if want to compare : Duck gives up}",
-        "params": []
+        "link": "{inTutorial ? Ask if want to compare : Duck gives up}"
       }
     ]
   },
@@ -593,13 +512,11 @@
     "buttons": [
       {
         "text": "Ah, that's it!",
-        "link": "Goodbye",
-        "params": []
+        "link": "Goodbye"
       },
       {
         "text": "I still need help",
-        "link": "{inTutorial ? Ask if want to compare : Duck gives up}",
-        "params": []
+        "link": "{inTutorial ? Ask if want to compare : Duck gives up}"
       }
     ]
   },
@@ -608,13 +525,11 @@
     "buttons": [
       {
         "text": "Ah, that's it!",
-        "link": "Goodbye",
-        "params": []
+        "link": "Goodbye"
       },
       {
         "text": "I still need help",
-        "link": "{inTutorial ? Ask if want to compare : Duck gives up}",
-        "params": []
+        "link": "{inTutorial ? Ask if want to compare : Duck gives up}"
       }
     ]
   }
