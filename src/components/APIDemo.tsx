@@ -72,7 +72,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
    * Fetch a markdown file from `public/tutorials/` once mounted.
    */
   componentDidMount(): void {
-    fetch('tutorials/ErrorTute.md')
+    fetch('tutorials/PythonTute.md')
       .then((r) => r.text())
       .then((text) =>
         this.setState({
