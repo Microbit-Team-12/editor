@@ -53,12 +53,12 @@ export interface TutorialResolver {
 /**
  * A default resolver for a tutorial that fetches tutorial from /public/tutorials.
  * 
- * This resolver assumes that the editor is at a parent directory of /public.
+ * This resolver assumes that the editor HTML is at a parent directory of /tutorials at runtime.
  */
 export const publicTutorialResolver: TutorialResolver = {
   async resolve(location: TutorialLocation): Promise<Tutorial | null> {
     try {
-      const response = await fetch(`./public/tutorials/${location.path}`);
+      const response = await fetch(`./tutorials/${location.path}`);
 
       return response.ok ? {
         raw_content: await response.text(),
