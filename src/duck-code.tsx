@@ -270,7 +270,7 @@ function parseSpeech(speech: string, props: DuckProps) {
 }
 
 function inTutorial(props: DuckProps): boolean {
-  return props.tutorialCode !== undefined && props.tutorialCode !== '# Fetching tutorial...';
+  return props.tutorialCode !== undefined && props.tutorialCode !== '';
 }
 
 /**
