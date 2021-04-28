@@ -9,12 +9,12 @@ export interface Tutorial {
   /**
    * content of the tutorial; supposed to be in a Markdown format.
    */
-  raw_content: string
+  readonly raw_content: string
 
   /**
    * An optional field that, when set to true, prevents the Duck from popping up when encountering an error.
    */
-  disable_duck?: boolean
+  readonly disable_duck?: boolean
 }
 
 /**
@@ -24,12 +24,20 @@ export interface TutorialLocation {
   /**
    * Title for the tutorial, to be shown on the side-menu
    */
-  title: string
+  readonly title: string
 
   /**
    * Path of the tutorial response, relative to /public/tutorials/.
    */
-  path: string
+  readonly path: string
+}
+
+/**
+ * Collection of tutorials, along with a default tutorial to display next to the editor.
+ */
+export interface TutorialList {
+  readonly default: TutorialLocation
+  readonly list: TutorialLocation[]
 }
 
 export interface TutorialResolver {
