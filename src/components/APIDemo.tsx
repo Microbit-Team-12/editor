@@ -12,8 +12,9 @@ import {
 } from '../api/microbit/impl/connect';
 import { FailedConnection, MicrobitConnection, MicrobitOutput, MicrobitState } from '../api/microbit/interface/message';
 import DuckViewer from '../duck-code';
-import { Tutorial, TutorialList, TutorialResolver } from '../tutorial';
+import { Tutorial, TutorialList, TutorialLocation, TutorialResolver } from '../tutorial';
 import './APIDemo.css';
+import { SideBar } from './SideBar';
 import TutorialViewer from './TutorialViewer';
 
 interface APIDemoProps {
@@ -81,17 +82,19 @@ class APIDemo extends React.Component<APIDemoProps, APIDemoState> {
     this.beforeExecution = this.beforeExecution.bind(this);
   }
 
-  /**
-   * Fetch a markdown file once mounted.
-   */
-  async componentDidMount(): Promise<void> {
-    const tutorial = await this.props.tutorialResolver.resolve(this.props.tutorialList.default);
+  async handleTutorialPathChange(newLocation: TutorialLocation): Promise<void> {
+    const tutorial = await this.props.tutorialResolver.resolve(newLocation);
 
     if (tutorial !== null) {
       this.setState({ tutorial });
     } else {
       alert('Failed to access tutorial. Please try again later.');
     }
+  }
+
+  async componentDidMount(): Promise<void> {
+    // Fetch a default tutorial once mounted.
+    await this.handleTutorialPathChange(this.props.tutorialList.default);
   }
 
   /**
@@ -370,6 +373,7 @@ class APIDemo extends React.Component<APIDemoProps, APIDemoState> {
   render(): JSX.Element {
     return (
       <div className="APIDemo">
+        <SideBar tutorialList={this.props.tutorialList} onTutorialSelection={this.handleTutorialPathChange.bind(this)}/>
         <header className="APIDemo-header">
           {this.renderHeaderButton(
             'Start',
