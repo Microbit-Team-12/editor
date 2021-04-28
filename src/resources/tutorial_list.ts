@@ -9,7 +9,7 @@ import { TutorialList } from '../tutorial';
 
 const pythonTute = { path: 'PythonTute.md', title: 'Python Language Features' };
 
-export const list: TutorialList = {
+export const defaultTutorialList: TutorialList = {
   default : pythonTute,
   list: [
     pythonTute,

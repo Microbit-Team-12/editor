@@ -12,8 +12,14 @@ import {
 } from '../api/microbit/impl/connect';
 import { FailedConnection, MicrobitConnection, MicrobitOutput, MicrobitState } from '../api/microbit/interface/message';
 import DuckViewer from '../duck-code';
+import { TutorialList, TutorialResolver } from '../tutorial';
 import './APIDemo.css';
 import TutorialViewer from './TutorialViewer';
+
+interface APIDemoProps {
+  tutorialList: TutorialList
+  tutorialResolver: TutorialResolver
+}
 
 interface APIDemoState {
   /** The markdown of the tutorial being displayed. */
@@ -46,8 +52,8 @@ while True:
         music.play(music.JUMP_DOWN)
 `;
 
-class APIDemo extends React.Component<unknown, APIDemoState> {
-  constructor(props: unknown) {
+class APIDemo extends React.Component<APIDemoProps, APIDemoState> {
+  constructor(props: APIDemoProps) {
     super(props);
     this.state = {
       tutorial: '# Fetching tutorial...',
