@@ -11,8 +11,22 @@
 }
 
 .APIDemo-header {
+  width: 90vw;
   height: 5vh;
   margin: 5px;
+  position: relative;
+}
+
+.APIDemo-header > button {
+  position: absolute;
+  left: 0px;
+}
+
+.APIDemo-header-buttons {
+  width: 100%;
+  height: 5vh;
+  margin: 5px;
+  position: absolute;
   display: flex;
   flex-direction: row;
   align-items: center;
