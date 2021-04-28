@@ -2,7 +2,6 @@
 import { Button, Drawer, List, ListItem, ListItemText, ListSubheader } from '@material-ui/core';
 import { Menu } from '@material-ui/icons';
 import React, { useState } from 'react';
-import 'react-minimal-side-navigation/lib/ReactMinimalSideNavigation.css';
 import { TutorialList, TutorialLocation } from '../tutorial';
 
 export interface SideBarProps {
