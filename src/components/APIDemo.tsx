@@ -12,17 +12,31 @@ import {
 } from '../api/microbit/impl/connect';
 import { FailedConnection, MicrobitConnection, MicrobitOutput, MicrobitState } from '../api/microbit/interface/message';
 import DuckViewer from '../duck-code';
+import { Tutorial, TutorialList, TutorialLocation, TutorialResolver } from '../tutorial';
 import './APIDemo.css';
+import { SideBar } from './SideBar';
 import TutorialViewer from './TutorialViewer';
 
+interface APIDemoProps {
+  tutorialList: TutorialList
+  tutorialResolver: TutorialResolver
+}
+
 interface APIDemoState {
-  /** The markdown of the tutorial being displayed. */
-  tutorial: string,
+  /** The tutorial being displayed. null if the tutorial is unavailable. */
+  tutorial: Tutorial | null,
+
+  /** Output from the micro:bit serial */
   output: string,
+
+  /** Active connection to the micro:bit */
   connection: MicrobitConnection | null,
+
+  needDuck: boolean,
+
   editor: monaco.editor.IStandaloneCodeEditor | null,
   monaco: Monaco | null,
-  needDuck: boolean,
+
   /** The most recent error message for the user, if one exists (otherwise, empty string) */
   errorString: string,
   errorLine: number,
@@ -39,11 +53,11 @@ while True:
     sleep(2000)
 `;
 
-class APIDemo extends React.Component<unknown, APIDemoState> {
-  constructor(props: unknown) {
+class APIDemo extends React.Component<APIDemoProps, APIDemoState> {
+  constructor(props: APIDemoProps) {
     super(props);
     this.state = {
-      tutorial: '# Fetching tutorial...',
+      tutorial: null,
       output: '',
       connection: null,
       editor: null,
@@ -61,17 +75,19 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
     this.beforeExecution = this.beforeExecution.bind(this);
   }
 
-  /**
-   * Fetch a markdown file from `public/tutorials/` once mounted.
-   */
-  componentDidMount(): void {
-    fetch('tutorials/PythonTute.md')
-      .then((r) => r.text())
-      .then((text) =>
-        this.setState({
-          tutorial: text,
-        }),
-      );
+  async handleTutorialPathChange(newLocation: TutorialLocation): Promise<void> {
+    const tutorial = await this.props.tutorialResolver.resolve(newLocation);
+
+    if (tutorial !== null) {
+      this.setState({ tutorial });
+    } else {
+      alert('Failed to access tutorial. Please try again later.');
+    }
+  }
+
+  async componentDidMount(): Promise<void> {
+    // Fetch a default tutorial once mounted.
+    await this.handleTutorialPathChange(this.props.tutorialList.default);
   }
 
   /**
@@ -270,21 +286,17 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
    * of the Python error message, if one exists.
    */
   renderDuck(): JSX.Element {
-    let renderedDuck;
-    if (this.state.errorString !== '') {
-      renderedDuck = <DuckViewer
-        closeDuck={this.exileDuck.bind(this)}
-        lineNumber={this.state.errorLine}
-        lineText={this.state.editor!.getValue().split('\n')[this.state.errorLine - 1]}
-        tutorialCode={this.getTuteCode(this.state.tutorial)}
-      />;
-    } else {
-      renderedDuck = <DuckViewer 
-        closeDuck={this.exileDuck.bind(this)}
-        tutorialCode={this.getTuteCode(this.state.tutorial)}
-      />;
-    }
-    return renderedDuck;
+    const tutorialCode = this.getTuteCode(this.state.tutorial?.raw_content ?? '');
+
+    return (this.state.errorString !== '') ? <DuckViewer
+      closeDuck={this.exileDuck.bind(this)}
+      lineNumber={this.state.errorLine}
+      lineText={this.state.editor!.getValue().split('\n')[this.state.errorLine - 1]}
+      tutorialCode={tutorialCode}
+    /> : <DuckViewer 
+      closeDuck={this.exileDuck.bind(this)}
+      tutorialCode={tutorialCode}
+    />;
   }
 
   /**
@@ -303,7 +315,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
           {this.renderDuck()}
         </div>
         : <TutorialViewer
-          markdown={this.state.tutorial}
+          markdown={this.state.tutorial?.raw_content ?? '# Fetching tutorial...'}
           onRun={this.onRunCell.bind(this)}
           onRunFinished={() => this.setState({})}
           canRun={this.hasFreeConnection.bind(this)}
@@ -354,38 +366,41 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
   render(): JSX.Element {
     return (
       <div className="APIDemo">
-        <header className="APIDemo-header">
-          {this.renderHeaderButton(
-            'Start',
-            this.onStart.bind(this),
-            () => this.state.connection == null,
-          )}
-          {this.renderHeaderButton(
-            'Flash',
-            () => this.onFlash(this.state.editor!.getValue()),
-            () => this.isEditorMounted() && this.hasFreeConnection(),
-          )}
-          {this.renderHeaderButton(
-            'Run',
-            () => this.onRun(this.state.editor!.getValue()),
-            () => this.isEditorMounted() && this.hasFreeConnection(),
-          )}
-          {this.renderHeaderButton(
-            'Interrupt',
-            this.onInterrupt.bind(this),
-            () => this.hasBusyConnection(),
-          )}
-          {this.renderHeaderButton(
-            'Reboot',
-            this.onReboot.bind(this),
-            () => this.hasFreeConnection(),
-          )}
-          {this.renderHeaderButton(
-            'Help',
-            this.summonDuck.bind(this),
-            () => true,
-          )}
-        </header>
+        <div className="APIDemo-header">
+          <header className="APIDemo-header-buttons">
+            {this.renderHeaderButton(
+              'Start',
+              this.onStart.bind(this),
+              () => this.state.connection == null,
+            )}
+            {this.renderHeaderButton(
+              'Flash',
+              () => this.onFlash(this.state.editor!.getValue()),
+              () => this.isEditorMounted() && this.hasFreeConnection(),
+            )}
+            {this.renderHeaderButton(
+              'Run',
+              () => this.onRun(this.state.editor!.getValue()),
+              () => this.isEditorMounted() && this.hasFreeConnection(),
+            )}
+            {this.renderHeaderButton(
+              'Interrupt',
+              this.onInterrupt.bind(this),
+              () => this.hasBusyConnection(),
+            )}
+            {this.renderHeaderButton(
+              'Reboot',
+              this.onReboot.bind(this),
+              () => this.hasFreeConnection(),
+            )}
+            {this.renderHeaderButton(
+              'Help',
+              this.summonDuck.bind(this),
+              () => true,
+            )}
+          </header>
+          <SideBar tutorialList={this.props.tutorialList} onTutorialSelection={this.handleTutorialPathChange.bind(this)} />
+        </div>
         <div className="APIDemo-body">
           {this.renderTutorial()}
           {this.renderEditor()}
