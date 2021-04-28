@@ -288,15 +288,18 @@ class APIDemo extends React.Component<APIDemoProps, APIDemoState> {
   renderDuck(): JSX.Element {
     const tutorialCode = this.getTuteCode(this.state.tutorial?.raw_content ?? '');
 
-    return (this.state.errorString !== '') ? <DuckViewer
-      closeDuck={this.exileDuck.bind(this)}
-      lineNumber={this.state.errorLine}
-      lineText={this.state.editor!.getValue().split('\n')[this.state.errorLine - 1]}
-      tutorialCode={tutorialCode}
-    /> : <DuckViewer 
-      closeDuck={this.exileDuck.bind(this)}
-      tutorialCode={tutorialCode}
-    />;
+    return (this.state.errorString === '' || this.state.tutorial?.disable_duck) ? 
+      <DuckViewer
+        closeDuck={this.exileDuck.bind(this)}
+        tutorialCode={tutorialCode}
+      /> : 
+      <DuckViewer 
+        closeDuck={this.exileDuck.bind(this)}
+        lineNumber={this.state.errorLine}
+        lineText={this.state.editor!.getValue().split('\n')[this.state.errorLine - 1]}
+        tutorialCode={tutorialCode}
+      />
+    ;
   }
 
   /**
