@@ -29,21 +29,14 @@ interface APIDemoState {
   errorMonacoIDs: string[] | null
 }
 
-const exampleCode = `from microbit import *
-import music
+const exampleCode = 
+`# Add your Python code here. E.g.
+from microbit import *
 
 while True:
-    if accelerometer.was_gesture('shake'):
-        display.show(Image.CONFUSED)
-        sleep(1500)
-    if accelerometer.was_gesture('face up'):
-        display.show(Image.HAPPY)
-    if accelerometer.was_gesture('left'):
-        display.show('<')
-        music.play(music.JUMP_UP)
-    if accelerometer.was_gesture('right'):
-        display.show('>')
-        music.play(music.JUMP_DOWN)
+    display.scroll('Hello, World!')
+    display.show(Image.HEART)
+    sleep(2000)
 `;
 
 class APIDemo extends React.Component<unknown, APIDemoState> {
