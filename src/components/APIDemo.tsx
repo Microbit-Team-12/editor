@@ -373,39 +373,41 @@ class APIDemo extends React.Component<APIDemoProps, APIDemoState> {
   render(): JSX.Element {
     return (
       <div className="APIDemo">
-        <SideBar tutorialList={this.props.tutorialList} onTutorialSelection={this.handleTutorialPathChange.bind(this)}/>
-        <header className="APIDemo-header">
-          {this.renderHeaderButton(
-            'Start',
-            this.onStart.bind(this),
-            () => this.state.connection == null,
-          )}
-          {this.renderHeaderButton(
-            'Flash',
-            () => this.onFlash(this.state.editor!.getValue()),
-            () => this.isEditorMounted() && this.hasFreeConnection(),
-          )}
-          {this.renderHeaderButton(
-            'Run',
-            () => this.onRun(this.state.editor!.getValue()),
-            () => this.isEditorMounted() && this.hasFreeConnection(),
-          )}
-          {this.renderHeaderButton(
-            'Interrupt',
-            this.onInterrupt.bind(this),
-            () => this.hasBusyConnection(),
-          )}
-          {this.renderHeaderButton(
-            'Reboot',
-            this.onReboot.bind(this),
-            () => this.hasFreeConnection(),
-          )}
-          {this.renderHeaderButton(
-            'Help',
-            this.summonDuck.bind(this),
-            () => true,
-          )}
-        </header>
+        <div className="APIDemo-header">
+          <header className="APIDemo-header-buttons">
+            {this.renderHeaderButton(
+              'Start',
+              this.onStart.bind(this),
+              () => this.state.connection == null,
+            )}
+            {this.renderHeaderButton(
+              'Flash',
+              () => this.onFlash(this.state.editor!.getValue()),
+              () => this.isEditorMounted() && this.hasFreeConnection(),
+            )}
+            {this.renderHeaderButton(
+              'Run',
+              () => this.onRun(this.state.editor!.getValue()),
+              () => this.isEditorMounted() && this.hasFreeConnection(),
+            )}
+            {this.renderHeaderButton(
+              'Interrupt',
+              this.onInterrupt.bind(this),
+              () => this.hasBusyConnection(),
+            )}
+            {this.renderHeaderButton(
+              'Reboot',
+              this.onReboot.bind(this),
+              () => this.hasFreeConnection(),
+            )}
+            {this.renderHeaderButton(
+              'Help',
+              this.summonDuck.bind(this),
+              () => true,
+            )}
+          </header>
+          <SideBar tutorialList={this.props.tutorialList} onTutorialSelection={this.handleTutorialPathChange.bind(this)} />
+        </div>
         <div className="APIDemo-body">
           {this.renderTutorial()}
           {this.renderEditor()}
