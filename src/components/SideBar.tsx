@@ -1,5 +1,5 @@
 /* eslint-disable react/display-name, jsx-a11y/click-events-have-key-events */
-import { Button, Drawer, List, ListItem, ListItemText } from '@material-ui/core';
+import { Button, Drawer, List, ListItem, ListItemText, ListSubheader } from '@material-ui/core';
 import { Menu } from '@material-ui/icons';
 import React, { useState } from 'react';
 import 'react-minimal-side-navigation/lib/ReactMinimalSideNavigation.css';
@@ -17,9 +17,16 @@ export function SideBar(props: SideBarProps): JSX.Element {
     <>
       <Button onClick={() => setIsSidebarOpen(true)}>
         <Menu/>
+        Select Tutorial
       </Button>
       <Drawer open={isSidebarOpen} onClose={() => setIsSidebarOpen(false)}>
-        <List>
+        <List subheader={
+          <ListSubheader component="div" id="nested-list-subheader">
+            <h2>
+              Available tutorials
+            </h2>
+          </ListSubheader>
+        }>
           {props.tutorialList.list.map((location) => {
             const { title } = location;
             return (
