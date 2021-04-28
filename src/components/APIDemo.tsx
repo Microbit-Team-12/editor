@@ -65,7 +65,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
    * Fetch a markdown file from `public/tutorials/` once mounted.
    */
   componentDidMount(): void {
-    fetch('tutorials/PythonTute.md')
+    fetch('tutorials/SoundTute.md')
       .then((r) => r.text())
       .then((text) =>
         this.setState({
@@ -557,6 +557,7 @@ class APIDemo extends React.Component<unknown, APIDemoState> {
    */
   async onRunCell(code: string): Promise<Stream<MicrobitOutput>> {
     console.log('onRunCell');
+    this.beforeExecution();
     return await this.state.connection!.interact.execute(code);
   }
 
