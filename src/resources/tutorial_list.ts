@@ -15,5 +15,6 @@ export const defaultTutorialList: TutorialList = {
     pythonTute,
     { path: 'ErrorTute.md', title: 'Python Errors' },
     { path: 'DisplayTute.md', title: 'Displaying Images on micro:bit' },
+    { path: 'SoundTute.md', title: 'Playing sounds on micro:bit' },
   ]
 };
