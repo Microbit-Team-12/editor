@@ -16,7 +16,8 @@ type DuckProps = {
   closeDuck(): void,
   lineNumber?: number,
   lineText?: string,
-  tutorialCode?: string
+  tutorialCode?: string,
+  isErrorTute?: boolean
 }
 
 type SlideButton = {
@@ -78,14 +79,7 @@ const slideNames = Object.keys(jsonData);
  * @returns the text to be embedded in the Duck's explanation, after executing the command
  */
 function executeCorrespondingCommand(commandString: string, props: DuckProps) {
-  if (commandString === 'link_to_tutorial_about_errors') {
-    return (
-      <a href="https://example.com/faq.html" target="_blank" rel="noreferrer">
-        Tutorial about errors
-      </a>
-    );
-  }
-  else if (commandString === 'get_readable_diff') {
+  if (commandString === 'get_readable_diff') {
     return readableDiffMessage(props);
 
   }
@@ -139,6 +133,9 @@ function readableDiffMessage(props: DuckProps) {
     else {
       return ('Unfortunately, your line does not look like any of the lines in the tutorial.');
     }
+  }
+  else if (props.isErrorTute) {
+    return ('I see that you are following the tutorial on errors. I cannot simply tell you the correct answer - why don\'t you reread the tutorial and see if that helps?');
   }
   else return ('I cannot see your error message. Perhaps press \'RUN\' again, and double check that an error message is visible?');
 }
