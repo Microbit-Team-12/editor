@@ -103,7 +103,7 @@
     ]
   },
   "Duck gives up": {
-    "speech": "This seems strange... Perhaps you would have better luck reading the tutorial about errors?\nHere is the link: {link_to_tutorial_about_errors}",
+    "speech": "This seems strange... Perhaps you would have better luck reading the tutorial about errors? You can access it by pressing \"Select tutorial\" at the top, and then selecting \"Python Errors\". ",
     "buttons": [
     ]
   },

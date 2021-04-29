@@ -79,14 +79,7 @@ const slideNames = Object.keys(jsonData);
  * @returns the text to be embedded in the Duck's explanation, after executing the command
  */
 function executeCorrespondingCommand(commandString: string, props: DuckProps) {
-  if (commandString === 'link_to_tutorial_about_errors') {
-    return (
-      <a href="https://example.com/faq.html" target="_blank" rel="noreferrer">
-        Tutorial about errors
-      </a>
-    );
-  }
-  else if (commandString === 'get_readable_diff') {
+  if (commandString === 'get_readable_diff') {
     return readableDiffMessage(props);
 
   }
