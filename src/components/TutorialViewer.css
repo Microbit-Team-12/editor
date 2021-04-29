@@ -1,3 +1,7 @@
+.Tutorial-code-no-click {
+  user-select: none;
+}
+
 .Tutorial-output {
   white-space: pre-wrap;
   background: #f8f8f8;

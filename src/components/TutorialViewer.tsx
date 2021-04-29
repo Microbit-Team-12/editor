@@ -218,16 +218,15 @@ ${output.type}: ${output.message}`;
    *  code, {@link PythonCodeState.isExpanded} is set to true, thus showing the
    *  line numbers by default without offering the ability to toggle the view.)
    *
-   * Incidentally, showing the line numbers makes it harder to copy the code:
-   * the line numbers are also copied. This could be a feature in that it
-   * prevents the students from copying code other than the lines that we wish
-   * to highlight and for them to insert into the editor.
+   * Prevents the students from copying code other than the lines that we wish
+   * to highlight --- these lines can be inserted at the click of a button.
    */
   render(): JSX.Element {
     return <div>
       <SyntaxHighlighter
         style={darcula}
         language="py"
+        className={this.state.isExpanded ? 'Tutorial-code-no-click' : ''}
         showLineNumbers={this.state.isExpanded}
       >
         {this.getDisplayedText()}
