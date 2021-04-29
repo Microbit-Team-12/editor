@@ -584,6 +584,9 @@ class APIDemo extends React.Component<APIDemoProps, APIDemoState> {
 
   async onInterrupt(): Promise<void> {
     await this.state.connection!.interact.interrupt();
+    this.state.editor!.updateOptions({
+      readOnly: false
+    });
 
     // Notify the app that the connection has freed up
     this.setState({});
