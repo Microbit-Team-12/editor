@@ -16,7 +16,8 @@ type DuckProps = {
   closeDuck(): void,
   lineNumber?: number,
   lineText?: string,
-  tutorialCode?: string
+  tutorialCode?: string,
+  isErrorTute?: boolean
 }
 
 type SlideButton = {
@@ -139,6 +140,9 @@ function readableDiffMessage(props: DuckProps) {
     else {
       return ('Unfortunately, your line does not look like any of the lines in the tutorial.');
     }
+  }
+  else if (props.isErrorTute) {
+    return ('I see that you are following the tutorial on errors. I cannot simply tell you the correct answer - why don\'t you reread the tutorial and see if that helps?');
   }
   else return ('I cannot see your error message. Perhaps press \'RUN\' again, and double check that an error message is visible?');
 }
