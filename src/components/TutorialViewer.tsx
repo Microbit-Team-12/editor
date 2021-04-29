@@ -151,7 +151,7 @@ class PythonCode extends React.Component<PythonCodeProps, PythonCodeState> {
       output: '',
     });
     if (!this.props.canRun()) {
-      alert('UI lied: Device is NOT free');
+      // alert('UI lied: Device is NOT free');
       this.props.onRunFinished();
       return;
     }
@@ -168,6 +168,7 @@ class PythonCode extends React.Component<PythonCodeProps, PythonCodeState> {
           currentOutput = `${currentOutput}Error on line ${output.line}:
 ${output.type}: ${output.message}`;
       }
+      this.props.onRunFinished();
       this.setState({
         output: currentOutput,
       });
