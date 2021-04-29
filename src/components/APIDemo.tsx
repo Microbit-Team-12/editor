@@ -515,6 +515,14 @@ class APIDemo extends React.Component<APIDemoProps, APIDemoState> {
     }
   }
 
+  afterExecution(): void {
+    this.state.editor!.updateOptions({
+      readOnly: false
+    });
+    // Notify the app that the connection has freed up
+    this.setState({});
+  }
+
   async onExec(outputStream: Stream<MicrobitOutput>): Promise<void> {
     // Notify the device that the connected micro:bit is now busy
     this.setState({});
@@ -550,18 +558,11 @@ class APIDemo extends React.Component<APIDemoProps, APIDemoState> {
               errorLine: output.line,
               errorMonacoIDs: errorMonacoID
             });
-            editor.updateOptions({
-              readOnly: false
-            });
             this.summonDuck();
           }
       }
     });
-    // Notify the app that the connection has freed up
-    this.setState({});
-    this.state.editor?.updateOptions({
-      readOnly: false
-    });
+    this.afterExecution();
   }
 
   async onFlash(code: string): Promise<void> {
@@ -598,8 +599,7 @@ class APIDemo extends React.Component<APIDemoProps, APIDemoState> {
       readOnly: false
     });
 
-    // Notify the app that the connection has freed up
-    this.setState({});
+    this.afterExecution();
   }
 }
 
