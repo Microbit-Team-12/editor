@@ -585,6 +585,9 @@ class MainApp extends React.Component<MainAppProps, MainAppState> {
     console.log('onRunCell');
     this.beforeExecution();
     return await this.state.connection!.interact.execute(code);
+    this.state.editor!.updateOptions({
+      readOnly: false
+    });
   }
 
   async onReboot(): Promise<void> {
