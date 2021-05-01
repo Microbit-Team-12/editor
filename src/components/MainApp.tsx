@@ -584,10 +584,10 @@ class MainApp extends React.Component<MainAppProps, MainAppState> {
   async onRunCell(code: string): Promise<Stream<MicrobitOutput>> {
     console.log('onRunCell');
     this.beforeExecution();
-    return await this.state.connection!.interact.execute(code);
     this.state.editor!.updateOptions({
       readOnly: false
     });
+    return await this.state.connection!.interact.execute(code);
   }
 
   async onReboot(): Promise<void> {
