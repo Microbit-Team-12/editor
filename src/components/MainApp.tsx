@@ -13,16 +13,16 @@ import {
 import { FailedConnection, MicrobitConnection, MicrobitOutput, MicrobitState } from '../api/microbit/interface/message';
 import DuckViewer from '../duck-code';
 import { Tutorial, TutorialList, TutorialLocation, TutorialResolver } from '../tutorial';
-import './APIDemo.css';
+import './MainApp.css';
 import { SideBar } from './SideBar';
 import TutorialViewer from './TutorialViewer';
 
-interface APIDemoProps {
+interface MainAppProps {
   tutorialList: TutorialList
   tutorialResolver: TutorialResolver
 }
 
-interface APIDemoState {
+interface MainAppState {
   /** The tutorial being displayed. null if the tutorial is unavailable. */
   tutorial: Tutorial | null,
 
@@ -53,8 +53,8 @@ while True:
     sleep(2000)
 `;
 
-class APIDemo extends React.Component<APIDemoProps, APIDemoState> {
-  constructor(props: APIDemoProps) {
+class MainApp extends React.Component<MainAppProps, MainAppState> {
+  constructor(props: MainAppProps) {
     super(props);
     this.state = {
       tutorial: null,
@@ -92,7 +92,7 @@ class APIDemo extends React.Component<APIDemoProps, APIDemoState> {
 
   /**
    * Called once the Monaco editor is mounted to set
-   * {@link APIDemoState.editor} and {@link APIDemoState.monaco}.
+   * {@link MainAppState.editor} and {@link MainAppState.monaco}.
    */
   handleEditorDidMount(editor: monaco.editor.IStandaloneCodeEditor, monaco: Monaco): void {
     this.setState({
@@ -176,11 +176,11 @@ class APIDemo extends React.Component<APIDemoProps, APIDemoState> {
    * @summary Disconnect the micro:bit before unmounting.
    *
    * For dev purposes only: upon recompilation, this component loses access to
-   * the {@link APIDemoState.connection} object; if the web serial connection
+   * the {@link MainAppState.connection} object; if the web serial connection
    * is not terminated here, the page must needs to be refreshed to reclaim the
    * micro:bit interface.
    *
-   * In production, {@link APIDemo} is intended to be the top-level component
+   * In production, {@link MainApp} is intended to be the top-level component
    * to be dismounted only when the page is closed, after which the web serial
    * connection is terminated anyways, making it unnecessary to manually invoke
    * the disconnection procedure.
@@ -192,7 +192,7 @@ class APIDemo extends React.Component<APIDemoProps, APIDemoState> {
   /**
    * @summary Renders a button in the header of the app.
    *
-   * The 'Start' button is enabled only when {@link APIDemoState.connection} is null,
+   * The 'Start' button is enabled only when {@link MainAppState.connection} is null,
    * as it is intended to be used when:
    * - the user first opens the page, and connects the micro:bit
    * - the micro:bit is disconnected, and the user wants to reconnect it (or to
@@ -218,7 +218,7 @@ class APIDemo extends React.Component<APIDemoProps, APIDemoState> {
 
     return (
       <Button
-        className="APIDemo-button"
+        className="MainApp-button"
         variant="contained"
         size="large"
         disabled={!isEnabled()}
@@ -230,7 +230,7 @@ class APIDemo extends React.Component<APIDemoProps, APIDemoState> {
   }
 
   /**
-   * Return true if the state of {@link APIDemoState.connection} is
+   * Return true if the state of {@link MainAppState.connection} is
    * {@link MicrobitState.Free}, and false otherwise.
    */
   hasFreeConnection(): boolean {
@@ -238,7 +238,7 @@ class APIDemo extends React.Component<APIDemoProps, APIDemoState> {
   }
 
   /**
-   * Return true if the state of {@link APIDemoState.connection} is
+   * Return true if the state of {@link MainAppState.connection} is
    * {@link MicrobitState.Busy}, and false otherwise.
    */
   hasBusyConnection(): boolean {
@@ -246,7 +246,7 @@ class APIDemo extends React.Component<APIDemoProps, APIDemoState> {
   }
 
   /**
-   * Return true if {@link APIDemoState.editor} has been assigned.
+   * Return true if {@link MainAppState.editor} has been assigned.
    */
   isEditorMounted(): boolean {
     return this.state.editor != null;
@@ -310,13 +310,13 @@ class APIDemo extends React.Component<APIDemoProps, APIDemoState> {
   }
 
   /**
-   * Render {@link APIDemoState.tutorial} with {@link TutorialViewer} unless
-   * {@link APIDemoState.needDuck} is true, in which case
-   * {@link APIDemoState.errorString} and the duck (via {@link renderDuck}) are
+   * Render {@link MainAppState.tutorial} with {@link TutorialViewer} unless
+   * {@link MainAppState.needDuck} is true, in which case
+   * {@link MainAppState.errorString} and the duck (via {@link renderDuck}) are
    * rendered instead.
    */
   renderTutorial(): JSX.Element {
-    return <div className="APIDemo-tutorial">
+    return <div className="MainApp-tutorial">
       {this.state.needDuck
         ? <div>
           <h1>
@@ -340,7 +340,7 @@ class APIDemo extends React.Component<APIDemoProps, APIDemoState> {
    * Render the python code editor.
    *
    * The default code is {@link exampleCode}.
-   * The current code can be accessed via {@link APIDemoState.editor}.
+   * The current code can be accessed via {@link MainAppState.editor}.
    */
   renderEditor(): JSX.Element {
     return (
@@ -355,18 +355,18 @@ class APIDemo extends React.Component<APIDemoProps, APIDemoState> {
           },
           fontSize: 18,
         }}
-        wrapperClassName="APIDemo-code"
+        wrapperClassName="MainApp-code"
       />
     );
   }
 
   /**
-   * Render a text box displaying {@link APIDemoState.output}.
+   * Render a text box displaying {@link MainAppState.output}.
    */
   renderOutput(): JSX.Element {
     return (
       <textarea
-        className="APIDemo-output"
+        className="MainApp-output"
         value={this.state.output}
         readOnly
       />
@@ -375,9 +375,9 @@ class APIDemo extends React.Component<APIDemoProps, APIDemoState> {
 
   render(): JSX.Element {
     return (
-      <div className="APIDemo">
-        <div className="APIDemo-header">
-          <header className="APIDemo-header-buttons">
+      <div className="MainApp">
+        <div className="MainApp-header">
+          <header className="MainApp-header-buttons">
             {this.renderHeaderButton(
               'Start',
               this.onStart.bind(this),
@@ -411,7 +411,7 @@ class APIDemo extends React.Component<APIDemoProps, APIDemoState> {
           </header>
           <SideBar tutorialList={this.props.tutorialList} onTutorialSelection={this.handleTutorialPathChange.bind(this)} />
         </div>
-        <div className="APIDemo-body">
+        <div className="MainApp-body">
           {this.renderTutorial()}
           {this.renderEditor()}
           {this.renderOutput()}
@@ -440,7 +440,7 @@ class APIDemo extends React.Component<APIDemoProps, APIDemoState> {
   }
 
   /**
-   * Insert the code snippet into {@link APIDemoState.editor} at the cursor.
+   * Insert the code snippet into {@link MainAppState.editor} at the cursor.
    * (If the user has never focused on the monaco editor before, the cursor is
    * actually placed on the top left, so the snippet is inserted at the very
    * start of the text.)
@@ -603,4 +603,4 @@ class APIDemo extends React.Component<APIDemoProps, APIDemoState> {
   }
 }
 
-export default APIDemo;
+export default MainApp;

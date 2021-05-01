@@ -1,4 +1,4 @@
-.APIDemo {
+.MainApp {
   min-height: 100vh;
 
   display: flex;
@@ -10,19 +10,19 @@
   align-items: center;
 }
 
-.APIDemo-header {
+.MainApp-header {
   width: 90vw;
   height: 5vh;
   margin: 5px;
   position: relative;
 }
 
-.APIDemo-header > button {
+.MainApp-header > button {
   position: absolute;
   left: 0px;
 }
 
-.APIDemo-header-buttons {
+.MainApp-header-buttons {
   width: 100%;
   height: 5vh;
   margin: 5px;
@@ -33,11 +33,11 @@
   justify-content: center;
 }
 
-.APIDemo-button:enabled, .APIDemo-button:disabled {
+.MainApp-button:enabled, .MainApp-button:disabled {
   margin: 5px;
 }
 
-.APIDemo-body {
+.MainApp-body {
   width: 90vw;
   height: 90vh;
 
@@ -51,7 +51,7 @@
 
 /* Column layout using grid */
 /* ---Left column--- */
-.APIDemo-tutorial {
+.MainApp-tutorial {
   grid-column: 1;
   grid-row: 1 / span 3;
 
@@ -62,18 +62,18 @@
   direction: rtl;
 }
 
-.APIDemo-tutorial * {
+.MainApp-tutorial * {
   /* Reset children's text direction back to left->right */
   direction: ltr;
 }
 
 /* ---Right column--- */
-.APIDemo-code {
+.MainApp-code {
   grid-column: 2;
   grid-row: 1 / span 2;
 }
 
-.APIDemo-output {
+.MainApp-output {
   grid-column: 2;
   grid-row: 3 / span 1;
 }
