@@ -3,7 +3,7 @@
 MicroPython comes with lots of built-in pictures to show on the display. For example, to make the device appear happy you type:
 
 ```py
-# LINES 3-3
+# LINES 4-4
 from microbit import *
 
 display.show(Image.HAPPY)
@@ -26,7 +26,7 @@ Each LED pixel on the physical display can be set to one of ten values. If a pix
 Armed with this information, it’s possible to create a new image like this:
 
 ```py
-# LINES 3-9
+# LINES 4-8
 from microbit import *
 
 boat = Image("05050:"
