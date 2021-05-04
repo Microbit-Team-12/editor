@@ -1,46 +1,56 @@
-# Getting Started with Create React App
+# Team 12: Micro:bit Python Editor
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![image](https://user-images.githubusercontent.com/13273623/117018712-55381280-ad27-11eb-8238-abe088d4111d.png)
 
-## Available Scripts
 
-In the project directory, you can run:
+![image](https://user-images.githubusercontent.com/13273623/117018465-1ace7580-ad27-11eb-8c9e-1c5c7c07f9ce.png)
 
-### `yarn start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Using the editor
+* Online: [https://microbit-team-12.github.io/editor/](https://microbit-team-12.github.io/editor/)
+* Locally (requires `git` and a Node package manager):
+    ```sh
+    git clone https://github.com/Microbit-Team-12/editor.git
+    cd editor/
+    yarn install
+    yarn start
+    ```
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Adding a tutorial
+The demo includes 4 tutorials:
+* Python Language Features
+* Python Errors
+* Displaying Images on micro:bit
+* Playing sounds on micro:bit
 
-### `yarn test`
+To add a new tutorial, first you need to write it in markdown.
+The current renderer supports the basic syntax but not HTML, 
+and it has additional support for python code blocks.
+For example,
+```
+~~~py
+# LINES 2-5
+explanation = """The optional meta-comment above tells the renderer which lines of code to highlight.      2
+The lines outside this range, both ends inclusive and counting from 1, will not be shown by default.       3
+This feature can be used to hide the importations or unimportant implementation details from the students. 4
+In this code block, precisely the lines declaring this multi-string will be highlighted.                   5""" 
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+print(explanation)
+print("Did you know you could use ~~~ instead of ```")?
 
-### `yarn build`
+~~~
+```
+will turn into
+![image](https://user-images.githubusercontent.com/13273623/117021560-09d33380-ad2a-11eb-8d7d-625762a44cd7.png)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Finally, you need to
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. Move the markdown file to `public/tutorials`
+2. Append the information about the tutorial to the list in `src/resources/tutorial_list.ts`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+so that the application actually includes the tutorial you wrote.
 
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Documentations
+* Code documentation: `docs/` -- possibly use `python3 -m http.server`
+* Project documentation for the customer: [Customer Documentation.pdf](https://github.com/Microbit-Team-12/editor/blob/master/Customer%20Documentation.pdf)
+* Script for manual behavioural testing: [Testing Table.pdf](https://github.com/Microbit-Team-12/editor/blob/master/Testing%20Table.pdf) 
