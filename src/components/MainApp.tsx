@@ -558,6 +558,9 @@ class MainApp extends React.Component<MainAppProps, MainAppState> {
               errorLine: output.line,
               errorMonacoIDs: errorMonacoID
             });
+            this.state.editor!.updateOptions({
+              readOnly: false
+            });
             this.summonDuck();
           }
       }
