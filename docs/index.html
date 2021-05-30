@@ -58,41 +58,69 @@
 	<div class="row">
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
-				<a href="#getting-started-with-create-react-app" id="getting-started-with-create-react-app" style="color: inherit; text-decoration: none;">
-					<h1>Getting Started with Create React App</h1>
+				<a href="#team-12-microbit-python-editor" id="team-12-microbit-python-editor" style="color: inherit; text-decoration: none;">
+					<h1>Team 12: Micro:bit Python Editor</h1>
 				</a>
-				<p>This project was bootstrapped with <a href="https://github.com/facebook/create-react-app">Create React App</a>.</p>
-				<a href="#available-scripts" id="available-scripts" style="color: inherit; text-decoration: none;">
-					<h2>Available Scripts</h2>
+				<p>Award winning!</p>
+				<a href="#gallery" id="gallery" style="color: inherit; text-decoration: none;">
+					<h2>Gallery</h2>
 				</a>
-				<p>In the project directory, you can run:</p>
-				<a href="#yarn-start" id="yarn-start" style="color: inherit; text-decoration: none;">
-					<h3><code>yarn start</code></h3>
+				<p><img src="README_assets/image-tute.jpg" alt="app when viewing the tutorial on displaying images"></p>
+				<p><img src="README_assets/error-duck.jpg" alt="when there is an error, the duck is summoned"></p>
+				<a href="#using-the-editor" id="using-the-editor" style="color: inherit; text-decoration: none;">
+					<h2>Using the editor</h2>
 				</a>
-				<p>Runs the app in the development mode.<br>Open <a href="http://localhost:3000">http://localhost:3000</a> to view it in the browser.</p>
-				<p>The page will reload if you make edits.<br>You will also see any lint errors in the console.</p>
-				<a href="#yarn-test" id="yarn-test" style="color: inherit; text-decoration: none;">
-					<h3><code>yarn test</code></h3>
+				<ul>
+					<li>Online: <a href="https://microbit-team-12.github.io/editor/">https://microbit-team-12.github.io/editor/</a></li>
+					<li>Locally (requires <code>git</code> and a Node package manager):<pre><code class="language-sh"><span style="color: #000000">git clone https://github.com/Microbit-Team-12/editor.git</span>
+<span style="color: #795E26">cd</span><span style="color: #000000"> editor/</span>
+<span style="color: #000000">yarn install</span>
+<span style="color: #000000">yarn start</span>
+</code></pre>
+					</li>
+				</ul>
+				<a href="#adding-a-tutorial" id="adding-a-tutorial" style="color: inherit; text-decoration: none;">
+					<h2>Adding a tutorial</h2>
 				</a>
-				<p>Launches the test runner in the interactive watch mode.<br>See the section about <a href="https://facebook.github.io/create-react-app/docs/running-tests">running tests</a> for more information.</p>
-				<a href="#yarn-build" id="yarn-build" style="color: inherit; text-decoration: none;">
-					<h3><code>yarn build</code></h3>
+				<p>The demo includes 4 tutorials:</p>
+				<ul>
+					<li>Python Language Features</li>
+					<li>Python Errors</li>
+					<li>Displaying Images on micro:bit</li>
+					<li>Playing sounds on micro:bit</li>
+				</ul>
+				<p>To add a new tutorial, first you need to write it in markdown.
+					The current renderer supports the basic syntax but not HTML,
+					and it has additional support for python code blocks.
+				For example,</p>
+				<pre><code><span style="color: #000000">~~~</span><span style="color: #001080">py</span>
+<span style="color: #000000"># </span><span style="color: #0070C1">LINES</span><span style="color: #000000"> </span><span style="color: #098658">2</span><span style="color: #000000">-</span><span style="color: #098658">5</span>
+<span style="color: #001080">explanation</span><span style="color: #000000"> = </span><span style="color: #A31515">&quot;&quot;&quot;The optional meta-comment above tells the renderer which lines of code to highlight.      </span><span style="color: #CD3131">2</span>
+<span style="color: #001080">The</span><span style="color: #000000"> </span><span style="color: #001080">lines</span><span style="color: #000000"> </span><span style="color: #001080">outside</span><span style="color: #000000"> </span><span style="color: #0000FF">this</span><span style="color: #000000"> </span><span style="color: #001080">range</span><span style="color: #000000">, </span><span style="color: #001080">both</span><span style="color: #000000"> </span><span style="color: #001080">ends</span><span style="color: #000000"> </span><span style="color: #001080">inclusive</span><span style="color: #000000"> </span><span style="color: #001080">and</span><span style="color: #000000"> </span><span style="color: #001080">counting</span><span style="color: #000000"> </span><span style="color: #001080">from</span><span style="color: #000000"> </span><span style="color: #098658">1</span><span style="color: #000000">, </span><span style="color: #001080">will</span><span style="color: #000000"> </span><span style="color: #001080">not</span><span style="color: #000000"> </span><span style="color: #001080">be</span><span style="color: #000000"> </span><span style="color: #001080">shown</span><span style="color: #000000"> </span><span style="color: #001080">by</span><span style="color: #000000"> </span><span style="color: #001080">default</span><span style="color: #000000">.       </span><span style="color: #098658">3</span>
+<span style="color: #001080">This</span><span style="color: #000000"> </span><span style="color: #001080">feature</span><span style="color: #000000"> </span><span style="color: #001080">can</span><span style="color: #000000"> </span><span style="color: #001080">be</span><span style="color: #000000"> </span><span style="color: #001080">used</span><span style="color: #000000"> </span><span style="color: #001080">to</span><span style="color: #000000"> </span><span style="color: #001080">hide</span><span style="color: #000000"> </span><span style="color: #001080">the</span><span style="color: #000000"> </span><span style="color: #001080">importations</span><span style="color: #000000"> </span><span style="color: #001080">or</span><span style="color: #000000"> </span><span style="color: #001080">unimportant</span><span style="color: #000000"> </span><span style="color: #001080">implementation</span><span style="color: #000000"> </span><span style="color: #001080">details</span><span style="color: #000000"> </span><span style="color: #001080">from</span><span style="color: #000000"> </span><span style="color: #001080">the</span><span style="color: #000000"> </span><span style="color: #001080">students</span><span style="color: #000000">. </span><span style="color: #098658">4</span>
+<span style="color: #001080">In</span><span style="color: #000000"> </span><span style="color: #0000FF">this</span><span style="color: #000000"> </span><span style="color: #001080">code</span><span style="color: #000000"> </span><span style="color: #001080">block</span><span style="color: #000000">, </span><span style="color: #001080">precisely</span><span style="color: #000000"> </span><span style="color: #001080">the</span><span style="color: #000000"> </span><span style="color: #001080">lines</span><span style="color: #000000"> </span><span style="color: #001080">declaring</span><span style="color: #000000"> </span><span style="color: #0000FF">this</span><span style="color: #000000"> </span><span style="color: #001080">multi</span><span style="color: #000000">-</span><span style="color: #001080">string</span><span style="color: #000000"> </span><span style="color: #001080">will</span><span style="color: #000000"> </span><span style="color: #001080">be</span><span style="color: #000000"> </span><span style="color: #001080">highlighted</span><span style="color: #000000">.                   </span><span style="color: #098658">5</span><span style="color: #A31515">&quot;&quot;&quot;</span><span style="color: #CD3131"> </span>
+
+<span style="color: #795E26">print</span><span style="color: #000000">(</span><span style="color: #001080">explanation</span><span style="color: #000000">)</span>
+<span style="color: #795E26">print</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;Did you know you could use ~~~ instead of ```&quot;</span><span style="color: #000000">)?</span>
+
+<span style="color: #000000">~~~</span>
+</code></pre>
+				<p>will turn into
+				<img src="README_assets/code-block.png" alt="python code block with the &#39;Run&#39;, &#39;Toggle full code&#39;, &#39;Insert into editor&#39; buttons"></p>
+				<p>Finally, you need to</p>
+				<ol>
+					<li>Move the markdown file to <code>public/tutorials</code></li>
+					<li>Append the information about the tutorial to the list in <code>src/resources/tutorial_list.ts</code></li>
+				</ol>
+				<p>so that the application actually includes the tutorial you wrote.</p>
+				<a href="#documentations" id="documentations" style="color: inherit; text-decoration: none;">
+					<h2>Documentations</h2>
 				</a>
-				<p>Builds the app for production to the <code>build</code> folder.<br>It correctly bundles React in production mode and optimizes the build for the best performance.</p>
-				<p>The build is minified and the filenames include the hashes.<br>Your app is ready to be deployed!</p>
-				<p>See the section about <a href="https://facebook.github.io/create-react-app/docs/deployment">deployment</a> for more information.</p>
-				<a href="#yarn-eject" id="yarn-eject" style="color: inherit; text-decoration: none;">
-					<h3><code>yarn eject</code></h3>
-				</a>
-				<p><strong>Note: this is a one-way operation. Once you <code>eject</code>, you can’t go back!</strong></p>
-				<p>If you aren’t satisfied with the build tool and configuration choices, you can <code>eject</code> at any time. This command will remove the single build dependency from your project.</p>
-				<p>Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except <code>eject</code> will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.</p>
-				<p>You don’t have to ever use <code>eject</code>. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.</p>
-				<a href="#learn-more" id="learn-more" style="color: inherit; text-decoration: none;">
-					<h2>Learn More</h2>
-				</a>
-				<p>You can learn more in the <a href="https://facebook.github.io/create-react-app/docs/getting-started">Create React App documentation</a>.</p>
-				<p>To learn React, check out the <a href="https://reactjs.org/">React documentation</a>.</p>
+				<ul>
+					<li>Code documentation: <code>docs/</code> -- possibly use <code>python3 -m http.server</code></li>
+					<li>Project documentation for the customer: <a href="https://github.com/Microbit-Team-12/editor/blob/master/Customer%20Documentation.pdf">Customer Documentation.pdf</a></li>
+					<li>Script for manual behavioural testing: <a href="https://github.com/Microbit-Team-12/editor/blob/master/Testing%20Table.pdf">Testing Table.pdf</a> </li>
+				</ul>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -129,7 +157,7 @@
 						<a href="modules/api_microbit_test_interact.html">api/microbit/test/interact</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/components_apidemo.html">components/APIDemo</a>
+						<a href="modules/components_mainapp.html">components/<wbr>Main<wbr>App</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="modules/components_sidebar.html">components/<wbr>Side<wbr>Bar</a>
@@ -144,7 +172,7 @@
 						<a href="modules/index.html">index</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/react_app_env.html">react-<wbr>app-<wbr>env</a>
+						<a href="modules/resources_tutorial_list.html">resources/tutorial_<wbr>list</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="modules/tutorial.html">tutorial</a>
