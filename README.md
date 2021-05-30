@@ -2,10 +2,10 @@
 Award winning!
 
 ## Gallery
-![app when viewing the tutorial on displaying images](README_assets/image-tute.jpg)
+![app when viewing the tutorial on displaying images](README_assets/image-tute.jpeg)
 
 
-![when there is an error, the duck is summoned](README_assets/error-duck.jpg)
+![when there is an error, the duck is summoned](README_assets/error-duck.jpeg)
 
 
 ## Using the editor
