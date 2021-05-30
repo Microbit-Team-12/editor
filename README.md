@@ -1,9 +1,11 @@
 # Team 12: Micro:bit Python Editor
+Award winning!
 
-![image](https://user-images.githubusercontent.com/13273623/117018712-55381280-ad27-11eb-8238-abe088d4111d.png)
+## Gallery
+![app when viewing the tutorial on displaying images](README_assets/image-tute.jpg)
 
 
-![image](https://user-images.githubusercontent.com/13273623/117018465-1ace7580-ad27-11eb-8c9e-1c5c7c07f9ce.png)
+![when there is an error, the duck is summoned](README_assets/error-duck.jpg)
 
 
 ## Using the editor
@@ -41,7 +43,7 @@ print("Did you know you could use ~~~ instead of ```")?
 ~~~
 ```
 will turn into
-![image](https://user-images.githubusercontent.com/13273623/117021560-09d33380-ad2a-11eb-8d7d-625762a44cd7.png)
+![python code block with the 'Run', 'Toggle full code', 'Insert into editor' buttons](README_assets/code-block.png)
 
 Finally, you need to
 
