@@ -1,5 +1,7 @@
-# Team 12: Micro:bit Python Editor
-Award winning!
+# Micro:bit Python Editor
+
+Team 12's project for the [Group Design Practicals](https://www.cs.ox.ac.uk/teaching/courses/2020-2021/gdp/index.html);
+> G-Research Group Project Prize for 2021 for a well-designed educational tool they created and a clear presentation and demonstration on how this tool can be used for learning purposes
 
 ## Gallery
 ![app when viewing the tutorial on displaying images](README_assets/image-tute.jpeg)
